@@ -14,12 +14,10 @@ class ProjectsTypeAdd extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         $builder
             ->add('name')
             ->add('description')
-            ->add('template')
-            ->add('createdAt')
-            ->add('updatedAt')
         ;
     }
     

@@ -36,13 +36,6 @@ class Projects
     private $description;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="template", type="string", length=255, nullable=true)
-     */
-    private $template;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -112,29 +105,6 @@ class Projects
     public function getDescription()
     {
         return $this->description;
-    }
-
-    /**
-     * Set template
-     *
-     * @param string $template
-     * @return Projects
-     */
-    public function setTemplate($template)
-    {
-        $this->template = $template;
-
-        return $this;
-    }
-
-    /**
-     * Get template
-     *
-     * @return string 
-     */
-    public function getTemplate()
-    {
-        return $this->template;
     }
 
     /**

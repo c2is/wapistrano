@@ -1,0 +1,35 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+    {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="box danger">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>{{ title }} {{ sectionTitle }}</h5>
+            <div class="toolbar">
+                {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+            </div>
+        </header>
+        <div class="body collapse in" id="div1">
+            <div class="form-group">
+                {{ form_label(form.name, null, { 'attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.description) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+
+            {{ form_widget(form.saveBottom, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': true}) }}
+{% endblock content %}
+
