@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Deployments" table="deployments">
+    <indexes>
+      <index name="index_deployments_on_stage_id" columns="stage_id"/>
+      <index name="index_deployments_on_user_id" columns="user_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="task" type="string" column="task" length="255" nullable="true"/>
+    <field name="log" type="text" column="log" nullable="true"/>
+    <field name="stageId" type="integer" column="stage_id" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <field name="completedAt" type="datetime" column="completed_at" nullable="true"/>
+    <field name="description" type="text" column="description" nullable="true"/>
+    <field name="userId" type="integer" column="user_id" nullable="true"/>
+    <field name="excludedHostIds" type="string" column="excluded_host_ids" length="255" nullable="true"/>
+    <field name="revision" type="string" column="revision" length="255" nullable="true"/>
+    <field name="pid" type="integer" column="pid" nullable="true"/>
+    <field name="status" type="string" column="status" length="255" nullable="true"/>
+  </entity>
+</doctrine-mapping>

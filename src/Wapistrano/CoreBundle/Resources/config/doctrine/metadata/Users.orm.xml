@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Users" table="users">
+    <indexes>
+      <index name="index_users_on_disabled" columns="disabled"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="login" type="string" column="login" length="255" nullable="true"/>
+    <field name="email" type="string" column="email" length="255" nullable="true"/>
+    <field name="cryptedPassword" type="string" column="crypted_password" length="40" nullable="true"/>
+    <field name="salt" type="string" column="salt" length="40" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <field name="rememberToken" type="string" column="remember_token" length="255" nullable="true"/>
+    <field name="rememberTokenExpiresAt" type="datetime" column="remember_token_expires_at" nullable="true"/>
+    <field name="admin" type="integer" column="admin" nullable="true"/>
+    <field name="timeZone" type="string" column="time_zone" length="255" nullable="true"/>
+    <field name="disabled" type="datetime" column="disabled" nullable="true"/>
+  </entity>
+</doctrine-mapping>

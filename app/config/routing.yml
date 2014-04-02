@@ -1,0 +1,5 @@
+wapistrano_core:
+    resource: "@WapistranoCoreBundle/Controller"
+    prefix:   /
+    type: annotation
+

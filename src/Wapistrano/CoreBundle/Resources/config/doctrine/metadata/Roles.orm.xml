@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Roles" table="roles">
+    <indexes>
+      <index name="index_roles_on_stage_id" columns="stage_id"/>
+      <index name="index_roles_on_host_id" columns="host_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="name" length="255" nullable="true"/>
+    <field name="stageId" type="integer" column="stage_id" nullable="true"/>
+    <field name="hostId" type="integer" column="host_id" nullable="true"/>
+    <field name="primary" type="integer" column="primary" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <field name="noRelease" type="integer" column="no_release" nullable="true"/>
+    <field name="sshPort" type="integer" column="ssh_port" nullable="true"/>
+    <field name="noSymlink" type="integer" column="no_symlink" nullable="true"/>
+  </entity>
+</doctrine-mapping>

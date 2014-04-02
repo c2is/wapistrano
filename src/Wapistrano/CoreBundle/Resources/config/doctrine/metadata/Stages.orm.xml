@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Stages" table="stages">
+    <indexes>
+      <index name="index_stages_on_project_id" columns="project_id"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="name" type="string" column="name" length="255" nullable="true"/>
+    <field name="projectId" type="integer" column="project_id" nullable="true"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+    <field name="updatedAt" type="datetime" column="updated_at" nullable="true"/>
+    <field name="alertEmails" type="text" column="alert_emails" nullable="true"/>
+    <field name="lockedByDeploymentId" type="integer" column="locked_by_deployment_id" nullable="true"/>
+    <field name="locked" type="integer" column="locked" nullable="true"/>
+  </entity>
+</doctrine-mapping>

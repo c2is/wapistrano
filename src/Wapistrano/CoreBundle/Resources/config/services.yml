@@ -1,0 +1,11 @@
+../composer.phar create-project symfony/framework-standard-edition . 2.4.2
+sudo chmod -R +a "_www allow delete,write,append,file_inherit,directory_inherit" app/cache/
+sudo chmod -R +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/cache/
+sudo chmod -R +a "_www allow delete,write,append,file_inherit,directory_inherit" app/logs/
+sudo chmod -R +a "`whoami` allow delete,write,append,file_inherit,directory_inherit" app/logs/
+
+imported webistrano datacheme into the database, added missing primary keys for deployment_roles and schema_migrations tablesand
+Then convert to xml:
+./app/console doctrine:mapping:convert xml ./src/Wapistrano/CoreBundle/Resources/config/doctrine/metadata --from-database --force
+then import, ie make doctrine generate corresponding entities
+./app/console doctrine:mapping:import WapistranoCoreBundle annotation
