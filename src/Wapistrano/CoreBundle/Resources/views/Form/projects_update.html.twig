@@ -9,8 +9,6 @@
             </div>
             <h5>{{ title }} {{ sectionTitle }}</h5>
             <div class="toolbar">
-
-                <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Home' })) }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
                 {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
             </div>
         </header>

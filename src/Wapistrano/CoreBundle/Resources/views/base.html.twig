@@ -20,6 +20,7 @@
     <!-- Metis core stylesheet -->
     <link rel="stylesheet" href="{{asset('css/main.min.css') }}">
     <link rel="stylesheet" href="{{asset('css/theme.css') }}">
+    <link rel="stylesheet" href="{{asset('css/screen.css') }}">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 
@@ -32,11 +33,18 @@
 
     <!--Modernizr 3.0-->
     <script src="{{asset('lib/modernizr-build.min.js') }}"></script>
+
+    <script src="{{asset('lib/jquery.min.js') }}"></script>
+    <script src="{{asset('lib/jquery.confirm.min.js') }}"></script>
+    <script src="{{asset('lib/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{asset('lib/screenfull/screenfull.js') }}"></script>
+    <script src="{{asset('js/main.min.js') }}"></script>
+    <script src="{{asset('js/script.js') }}"></script>
 </head>
 <body>
 <div id="wrap">
 <div id="top">
-
+{{ wapi_render_menu_project() }}
     <!-- .navbar -->
     <nav class="navbar navbar-inverse navbar-static-top">
 
@@ -131,7 +139,13 @@
         <!-- ."main-bar -->
         <div class="main-bar">
             <h3>
-                <i class="fa fa-home"></i> {{ sectionTitle }}</h3>
+                <i class="fa fa-home"></i> <a href="{{ sectionUrl }}">{{ sectionTitle }}</a>
+
+                {% if sectionAction is defined %}
+                    <a href="{{ sectionAction }}" class="btn btn-success btn-sm btn-grad" data-original-title="" title="">Add new</a>
+                {% endif %}
+
+            </h3>
         </div><!-- /.main-bar -->
     </header>
 
@@ -451,12 +465,10 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal --><!-- /#helpModal -->
-<script src="{{asset('lib/jquery.min.js') }}"></script>
-<script src="{{asset('lib/bootstrap/js/bootstrap.min.js') }}"></script>
-<script src="{{asset('lib/screenfull/screenfull.js') }}"></script>
-<script src="{{asset('js/main.min.js') }}"></script>
+
 
 <!--For Demo Only. Not required -->
 <script type="text/javascript" src="{{asset('js/style-switcher.js') }}"></script>
+
 </body>
 </html>

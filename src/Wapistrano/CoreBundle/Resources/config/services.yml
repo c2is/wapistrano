@@ -1,0 +1,9 @@
+services:
+    wapistrano_core.twig.menu_extension:
+        class: Wapistrano\CoreBundle\Twig\MenuExtension
+        arguments: [ @service_container ]
+        tags:
+            - { name: twig.extension }
+    wapistrano_core.menu:
+        class: Wapistrano\CoreBundle\Menu\Menu
+        arguments: [ @service_container ]
