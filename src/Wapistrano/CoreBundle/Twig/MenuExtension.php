@@ -46,20 +46,23 @@ class MenuExtension extends \Twig_Extension
     {
         $projects = $this->container->get('wapistrano_core.menu')->getMenuProjectItems();
         $sectionUrl = $this->container->get("router")->generate('projectsList');
-        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_project.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Projects", "projects" => $projects));
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_project.html.twig",
+            array("sectionUrl" => $sectionUrl, "sectionPict" => "fa fa-dashboard", "menuTitle" =>"Projects", "projects" => $projects));
     }
 
     public function renderMenuHost($parameters = array(), $name = null)
     {
         $hosts = $this->container->get('wapistrano_core.menu')->getMenuHostItems();
         $sectionUrl = $this->container->get("router")->generate('hostsList');
-        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_host.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Hosts", "hosts" => $hosts));
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_host.html.twig",
+            array("sectionUrl" => $sectionUrl, "sectionPict" => "glyphicon glyphicon-home", "menuTitle" =>"Hosts", "hosts" => $hosts));
     }
 
     public function renderMenuRecipe($parameters = array(), $name = null)
     {
         $recipes = $this->container->get('wapistrano_core.menu')->getMenuRecipeItems();
         $sectionUrl = $this->container->get("router")->generate('recipesList');
-        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_recipe.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Recipes", "recipes" => $recipes));
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_recipe.html.twig",
+            array("sectionUrl" => $sectionUrl, "sectionPict" => "glyphicon glyphicon-tasks", "menuTitle" =>"Recipes", "recipes" => $recipes));
     }
 }
