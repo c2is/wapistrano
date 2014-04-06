@@ -9,7 +9,8 @@
             </div>
             <h5>{{ title }} {{ sectionTitle }}</h5>
             <div class="toolbar">
-                <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'List' })) }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
+
+                <a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'List' })) }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
                 {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
             </div>
         </header>
@@ -20,7 +21,12 @@
                     {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-
+            <div class="form-group">
+                {{ form_label(form.alias) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.alias, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
             <div class="form-group">
                 {{ form_label(form.description) }}
                 <div class="col-lg-4">

@@ -1,0 +1,11 @@
+{% extends 'WapistranoCoreBundle:Menu:base.html.twig' %}
+{% block menuList %}
+    {% for project in projects %}
+
+        <li class="">
+            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}">
+                <i class="fa fa-angle-right"></i>&nbsp;{{ project.getName }}
+            </a>
+        </li>
+    {% endfor %}
+{% endblock %}

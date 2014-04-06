@@ -1,0 +1,46 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+
+    <div class="box primary">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>{{ project.name }}</h5>
+            <div class="toolbar">
+
+            </div>
+        </header>
+        {% if null != flashMessage %}
+        <div id="flashMessage" class="" style="">
+            <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+           {{ flashMessage }}
+
+        </div>
+        {% endif %}
+        <div id="collapse2" class="body">
+
+
+        {{ project.id }}
+
+
+
+
+        </div>
+    </div>
+
+    <script language="javascript">
+
+        $( document ).ready(function() {
+            $(".confirm").confirm();
+            $.confirm.options = {
+                text: "Are you sure you want to delete this project ?",
+                title: "Danger zone !!!",
+                confirmButton: "Yes",
+                cancelButton: "Cancel"
+            }
+        });
+
+    </script>
+{% endblock content %}
+

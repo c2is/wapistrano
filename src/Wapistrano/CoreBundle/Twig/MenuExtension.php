@@ -15,7 +15,7 @@ class MenuExtension extends \Twig_Extension
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->container     = $container;
+        $this->container = $container;
     }
 
     /**
@@ -27,6 +27,8 @@ class MenuExtension extends \Twig_Extension
     {
         return array(
             'wapi_render_menu_project' => new \Twig_Function_Method($this, 'renderMenuProject', array('is_safe' => array('html'))),
+            'wapi_render_menu_host' => new \Twig_Function_Method($this, 'renderMenuHost', array('is_safe' => array('html'))),
+            'wapi_render_menu_recipe' => new \Twig_Function_Method($this, 'renderMenuRecipe', array('is_safe' => array('html'))),
         );
     }
 
@@ -37,18 +39,27 @@ class MenuExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'seh_facebook';
+        return 'wapi_menu';
     }
 
-    /**
-     * @see FacebookHelper::initialize()
-     */
     public function renderMenuProject($parameters = array(), $name = null)
     {
-        $contextBrand = $this->container->get('wapistrano_core.menu');
+        $projects = $this->container->get('wapistrano_core.menu')->getMenuProjectItems();
+        $sectionUrl = $this->container->get("router")->generate('projectsList');
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_project.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Projects", "projects" => $projects));
+    }
 
+    public function renderMenuHost($parameters = array(), $name = null)
+    {
+        $hosts = $this->container->get('wapistrano_core.menu')->getMenuHostItems();
+        $sectionUrl = $this->container->get("router")->generate('hostsList');
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_host.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Hosts", "hosts" => $hosts));
+    }
 
-
-        return "toto";
+    public function renderMenuRecipe($parameters = array(), $name = null)
+    {
+        $recipes = $this->container->get('wapistrano_core.menu')->getMenuRecipeItems();
+        $sectionUrl = $this->container->get("router")->generate('recipesList');
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Menu:left_recipe.html.twig", array("sectionUrl" => $sectionUrl, "menuTitle" =>"Recipes", "recipes" => $recipes));
     }
 }

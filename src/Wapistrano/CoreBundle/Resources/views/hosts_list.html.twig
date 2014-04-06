@@ -30,20 +30,19 @@
         </thead>
         <tbody>
 
-        {% for project in projects %}
+        {% for host in hosts %}
             <tr>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Home', 'id': project.id })) }}">{{ project.getName }}</a>
-                </td>
-                <td>Internet Explorer 4.0</td>
-                <td><a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
-                            <i class="glyphicon glyphicon-edit"></i>
-                </a></td>
-                <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Delete', 'id': project.id })) }}" class="btn btn-danger btn-xs btn-grad confirm">
-                    <i class="glyphicon glyphicon-remove"></i>
+                    <a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Edit', 'id': host.id })) }}">{{ host.getName }}
                     </a>
                 </td>
+                <td>Internet Explorer 4.0</td>
+                <td><a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Edit', 'id': host.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                            <i class="glyphicon glyphicon-edit"></i>
+                </a></td>
+                <td><a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Delete', 'id': host.id })) }}" class="btn btn-danger btn-xs btn-grad confirm" data-original-title="" title="">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </a></td>
             </tr>
         {% endfor %}
 

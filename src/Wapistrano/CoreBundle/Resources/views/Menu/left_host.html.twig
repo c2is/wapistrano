@@ -1,0 +1,11 @@
+{% extends 'WapistranoCoreBundle:Menu:base.html.twig' %}
+{% block menuList %}
+    {% for host in hosts %}
+
+        <li class="">
+            <a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Edit', 'id': host.id })) }}">
+                <i class="fa fa-angle-right"></i>&nbsp;{{ host.getName }}
+            </a>
+        </li>
+    {% endfor %}
+{% endblock %}

@@ -6,14 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Wapistrano\CoreBundle\Entity\Projects;
-use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
+use Wapistrano\CoreBundle\Entity\hosts;
+use Wapistrano\CoreBundle\Form\hostsTypeAdd;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @Route("/projects")
+ * @Route("/hosts")
  */
-class ProjectsController extends Controller
+class HostsController extends Controller
 {
     private $sectionTitle;
     private $sectionAction;
@@ -21,80 +21,81 @@ class ProjectsController extends Controller
 
     public function getSectionTitle() {
         if (null == $this->sectionTitle) {
-            $this->sectionTitle = 'Projects';
+            $this->sectionTitle = 'hosts';
         }
         return $this->sectionTitle;
     }
 
     public function getSectionAction() {
         if (null == $this->sectionAction) {
-            $this->sectionAction = $this->generateUrl('projectsAdd');
+            $this->sectionAction = $this->generateUrl('hostsAdd');
         }
         return $this->sectionAction;
     }
 
     public function getSectionUrl() {
         if (null == $this->sectionUrl) {
-            $this->sectionUrl = $this->generateUrl('projectsList');
+            $this->sectionUrl = $this->generateUrl('hostsList');
         }
         return $this->sectionUrl;
     }
     /**
-     * @Route("/", name="projectsList")
-     * @Template("WapistranoCoreBundle::projects_list.html.twig")
+     * @Route("/", name="hostsList")
+     * @Template("WapistranoCoreBundle::hosts_list.html.twig")
      */
     public function listAction(Request $request)
     {
 
         $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findAll();
+        $hosts = $em->getRepository('WapistranoCoreBundle:hosts')->findAll();
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'projects'=>$projects, "flashMessage" => $flashMessage);
+            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'hosts'=>$hosts, "flashMessage" => $flashMessage);
     }
 
     /**
-     * @Route("/{id}", name="projectsHome")
-     * @Template("WapistranoCoreBundle::projects_home.html.twig")
+     * @Route("/{id}", name="hostsHome")
+     * @Template("WapistranoCoreBundle::hosts_list.html.twig")
      */
-    public function indexAction(Request $request, $id)
+    public function indexAction(Request $request)
     {
+
         $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
+        $hosts = $em->getRepository('WapistranoCoreBundle:hosts')->findAll();
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project, "flashMessage" => $flashMessage);
+            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'hosts'=>$hosts, "flashMessage" => $flashMessage);
     }
 
     public function getUrlAction($action, $id = ""){
 
         if ("" == $id) {
-            return new Response($this->generateUrl('projects'.$action));
+            return new Response($this->generateUrl('hosts'.$action));
         } else {
-            return new Response($this->generateUrl('projects'.$action, array("id" => $id)));
+            return new Response($this->generateUrl('hosts'.$action, array("id" => $id)));
 
         }
 
     }
     /**
-     * @Route("/add", name="projectsAdd")
-     * @Template("WapistranoCoreBundle:Form:projects_create.html.twig")
+     * @Route("/add", name="hostsAdd")
+     * @Template("WapistranoCoreBundle:Form:hosts_create.html.twig")
      */
     public function addAction(Request $request)
     {
-        $projectType = new ProjectsTypeAdd();
-        $project = new Projects();
+        $HostType = new hostsTypeAdd();
+        $Host = new hosts();
 
 
-        $form = $this->get('form.factory')->create($projectType, $project);
+        $form = $this->get('form.factory')->create($HostType, $Host);
         $form->add('saveTop', 'submit');
         $form->add('saveBottom', 'submit');
 
@@ -102,36 +103,36 @@ class ProjectsController extends Controller
 
         if ($form->isValid()) {
             $today = new \DateTime();
-            $project->setCreatedAt($today);
-            $project = $form->getData();
+            $Host->setCreatedAt($today);
+            $Host = $form->getData();
 
             $manager = $this->getDoctrine()->getManager();
-            $manager->persist($project);
+            $manager->persist($Host);
             $manager->flush();
 
             $session = $request->getSession();
-            $session->getFlashBag()->add('notice', 'Project '.$project->getName().' added');
+            $session->getFlashBag()->add('notice', 'Host '.$Host->getName().' added');
 
-            return $this->redirect($this->generateUrl('projectsList'));
+            return $this->redirect($this->generateUrl('hostsList'));
         }
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/{id}/edit", name="projectsEdit")
-     * @Template("WapistranoCoreBundle:Form:projects_update.html.twig")
+     * @Route("/{id}/edit", name="hostsEdit")
+     * @Template("WapistranoCoreBundle:Form:hosts_update.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
 
         $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
+        $Host = $em->getRepository('WapistranoCoreBundle:hosts')->findOneBy(array("id" => $id));
 
-        $projectType = new ProjectsTypeAdd();
+        $HostType = new hostsTypeAdd();
 
 
-        $form = $this->get('form.factory')->create($projectType, $project);
+        $form = $this->get('form.factory')->create($HostType, $Host);
         $form->add('saveTop', 'submit');
         $form->add('saveBottom', 'submit');
 
@@ -139,34 +140,34 @@ class ProjectsController extends Controller
 
         if ($form->isValid()) {
             $today = new \DateTime();
-            $project->setCreatedAt($today);
-            $project = $form->getData();
+            $Host->setCreatedAt($today);
+            $Host = $form->getData();
 
             $manager = $this->getDoctrine()->getManager();
-            $manager->persist($project);
+            $manager->persist($Host);
             $manager->flush();
 
             $session = $request->getSession();
-            $session->getFlashBag()->add('notice', 'Project '.$project->getName().' updated');
+            $session->getFlashBag()->add('notice', 'Host '.$Host->getName().' updated');
 
-            return $this->redirect($this->generateUrl('projectsList'));
+            return $this->redirect($this->generateUrl('hostsList'));
         }
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/{id}/delete", name="projectsDelete")
+     * @Route("/{id}/delete", name="hostsDelete")
      */
     public function deleteAction(Request $request, $id)
     {
         $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
-        $em->remove($project);
+        $Host = $em->getRepository('WapistranoCoreBundle:hosts')->findOneBy(array("id" => $id));
+        $em->remove($Host);
         $em->flush();
 
         $session = $request->getSession();
-        $session->getFlashBag()->add('notice', 'Project '.$project->getName().'deleted');
-        return $this->redirect($this->generateUrl('projectsHome'));
+        $session->getFlashBag()->add('notice', 'Host '.$Host->getName().'deleted');
+        return $this->redirect($this->generateUrl('hostsHome'));
     }
 }

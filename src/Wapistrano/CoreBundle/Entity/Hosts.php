@@ -29,6 +29,20 @@ class Hosts
     private $name;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="alias", type="string", length=255, nullable=true)
+     */
+    private $alias;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
@@ -75,6 +89,52 @@ class Hosts
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Set alias
+     *
+     * @param string $alias
+     * @return Hosts
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Get alias
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Hosts
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

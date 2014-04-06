@@ -1,0 +1,11 @@
+{% extends 'WapistranoCoreBundle:Menu:base.html.twig' %}
+{% block menuList %}
+    {% for recipe in recipes %}
+
+        <li class="">
+            <a href="{{ render(controller('WapistranoCoreBundle:recipes:getUrl', { 'action': 'Edit', 'id': recipe.id })) }}">
+                <i class="fa fa-angle-right"></i>&nbsp;{{ recipe.getName }}
+            </a>
+        </li>
+    {% endfor %}
+{% endblock %}
