@@ -58,7 +58,7 @@ class ProjectsController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="projectsHome")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="projectsHome")
      * @Template("WapistranoCoreBundle::projects_home.html.twig")
      */
     public function indexAction(Request $request, $id)

@@ -58,7 +58,7 @@ class HostsController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="hostsHome")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="hostsHome")
      * @Template("WapistranoCoreBundle::hosts_list.html.twig")
      */
     public function indexAction(Request $request)

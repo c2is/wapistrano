@@ -58,7 +58,7 @@ class RecipesController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="recipesHome")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="recipesHome")
      * @Template("WapistranoCoreBundle::recipes_list.html.twig")
      */
     public function indexAction(Request $request)
