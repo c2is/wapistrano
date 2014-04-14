@@ -17,11 +17,11 @@ $( document ).ready(function() {
     });
     $("body").on("submit", "#sendform", function() {
         var form = $(this);
-        alert("Sent");
         $.post($(this).attr("action"), form.serialize(),
             function success(data){
                 $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
                 $("#flashMessagePopin").show("slow");
+                updateConfigurationList($("#wapistrano_corebundle_projects_project_id").val());
             });
 
         return false;

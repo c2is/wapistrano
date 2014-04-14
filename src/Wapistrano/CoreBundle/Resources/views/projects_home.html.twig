@@ -47,7 +47,7 @@
             <div class="box">
                 <div class="body">
                     <div id="headBoxRight">
-qsdqsd
+                        aze
 
                     </div><!-- /#trigo -->
                 </div><!-- /.body -->
@@ -65,11 +65,16 @@ qsdqsd
                 </a>
             </h4>
                 <div id="popup"></div>
+                <div id="configurationList">
+                    {{ wapi_render_configuration_list({"projectId" : '11'}) }}
+                </div>
+
             </div>
         </div>
     </div>
 </div>
     <script language="javascript">
+
 
         $( document ).ready(function() {
             $(".confirm").confirm();
@@ -79,7 +84,18 @@ qsdqsd
                 confirmButton: "Yes",
                 cancelButton: "Cancel"
             }
+
         });
+
+        function updateConfigurationList(projectId) {
+            var url = "http://localhost/wapistrano/web/app_dev.php/projects/" + projectId + "/project_configuration/list";
+            var oParam = {};
+            var displayMessage = function(data){
+                $("#configurationList").html((data || ''));
+            };
+            loadData(url,"html",displayMessage,oParam);
+
+        }
 
     </script>
 {% endblock content %}

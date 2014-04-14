@@ -154,7 +154,7 @@ class ProjectsController extends Controller
             return $this->redirect($this->generateUrl('projectsList'));
         }
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
+        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
@@ -182,5 +182,18 @@ class ProjectsController extends Controller
         $configuration->setProjectId($id) ;
 
         return new Response($configuration->displayFormAdd());
+    }
+
+    /**
+     * @Route("/{id}/project_configuration/list", name="projectsConfigurationList")
+     */
+    public function configurationListAction($id)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($id) ;
+
+        return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
+        array("configurations" => $configuration->getConfigurationList())
+        ));
     }
 }

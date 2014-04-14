@@ -51,6 +51,12 @@ class Configuration
             array("form"=>$form->createView(), "projectId"=>$this->projectId, "popinTitle" => "Add a configuration"));
 
     }
+
+    public function getConfigurationList() {
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId()));
+
+        return $configurations;
+    }
     /**
      * @param mixed $projectId
      */
