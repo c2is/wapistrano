@@ -25,19 +25,29 @@
         <div class="col-lg-6">
             <div class="box">
                 <div class="body">
-                    <div id="trigo" style="height: 250px;">
+                    <div id="headBoxLeft">
                     {{ project.name }}
                     <br>
                     {{ project.description }}
+                        <div class="action">
+                            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Delete', 'id': project.id })) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </div>
                     </div>
+
+
                 </div><!-- /.body -->
             </div><!-- /.box -->
         </div>
         <div class="col-lg-6">
             <div class="box">
                 <div class="body">
-                    <div id="trigo" style="height: 250px;">
-
+                    <div id="headBoxRight">
+qsdqsd
 
                     </div><!-- /#trigo -->
                 </div><!-- /.body -->
@@ -45,6 +55,20 @@
         </div>
     </div>
 
+<div id="collapse1" class="body">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="body">
+            <h4>Project configurations
+                <a href="{{ newStageUrl }}" class="btn btn-success btn-xs btn-grad popDefaultAjax">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </a>
+            </h4>
+                <div id="popup"></div>
+            </div>
+        </div>
+    </div>
+</div>
     <script language="javascript">
 
         $( document ).ready(function() {

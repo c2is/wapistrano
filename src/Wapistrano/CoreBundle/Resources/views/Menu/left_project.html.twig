@@ -3,7 +3,7 @@
     {% for project in projects %}
 
         <li class="">
-            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}">
+            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Home', 'id': project.id })) }}">
                 <i class="fa fa-angle-right"></i>&nbsp;{{ project.getName }}
             </a>
         </li>

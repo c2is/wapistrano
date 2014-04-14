@@ -3,6 +3,7 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * ConfigurationParameters
@@ -25,6 +26,7 @@ class ConfigurationParameters
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -71,11 +73,11 @@ class ConfigurationParameters
     private $updatedAt;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="prompt_on_deploy", type="integer", nullable=true)
+     * @ORM\Column(name="prompt_on_deploy", type="boolean", nullable=true)
      */
-    private $promptOnDeploy = '0';
+    private $promptOnDeploy = false;
 
 
 

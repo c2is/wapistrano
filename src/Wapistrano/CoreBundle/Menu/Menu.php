@@ -4,33 +4,30 @@ namespace Wapistrano\CoreBundle\Menu;
 
 class Menu
 {
-    private $container;
-    public function __construct($container)
+    private $em;
+    public function __construct($em)
     {
-        $this->container = $container;
+        $this->em = $em;
     }
 
     public function getMenuProjectItems() {
-        $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findAll();
+        $projects = $this->em->getRepository('WapistranoCoreBundle:Projects')->findAll();
 
         return $projects;
 
     }
 
     public function getMenuHostItems() {
-        $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Hosts')->findAll();
+        $hosts = $this->em->getRepository('WapistranoCoreBundle:Hosts')->findAll();
 
-        return $projects;
+        return $hosts;
 
     }
 
     public function getMenuRecipeItems() {
-        $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Recipes')->findAll();
+        $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')->findAll();
 
-        return $projects;
+        return $recipes;
 
     }
 

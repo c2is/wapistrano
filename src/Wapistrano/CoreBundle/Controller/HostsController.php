@@ -167,7 +167,7 @@ class HostsController extends Controller
         $em->flush();
 
         $session = $request->getSession();
-        $session->getFlashBag()->add('notice', 'Host '.$Host->getName().'deleted');
-        return $this->redirect($this->generateUrl('hostsHome'));
+        $session->getFlashBag()->add('notice', 'Host '.$Host->getName().' deleted');
+        return $this->redirect($this->generateUrl('hostsList'));
     }
 }

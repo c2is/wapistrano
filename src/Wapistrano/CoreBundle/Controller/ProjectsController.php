@@ -70,8 +70,10 @@ class ProjectsController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
+        $newStageUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$id));
+
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project, "flashMessage" => $flashMessage);
+            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project, "flashMessage" => $flashMessage, "newStageUrl" => $newStageUrl);
     }
 
     public function getUrlAction($action, $id = ""){
@@ -151,6 +153,7 @@ class ProjectsController extends Controller
 
             return $this->redirect($this->generateUrl('projectsList'));
         }
+
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
@@ -166,7 +169,18 @@ class ProjectsController extends Controller
         $em->flush();
 
         $session = $request->getSession();
-        $session->getFlashBag()->add('notice', 'Project '.$project->getName().'deleted');
-        return $this->redirect($this->generateUrl('projectsHome'));
+        $session->getFlashBag()->add('notice', 'Project '.$project->getName().' deleted');
+        return $this->redirect($this->generateUrl('projectsList'));
+    }
+
+    /**
+     * @Route("/{id}/project_configuration/add", name="projectsConfigurationAdd")
+     */
+    public function configurationAddAction($id)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($id) ;
+
+        return new Response($configuration->displayFormAdd());
     }
 }

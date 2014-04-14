@@ -6,4 +6,8 @@ services:
             - { name: twig.extension }
     wapistrano_core.menu:
         class: Wapistrano\CoreBundle\Menu\Menu
-        arguments: [ @service_container ]
+        arguments: [ @doctrine.orm.entity_manager ]
+
+    wapistrano_core.configuration:
+        class: Wapistrano\CoreBundle\Configuration\Configuration
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig ]

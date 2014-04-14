@@ -167,7 +167,7 @@ class RecipesController extends Controller
         $em->flush();
 
         $session = $request->getSession();
-        $session->getFlashBag()->add('notice', 'Recipe '.$Recipe->getName().'deleted');
-        return $this->redirect($this->generateUrl('recipesHome'));
+        $session->getFlashBag()->add('notice', 'Recipe '.$Recipe->getName().' deleted');
+        return $this->redirect($this->generateUrl('recipesList'));
     }
 }
