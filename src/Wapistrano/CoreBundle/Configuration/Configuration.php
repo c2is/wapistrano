@@ -40,6 +40,13 @@ class Configuration
         $form->add('project_id', 'hidden', array(
             'data' => $this->projectId
         ));
+
+        if ("" != $this->getStageId()) {
+            $form->add('stage_id', 'hidden', array(
+                'data' => $this->getStageId()
+            ));
+        }
+
         $form->add('saveBottom', 'submit');
 
         $form->handleRequest($this->request);
@@ -53,7 +60,13 @@ class Configuration
             $this->em->flush();
 
         }
-        $formUrl = $this->router->generate("projectsConfigurationAdd", array("id"=>$this->getProjectId()));
+
+        if ("" != $this->getStageId()) {
+            $formUrl = $this->router->generate("stageConfigurationAdd", array("projectId"=>$this->getProjectId(), "stageId" => $this->getStageId()));
+        } else {
+            $formUrl = $this->router->generate("projectsConfigurationAdd", array("id"=>$this->getProjectId()));
+        }
+
 
         return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig",
             array("form"=>$form->createView(), "formUrl" => $formUrl, "projectId"=>$this->projectId, "popinTitle" => "Add a configuration"));
@@ -91,8 +104,14 @@ class Configuration
 
     }
 
-    public function getConfigurationList() {
-        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId()));
+    public function getProjectConfigurationList() {
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL));
+
+        return $configurations;
+    }
+
+    public function getStageConfigurationList() {
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => $this->getStageId()));
 
         return $configurations;
     }

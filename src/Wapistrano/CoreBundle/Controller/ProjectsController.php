@@ -178,7 +178,7 @@ class ProjectsController extends Controller
     /**
      * @Route("/{id}/project_configuration/add", name="projectsConfigurationAdd")
      */
-    public function configurationAddAction($id)
+    public function projectConfigurationAddAction($id)
     {
         $configuration = $this->container->get('wapistrano_core.configuration');
         $configuration->setProjectId($id) ;
@@ -209,19 +209,21 @@ class ProjectsController extends Controller
         $session = $request->getSession();
         $session->getFlashBag()->add('notice', 'Configuration deleted');
 
-        return $this->redirect($this->generateUrl('projectsHome', array("id" => $projectId)));
+        $urlRedir = $request->headers->get('referer');
+//$this->generateUrl('projectsHome', array("id" => $projectId))
+        return $this->redirect($urlRedir);
     }
 
     /**
      * @Route("/{id}/project_configuration/list", name="projectsConfigurationList")
      */
-    public function configurationListAction($id)
+    public function projectConfigurationListAction($id)
     {
         $configuration = $this->container->get('wapistrano_core.configuration');
         $configuration->setProjectId($id) ;
 
         return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
-        array("configurations" => $configuration->getConfigurationList(), "projectId" => $id, "isAjax" => true)
+        array("configurations" => $configuration->getProjectConfigurationList(), "projectId" => $id, "isAjax" => true)
         ));
     }
 
@@ -239,8 +241,7 @@ class ProjectsController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        $newConfigurationUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$projectId));
-        $newStageUrl = $this->generateUrl('projectsStageAdd', array("id" =>$projectId));
+        $newConfigurationUrl = $this->generateUrl('stageConfigurationAdd', array("projectId" =>$projectId, "stageId" => $stageId));
 
         $twigVars = array();
         $twigVars['sectionTitle'] = $this->getSectionTitle();
@@ -253,9 +254,34 @@ class ProjectsController extends Controller
         $twigVars['stage'] = $stage;
         $twigVars['flashMessage'] = $flashMessage;
         $twigVars['newConfigurationUrl'] = $newConfigurationUrl;
-        $twigVars['newStageUrl'] = $newStageUrl;
 
         return $twigVars;
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/stage_configuration/add", name="stageConfigurationAdd")
+     */
+    public function stageConfigurationAddAction($projectId, $stageId)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($projectId);
+        $configuration->setStageId($stageId);
+
+        return new Response($configuration->displayFormAdd());
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/stage_configuration/list", name="stageConfigurationList")
+     */
+    public function stageConfigurationListAction($projectId, $stageId)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($projectId);
+        $configuration->setStageId($stageId);
+
+        return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
+            array("configurations" => $configuration->getStageConfigurationList(), "projectId" => $projectId, "stageId" => $stageId, "isAjax" => true)
+        ));
     }
 
     /**

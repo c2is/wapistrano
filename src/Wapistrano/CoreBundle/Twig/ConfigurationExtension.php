@@ -44,8 +44,13 @@ class ConfigurationExtension extends \Twig_Extension
     {
         $configurations = $this->container->get('wapistrano_core.configuration');
         $configurations->setProjectId($parameters["projectId"]);
+        if (!isset($parameters["stageId"])) {
+            $configurationsList = $configurations->getProjectConfigurationList();
+        } else {
+            $configurations->setStageId($parameters["stageId"]);
+            $configurationsList = $configurations->getStageConfigurationList();
+        }
 
-        $configurationsList = $configurations->getConfigurationList();
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
             array("configurations" => $configurationsList, "projectId" => $parameters["projectId"]));
