@@ -4,7 +4,7 @@
     <span id="flashMessagePopinText"></span>
     <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
 </div>
-{{ form_start(form, {'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormConfiguration'} }) }}
+{{ form_start(form, {'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormStage'} }) }}
     <div class="box primary">
         <div class="body collapse in" id="div1">
             <div class="form-group">
@@ -14,15 +14,9 @@
                 </div>
             </div>
             <div class="form-group">
-                {{ form_label(form.value) }}
+                {{ form_label(form.alertEmails) }}
                 <div class="col-lg-4">
-                    {{ form_widget(form.value, { 'attr': {'class': 'form-control'} }) }}
-                </div>
-            </div>
-            <div class="form-group">
-                {{ form_label(form.prompt_on_deploy) }}
-                <div class="col-lg-4">
-                    {{ form_widget(form.prompt_on_deploy, { 'attr': {'class': 'form-control'} }) }}
+                    {{ form_widget(form.alertEmails, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
 

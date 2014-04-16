@@ -70,10 +70,12 @@ class ProjectsController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        $newStageUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$id));
+        $newConfigurationUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$id));
+        $newStageUrl = $this->generateUrl('projectsStageAdd', array("id" =>$id));
 
         return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project, "flashMessage" => $flashMessage, "newStageUrl" => $newStageUrl);
+            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project,
+            "flashMessage" => $flashMessage, "newConfigurationUrl" => $newConfigurationUrl, "newStageUrl" => $newStageUrl);
     }
 
     public function getUrlAction($action, $id = ""){
@@ -185,6 +187,32 @@ class ProjectsController extends Controller
     }
 
     /**
+     * @Route("/{projectId}/project_configuration/{configurationId}/edit", name="projectsConfigurationEdit")
+     */
+    public function configurationEditAction($projectId, $configurationId)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($projectId) ;
+        $configuration->setConfigurationId($configurationId) ;
+        return new Response($configuration->displayFormEdit());
+    }
+
+    /**
+     * @Route("/{projectId}/project_configuration/{configurationId}/delete", name="projectsConfigurationDelete")
+     */
+    public function configurationDeleteAction(Request $request, $projectId, $configurationId)
+    {
+        $configuration = $this->container->get('wapistrano_core.configuration');
+        $configuration->setProjectId($configurationId) ;
+        $configuration->delete($configurationId);
+
+        $session = $request->getSession();
+        $session->getFlashBag()->add('notice', 'Configuration deleted');
+
+        return $this->redirect($this->generateUrl('projectsHome', array("id" => $projectId)));
+    }
+
+    /**
      * @Route("/{id}/project_configuration/list", name="projectsConfigurationList")
      */
     public function configurationListAction($id)
@@ -193,7 +221,93 @@ class ProjectsController extends Controller
         $configuration->setProjectId($id) ;
 
         return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
-        array("configurations" => $configuration->getConfigurationList())
+        array("configurations" => $configuration->getConfigurationList(), "projectId" => $id, "isAjax" => true)
         ));
     }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}", requirements={"projectId" = "\d+", "stageId" = "\d+"}, name="projectsStageHome")
+     * @Template("WapistranoCoreBundle::projects_stage_home.html.twig")
+     */
+    public function stageHomeAction(Request $request, $projectId, $stageId)
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $projectId));
+        $stage = $em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $stageId));
+
+        $session = $request->getSession();
+        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
+        $session->getFlashBag()->clear('notice');
+
+        $newConfigurationUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$projectId));
+        $newStageUrl = $this->generateUrl('projectsStageAdd', array("id" =>$projectId));
+
+        $twigVars = array();
+        $twigVars['sectionTitle'] = $this->getSectionTitle();
+        $twigVars['sectionAction'] = $this->getSectionAction();
+        $twigVars['sectionUrl'] = $this->getSectionUrl();
+        $twigVars['subSectionTitle'] = $project->getName();
+        $twigVars['subSectionUrl'] = $this->generateUrl('projectsHome', array("id" =>$projectId));
+        $twigVars['title'] = 'Home';
+        $twigVars['project'] = $project;
+        $twigVars['stage'] = $stage;
+        $twigVars['flashMessage'] = $flashMessage;
+        $twigVars['newConfigurationUrl'] = $newConfigurationUrl;
+        $twigVars['newStageUrl'] = $newStageUrl;
+
+        return $twigVars;
+    }
+
+    /**
+     * @Route("/{id}/project_stage/add", name="projectsStageAdd")
+     */
+    public function stageAddAction($id)
+    {
+        $stage = $this->container->get('wapistrano_core.stage');
+        $stage->setProjectId($id) ;
+
+        return new Response($stage->displayFormAdd());
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/edit", name="projectsStageEdit")
+     */
+    public function stageEditAction($projectId, $stageId)
+    {
+        $stage = $this->container->get('wapistrano_core.stage');
+        $stage->setProjectId($projectId) ;
+        $stage->setStageId($stageId) ;
+
+        return new Response($stage->displayFormEdit());
+    }
+
+    /**
+     * @Route("/{id}/project_stage/list", name="projectsStageList")
+     */
+    public function stageListAction($id)
+    {
+        $stage = $this->container->get('wapistrano_core.stage');
+        $stage->setProjectId($id) ;
+
+        return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Stage:list.html.twig",
+            array("stages" => $stage->getStageList(), "projectId" => $id, "isAjax" => true)
+        ));
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/delete", name="projectsStageDelete")
+     */
+    public function stageDeleteAction(Request $request, $projectId, $stageId)
+    {
+        $stage = $this->container->get('wapistrano_core.stage');
+        $stage->setProjectId($stageId) ;
+        $stage->delete($stageId);
+
+        $session = $request->getSession();
+        $session->getFlashBag()->add('notice', 'Stage deleted');
+
+        return $this->redirect($this->generateUrl('projectsHome', array("id" => $projectId)));
+    }
+
+
 }

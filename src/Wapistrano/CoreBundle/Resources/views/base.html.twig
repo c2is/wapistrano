@@ -139,8 +139,11 @@
         <!-- ."main-bar -->
         <div class="main-bar">
             <h3>
-                <i class="fa fa-home"></i> <a href="{{ sectionUrl }}">{{ sectionTitle }}</a>
-
+                <i class="fa fa-home"></i>
+                <a href="{{ sectionUrl }}">{{ sectionTitle }}</a>
+                {% if subSectionTitle is defined %}
+                    / <a href="{{ subSectionUrl }}">{{ subSectionTitle }}</a>
+                {% endif %}
                 {% if sectionAction is defined %}
                     <a href="{{ sectionAction }}" class="btn btn-success btn-sm btn-grad" data-original-title="" title="">Add new</a>
                 {% endif %}

@@ -1,0 +1,120 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+
+    <div class="box primary">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>Stage {{ stage.name }}</h5>
+            <div class="toolbar">
+
+            </div>
+        </header>
+        {% if null != flashMessage %}
+        <div id="flashMessage" class="" style="">
+            <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+           {{ flashMessage }}
+
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div id="collapse2" class="body">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="body">
+                    <div id="headBoxLeft">
+                    <strong>Name</strong>: {{ stage.name }}<br>
+                    <strong>Project</strong>: <span class="label label-warning">{{ project.name }}</span><br>
+                    <strong>ALert on deploy</strong>: {{ stage.alertEmails }}<br>
+
+                        <div class="action">
+                            <a href="{{ path('projectsStageEdit', { 'projectId': project.id, "stageId" : stage.id }) }}" class="btn btn-success btn-xs btn-grad popStageAjax" data-original-title="" title="">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                            <a href="{{ path('projectsStageDelete', { 'projectId': project.id, "stageId" : stage.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div><!-- /.body -->
+            </div><!-- /.box -->
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="body">
+                    <div id="headBoxRight">
+                        <strong>Deployments actions</strong>
+                        <br>
+
+                    </div><!-- /#trigo -->
+                </div><!-- /.body -->
+            </div><!-- /.box -->
+        </div>
+    </div>
+
+<div id="collapse1" class="body">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="body">
+            <h4>Project configurations
+                <a href="{{ newConfigurationUrl }}" class="btn btn-success btn-xs btn-grad popDefaultAjax">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </a>
+            </h4>
+                <div id="popup"></div>
+                <div id="configurationList">
+                    {{ wapi_render_configuration_list({"projectId" : '11'}) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="collapse1" class="body">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="body">
+                <h4>Project stages
+                    <a href="{{ newStageUrl }}" class="btn btn-success btn-xs btn-grad popStageAjax">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>
+                </h4>
+                <div id="popup"></div>
+                <div id="stageList">
+                    {{ wapi_render_stage_list({"projectId" : '11'}) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+    <script language="javascript">
+
+        /* Ajax bPopup */
+        /* used to create or update a stage */
+        $('body').on('click','.popStageAjax',function(e){
+            e.preventDefault();
+            ajaxBPopup($(this).attr('href'));
+        });
+        $("body").on("submit", "#sendFormStage", function() {
+            var form = $(this);
+            $.post($(this).attr("action"), form.serialize(),
+                    function success(data){
+                        $(".popStageAjax").bPopup().close();
+                        location.reload();
+                    });
+
+            return false;
+        })
+
+
+
+    </script>
+{% endblock content %}
+

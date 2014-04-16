@@ -1,0 +1,14 @@
+<ul>
+{% for stage in stages %}
+
+           <li>
+               <a href="{{ path('projectsStageHome', { 'projectId': projectId, "stageId" : stage.id }) }}" class="">
+                   {{ stage.name }}
+               </a>
+           </li>
+
+
+{% endfor %}
+</ul>
+
+

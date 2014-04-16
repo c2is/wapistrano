@@ -8,28 +8,15 @@ $( document ).ready(function() {
         $("#flashMessagePopin").toggle("slow");
     });
 
-    /* Ajax bPopup */
-    /* open popup */
-    $('body').on('click','.popDefaultAjax',function(e){
-        e.preventDefault();
-        ajaxBPopup($(this).attr('href'));
-        //ajaxBPopup('cgv/ajaxCGV.php');
-    });
-    $("body").on("submit", "#sendform", function() {
-        var form = $(this);
-        $.post($(this).attr("action"), form.serialize(),
-            function success(data){
-                $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
-                $("#flashMessagePopin").show("slow");
-                updateConfigurationList($("#wapistrano_corebundle_projects_project_id").val());
-            });
-
-        return false;
-    })
-
-
+    
+    $(".confirm").confirm();
+    $.confirm.options = {
+        text: "Are you sure you want to delete it ?",
+        title: "Danger zone !!!",
+        confirmButton: "Yes",
+        cancelButton: "Cancel"
+    }
 });
-
 
 
 var oSettingsBPopupDefault = {

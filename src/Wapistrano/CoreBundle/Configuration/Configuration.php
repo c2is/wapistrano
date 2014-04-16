@@ -6,6 +6,7 @@ use Wapistrano\CoreBundle\Entity\ConfigurationParameters;
 use Wapistrano\CoreBundle\Form\ConfigurationParametersTypeAdd;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class Configuration
 {
@@ -13,15 +14,21 @@ class Configuration
     private $request;
     private $form;
     private $twig;
+    private $router;
+
     public $projectId;
+    public $configurationId;
+
+
     public $stageId;
 
-    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig)
+    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
         $this->form = $form;
         $this->twig = $twig;
+        $this->router = $router;
     }
 
     public function displayFormAdd() {
@@ -46,9 +53,41 @@ class Configuration
             $this->em->flush();
 
         }
+        $formUrl = $this->router->generate("projectsConfigurationAdd", array("id"=>$this->getProjectId()));
 
         return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig",
-            array("form"=>$form->createView(), "projectId"=>$this->projectId, "popinTitle" => "Add a configuration"));
+            array("form"=>$form->createView(), "formUrl" => $formUrl, "projectId"=>$this->projectId, "popinTitle" => "Add a configuration"));
+
+    }
+
+    public function displayFormEdit() {
+        $configurationType = new ConfigurationParametersTypeAdd();
+
+        $configuration = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')
+            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getConfigurationId()));
+
+
+
+        $form = $this->form->create($configurationType, $configuration);
+
+        $form->add('saveBottom', 'submit');
+
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $today = new \DateTime();
+            $configuration->setUpdatedAt($today);
+            $configuration = $form->getData();
+
+            $this->em->persist($configuration);
+            $this->em->flush();
+
+        }
+
+        $formUrl = $this->router->generate("projectsConfigurationEdit", array("projectId"=>$this->getProjectId(), "configurationId"=>$this->getConfigurationId()));
+
+        return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig",
+            array("form"=>$form->createView(), "projectId"=>$this->projectId, "popinTitle" => "Edit a configuration", "formUrl" => $formUrl));
 
     }
 
@@ -56,6 +95,12 @@ class Configuration
         $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId()));
 
         return $configurations;
+    }
+
+    public function delete($id) {
+        $configuration = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findOneBy(array("id" => $id));
+        $this->em->remove($configuration);
+        $this->em->flush();
     }
     /**
      * @param mixed $projectId
@@ -89,6 +134,21 @@ class Configuration
         return $this->stageId;
     }
 
+    /**
+     * @param mixed $configurationId
+     */
+    public function setConfigurationId($configurationId)
+    {
+        $this->configurationId = $configurationId;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfigurationId()
+    {
+        return $this->configurationId;
+    }
 
 
 }

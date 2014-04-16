@@ -10,10 +10,21 @@ services:
             arguments: [ @service_container ]
             tags:
                 - { name: twig.extension }
+
+    wapistrano_core.twig.stage_extension:
+            class: Wapistrano\CoreBundle\Twig\StageExtension
+            arguments: [ @service_container ]
+            tags:
+                - { name: twig.extension }
+
     wapistrano_core.menu:
         class: Wapistrano\CoreBundle\Menu\Menu
         arguments: [ @doctrine.orm.entity_manager ]
 
     wapistrano_core.configuration:
         class: Wapistrano\CoreBundle\Configuration\Configuration
-        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig ]
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router ]
+
+    wapistrano_core.stage:
+        class: Wapistrano\CoreBundle\Stage\Stage
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router ]

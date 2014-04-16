@@ -48,7 +48,7 @@ class ConfigurationExtension extends \Twig_Extension
         $configurationsList = $configurations->getConfigurationList();
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
-            array("configurations" => $configurationsList));
+            array("configurations" => $configurationsList, "projectId" => $parameters["projectId"]));
     }
 
 }

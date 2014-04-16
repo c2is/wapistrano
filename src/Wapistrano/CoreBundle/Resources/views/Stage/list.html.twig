@@ -1,0 +1,36 @@
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for stage in stages %}
+
+            <tr>
+                <td>{{ stage.name }}</td>
+                <td>{{ stage.alertEmails }}</td>
+                <td>
+                    <a href="{{ path('projectsStageEdit', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-success btn-xs btn-grad popConfigurationAjax">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a href="{{ path('projectsStageDelete', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                </td>
+            </tr>
+
+{% endfor %}
+    </tbody>
+</table>
+
+{% if isAjax is defined %}
+    <script language="javaScript">
+        $( document ).ready(  function(  ) {
+            $(".confirm").confirm();
+
+        });
+    </script>
+{% endif %}
