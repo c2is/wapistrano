@@ -70,6 +70,16 @@ class Stages
      */
     private $locked = '0';
 
+    /**
+     * @var integer
+     * @ORM\ManyToMany(targetEntity="Recipes", inversedBy="stage", cascade={"persist", "merge"})
+     * @ORM\JoinTable(name="recipes_stages",
+     *      joinColumns={@ORM\JoinColumn(name="stages_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="recipes_id", referencedColumnName="id")}
+     *      ))
+     */
+    protected $recipe;
+
 
 
     /**
@@ -241,5 +251,55 @@ class Stages
     public function getLocked()
     {
         return $this->locked;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->recipe = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add recipe
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Recipes $recipe
+     * @return Stages
+     */
+    public function addRecipe(\Wapistrano\CoreBundle\Entity\Recipes $recipe)
+    {
+        $this->recipe[] = $recipe;
+
+        return $this;
+    }
+
+    /**
+     * Remove recipe
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Recipes $recipe
+     */
+    public function removeRecipe(\Wapistrano\CoreBundle\Entity\Recipes $recipe)
+    {
+        $this->recipe->removeElement($recipe);
+    }
+
+    /**
+     * Get recipe
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRecipe()
+    {
+        return $this->recipe;
+    }
+
+    /**
+     * Set recipe
+     *
+     * @param Array
+     */
+    public function setRecipe(Array $recipe)
+    {
+        $this->recipe = $recipe;
     }
 }

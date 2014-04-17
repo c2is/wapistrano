@@ -3,6 +3,7 @@
 namespace Wapistrano\CoreBundle\Stage;
 
 use Wapistrano\CoreBundle\Entity\Stages;
+use Wapistrano\CoreBundle\Entity\Recipes;
 use Wapistrano\CoreBundle\Form\StagesTypeAdd;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -86,6 +87,43 @@ class Stage
 
     }
 
+    public function displayFormRecipeManage() {
+
+        $form = $this->form->create();
+
+        $form->add('recipes', 'entity', array(
+            'class'   => "WapistranoCoreBundle:Recipes",
+            'property'   => "name",
+            'data' => $this->getRecipes(),
+            'multiple'  => true,
+            'expanded'  => true,
+        ));
+
+        $form->add('save', 'submit');
+
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $recipes = array();
+            foreach ($data["recipes"] as $recipe) {
+                $recipes[] = $recipe;
+            }
+
+            $this->manageRecipes($recipes);
+
+            return "redirect";
+        }
+        $options = $form->get('recipes')->getConfig()->getOptions();
+        $choices = $options['choice_list']->getChoices();
+
+        $formUrl = $this->router->generate("projectsStageRecipeManage", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId()));
+
+        return $this->twig->render("WapistranoCoreBundle:Form:stage_recipes.html.twig",
+            array("form"=>$form->createView(), "formUrl" => $formUrl, "choices" => $choices));
+
+    }
+
     public function getStageList() {
         $stages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("projectId" => $this->getProjectId()));
 
@@ -96,6 +134,31 @@ class Stage
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $id));
         $this->em->remove($stage);
         $this->em->flush();
+    }
+
+    public function manageRecipes($recipes) {
+        $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
+            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+
+
+        $stage->setRecipe($recipes);
+
+        $this->em->persist($stage);
+        $this->em->flush();
+
+    }
+
+    public function getRecipes() {
+        $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
+            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+
+        return $stage->getRecipe();
+    }
+    public function getAllRecipes() {
+        $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')
+            ->findAll();
+
+        return $recipes;
     }
 
     /**

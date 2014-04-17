@@ -59,6 +59,14 @@ class Recipes
     /**
      * @var integer
      *
+     * @ORM\ManyToMany(targetEntity="Stages", mappedBy="recipe")
+     */
+    private $stage;
+
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="version", type="integer", nullable=true)
      */
     private $version = '1';
@@ -211,5 +219,45 @@ class Recipes
     public function getVersion()
     {
         return $this->version;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->stage = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add stage
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Stages $stage
+     * @return Recipes
+     */
+    public function addStage(\Wapistrano\CoreBundle\Entity\Stages $stage)
+    {
+        $this->stage[] = $stage;
+
+        return $this;
+    }
+
+    /**
+     * Remove stage
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Stages $stage
+     */
+    public function removeStage(\Wapistrano\CoreBundle\Entity\Stages $stage)
+    {
+        $this->stage->removeElement($stage);
+    }
+
+    /**
+     * Get stage
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getStage()
+    {
+        return $this->stage;
     }
 }

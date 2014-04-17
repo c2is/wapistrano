@@ -3,6 +3,7 @@
 namespace Wapistrano\CoreBundle\Twig;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 class StageExtension extends \Twig_Extension
 {
@@ -27,6 +28,7 @@ class StageExtension extends \Twig_Extension
     {
         return array(
             'wapi_render_stage_list' => new \Twig_Function_Method($this, 'renderStageList', array('is_safe' => array('html'))),
+            'wapi_render_stage_recipe_list' => new \Twig_Function_Method($this, 'renderStageRecipeList', array('is_safe' => array('html'))),
         );
     }
 
@@ -54,7 +56,25 @@ class StageExtension extends \Twig_Extension
             return $this->container->get("templating")->render("WapistranoCoreBundle:Stage:list.html.twig",
                 array("stages" => $stagesList, "projectId" => $parameters["projectId"]));
         }
+    }
 
+    public function renderStageRecipeList($parameters = array(), $name = null)
+    {
+        $stage = $this->container->get('wapistrano_core.stage');
+        $stage->setProjectId($parameters["projectId"]);
+
+        if (! isset($parameters["projectId"])) {
+            throw new MissingMandatoryParametersException("projectId");
+        }
+        if (! isset($parameters["stageId"])) {
+            throw new MissingMandatoryParametersException("stageId");
+        }
+
+        $stage->setStageId($parameters["stageId"]);
+        $recipes = $stage->getRecipes();
+
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Stage:recipes_list.html.twig",
+            array("recipes" => $recipes));
 
     }
 

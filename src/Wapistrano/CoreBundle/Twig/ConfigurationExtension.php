@@ -27,6 +27,7 @@ class ConfigurationExtension extends \Twig_Extension
     {
         return array(
             'wapi_render_configuration_list' => new \Twig_Function_Method($this, 'renderConfigurationList', array('is_safe' => array('html'))),
+            'wapi_render_effective_configuration_list' => new \Twig_Function_Method($this, 'renderEffectiveConfigurationList', array('is_safe' => array('html'))),
         );
     }
 
@@ -53,6 +54,19 @@ class ConfigurationExtension extends \Twig_Extension
 
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Configuration:list.html.twig",
+            array("configurations" => $configurationsList, "projectId" => $parameters["projectId"]));
+    }
+
+    public function renderEffectiveConfigurationList($parameters = array(), $name = null)
+    {
+        $configurations = $this->container->get('wapistrano_core.configuration');
+        $configurations->setProjectId($parameters["projectId"]);
+        $configurations->setStageId($parameters["stageId"]);
+
+        $configurationsList = array_merge($configurations->getProjectConfigurationList(), $configurations->getStageConfigurationList());
+
+
+        return $this->container->get("templating")->render("WapistranoCoreBundle:Configuration:effective_list.html.twig",
             array("configurations" => $configurationsList, "projectId" => $parameters["projectId"]));
     }
 

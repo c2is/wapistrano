@@ -6,16 +6,16 @@ services:
             - { name: twig.extension }
 
     wapistrano_core.twig.configuration_extension:
-            class: Wapistrano\CoreBundle\Twig\ConfigurationExtension
-            arguments: [ @service_container ]
-            tags:
-                - { name: twig.extension }
+        class: Wapistrano\CoreBundle\Twig\ConfigurationExtension
+        arguments: [ @service_container ]
+        tags:
+            - { name: twig.extension }
 
     wapistrano_core.twig.stage_extension:
-            class: Wapistrano\CoreBundle\Twig\StageExtension
-            arguments: [ @service_container ]
-            tags:
-                - { name: twig.extension }
+        class: Wapistrano\CoreBundle\Twig\StageExtension
+        arguments: [ @service_container ]
+        tags:
+            - { name: twig.extension }
 
     wapistrano_core.menu:
         class: Wapistrano\CoreBundle\Menu\Menu

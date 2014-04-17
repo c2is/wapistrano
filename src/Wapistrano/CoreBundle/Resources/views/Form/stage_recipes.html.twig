@@ -1,0 +1,26 @@
+{% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+{{ form_start(form, { 'action': formUrl, 'attr': {'class': 'form-horizontal'} }) }}
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Use</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for child in form.recipes %}
+        {% set index = child.vars.value %}
+        <tr>
+            <td>{{ form_widget(child) }}</td>
+            <td>{{ choices[index].name }}</td>
+            <td>{{ choices[index].description }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+{{ form_end(form, {'render_rest': true}) }}
+
+
+

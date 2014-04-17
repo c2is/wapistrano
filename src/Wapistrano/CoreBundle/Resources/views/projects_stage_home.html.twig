@@ -71,12 +71,67 @@
                     {{ wapi_render_configuration_list({"projectId" : project.id, "stageId" : stage.id}) }}
                 </div>
 
+            <div class="action">
+                <a id="effectiveConfigurationManage" href="#">Show effective configuration</a>
+            </div>
+            <div id="effectiveConfiguration">
+                <h4>Effective configurations</h4>
+                <div id="effectiveConfigurationList">
+                    {{ wapi_render_effective_configuration_list({"projectId" : project.id, "stageId" : stage.id}) }}
+                </div>
+            </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="collapse1" class="body">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="body">
+                <h4>Used recipes</h4>
+                <div id="popup"></div>
+                <div id="configurationList">
+                    {{ wapi_render_stage_recipe_list({"projectId" : project.id, "stageId" : stage.id}) }}
+                </div>
+
+                <div class="action">
+                    <a id="recipesManage" href="#">Manage stage recipes</a>
+                </div>
+                <div id="recipesManagement">
+                    <h4>Recipes management </h4>
+                    <div id="recipesManagementForm">
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
     <script language="javascript">
+        /* Ajax bPopup */
+        /* used to create or update a stage */
+        $('body').on('click','#recipesManage',function(e){
+            if($("#recipesManagement").is(":visible")) {
+                $("#recipesManagement").toggle("slow");
+                $("#recipesManage").html("Manage stage recipes");
+            } else {
+                $("#recipesManagement").show();
+                $("#recipesManage").html("Hide recipes management");
+                e.preventDefault();
+                var url = "{{ path('projectsStageRecipeManage', { 'projectId': project.id, 'stageId': stage.id }) }}";
+                var oParam = {};
+                var displayMessage = function(data){
+                    $("#recipesManagementForm").html((data || ''));
+                };
+                loadData(url, "html", displayMessage, oParam);
+            }
+
+
+        });
+
 
         /* Ajax bPopup */
         /* used to create or update a stage */

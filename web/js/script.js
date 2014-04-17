@@ -4,11 +4,22 @@ $( document ).ready(function() {
     });
 
 
+    $("body").on("click", "#effectiveConfigurationManage", function() {
+        if($("#effectiveConfiguration").is(":visible")) {
+            $("#effectiveConfiguration").toggle("slow");
+            $("#effectiveConfigurationManage").html("Show effective configuration");
+        } else {
+            $("#effectiveConfiguration").show("slow");
+            $("#effectiveConfigurationManage").html("Hide effective configuration");
+        }
+
+    });
+
     $("body").on("click", "#flashMessagePopinClose", function() {
         $("#flashMessagePopin").toggle("slow");
     });
 
-    
+
     $(".confirm").confirm();
     $.confirm.options = {
         text: "Are you sure you want to delete it ?",
