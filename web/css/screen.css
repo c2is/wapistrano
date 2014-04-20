@@ -63,3 +63,14 @@
 #recipesManagement {
     display:none;
 }
+
+.optionaSubForm {
+    display: none;
+    float: right;
+    text-align:right;
+}
+
+.optionaSubForm form-group {
+    text-align:right;
+    display: inline-block;
+}

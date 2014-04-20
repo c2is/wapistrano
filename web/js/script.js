@@ -15,6 +15,9 @@ $( document ).ready(function() {
 
     });
 
+
+
+
     $("body").on("click", "#flashMessagePopinClose", function() {
         $("#flashMessagePopin").toggle("slow");
     });

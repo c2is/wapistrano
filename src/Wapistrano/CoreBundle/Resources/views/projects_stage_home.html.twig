@@ -109,8 +109,29 @@
         </div>
     </div>
 </div>
+<div id="collapse1" class="body">
+    <div class="col-lg-12">
+        <div class="box">
+            <div class="body">
+                <h4>Hosts
+                    <a href="{{ newRoleUrl }}" class="btn btn-success btn-xs btn-grad popRoleAjax">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>
+                </h4>
+                <div id="popup"></div>
+                <div id="stageList">
+                    {{ wapi_render_role_list({"projectId" : project.id, "stageId" : stage.id}) }}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
     <script language="javascript">
+
+
         /* Ajax bPopup */
         /* used to create or update a stage */
         $('body').on('click','#recipesManage',function(e){
@@ -118,7 +139,6 @@
                 $("#recipesManagement").toggle("slow");
                 $("#recipesManage").html("Manage stage recipes");
             } else {
-                $("#recipesManagement").show();
                 $("#recipesManage").html("Hide recipes management");
                 e.preventDefault();
                 var url = "{{ path('projectsStageRecipeManage', { 'projectId': project.id, 'stageId': stage.id }) }}";
@@ -127,11 +147,35 @@
                     $("#recipesManagementForm").html((data || ''));
                 };
                 loadData(url, "html", displayMessage, oParam);
+                $("#recipesManagement").show("slow");
             }
 
 
         });
 
+        /* Ajax bPopup */
+        /* used to create or update a role */
+            $('body').on('click','.popRoleAjax',function(e){
+                e.preventDefault();
+                ajaxBPopup($(this).attr('href'));
+            });
+            $("body").on("submit", "#sendFormRole", function() {
+                var form = $(this);
+                $.post($(this).attr("action"), form.serialize(),
+                        function success(data){
+                            var reg=new RegExp("edit","gi");
+                            if(form.attr("action").match(reg)) {
+                                $("#flashMessagePopinText").html("Element updated successfully!");
+                            } else {
+                                $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
+                            }
+
+                            $("#flashMessagePopin").show("slow");
+                            updateRoleList();
+                        });
+
+                return false;
+            })
 
         /* Ajax bPopup */
         /* used to create or update a stage */
@@ -179,6 +223,16 @@
             var oParam = {};
             var displayMessage = function(data){
                 $("#configurationList").html((data || ''));
+            };
+            loadData(url, "html", displayMessage, oParam);
+
+        }
+
+        function updateRoleList() {
+            var url = "{{ path('projectsStageRoleList', { 'projectId': project.id, 'stageId': stage.id }) }}";
+            var oParam = {};
+            var displayMessage = function(data){
+                $("#stageList").html((data || ''));
             };
             loadData(url, "html", displayMessage, oParam);
 

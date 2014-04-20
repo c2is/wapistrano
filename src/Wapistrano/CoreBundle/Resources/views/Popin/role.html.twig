@@ -1,0 +1,100 @@
+{% extends 'WapistranoCoreBundle::base_popin.html.twig' %}
+{% block content %}
+<div id="flashMessagePopin" class="" style="display:none">
+    <span id="flashMessagePopinText"></span>
+    <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+</div>
+{{ form_start(form, {'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormRole'} }) }}
+    <div class="box primary">
+        <div class="body collapse in" id="div1">
+            <div class="form-group">
+                {{ form_label(form.name, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.host, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.host, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div id="optionaSubFormManager" class="btn btn-success btn-sm btn-grad">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </div>
+            </div>
+            {% if form.hostName is defined %}
+            <div class="optionaSubForm">
+                <div class="form-group">
+                    <div>
+                        {{ form_label(form.hostName, 'Name or ip', { 'label_attr': {'class': 'control-label col-lg-6'} }) }}
+                        <div class="col-lg-6">
+                            {{ form_widget(form.hostName, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        {{ form_label(form.hostAlias, 'Alias', { 'label_attr': {'class': 'control-label col-lg-6'} }) }}
+                        <div class="col-lg-6">
+                            {{ form_widget(form.hostAlias, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        {{ form_label(form.hostDescription, 'Description', { 'label_attr': {'class': 'control-label col-lg-6'} }) }}
+                        <div class="col-lg-6">
+                            {{ form_widget(form.hostDescription, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="form-group">
+                {{ form_label(form.sshPort, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.sshPort, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.primary, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.primary, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.noRelease, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.noRelease, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(form.noSymlink, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.noSymlink, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+
+            {{ form_widget(form.saveBottom, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+        </div>
+    </div>
+
+    {{ form_end(form, {'render_rest': true}) }}
+
+    <script language="javascript">
+
+        $("body").on("click", "#optionaSubFormManager", function() {
+            if($(".optionaSubForm").is(":visible")) {
+                $(".optionaSubForm").toggle("fast");
+                $("#optionaSubFormManager").children("i").attr('class', 'glyphicon glyphicon-plus');
+            } else {
+                $(".optionaSubForm").show("fast");
+                $("#optionaSubFormManager").children("i").attr('class', 'glyphicon glyphicon-minus');
+            }
+
+        });
+    </script>
+
+{% endblock content %}
+
+

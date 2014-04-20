@@ -55,6 +55,7 @@ class ProjectsStageController extends Controller
         $session->getFlashBag()->clear('notice');
 
         $newConfigurationUrl = $this->generateUrl('stageConfigurationAdd', array("projectId" =>$projectId, "stageId" => $stageId));
+        $newRoleUrl = $this->generateUrl('projectsStageRoleAdd', array("projectId" =>$projectId, "stageId" => $stageId));
 
         $twigVars = array();
         $twigVars['sectionTitle'] = $this->getSectionTitle();
@@ -67,6 +68,7 @@ class ProjectsStageController extends Controller
         $twigVars['stage'] = $stage;
         $twigVars['flashMessage'] = $flashMessage;
         $twigVars['newConfigurationUrl'] = $newConfigurationUrl;
+        $twigVars['newRoleUrl'] = $newRoleUrl;
 
         return $twigVars;
     }
@@ -167,6 +169,59 @@ class ProjectsStageController extends Controller
             return new Response($formReturn);
         }
 
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/role_configuration/add", name="projectsStageRoleAdd")
+     */
+    public function stageRoleAddAction($projectId, $stageId)
+    {
+        $configuration = $this->container->get('wapistrano_core.role');
+        $configuration->setProjectId($projectId);
+        $configuration->setStageId($stageId);
+
+        return new Response($configuration->displayFormAdd());
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/role_configuration/{roleId}/edit", name="projectsStageRoleEdit")
+     */
+    public function stageRoleEditAction($projectId, $stageId, $roleId)
+    {
+        $role = $this->container->get('wapistrano_core.role');
+        $role->setProjectId($projectId) ;
+        $role->setStageId($stageId);
+        $role->setRoleId($roleId);
+
+        return new Response($role->displayFormEdit());
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/role_configuration/{roleId}/delete", name="projectsStageRoleDelete")
+     */
+    public function stageRoleDeleteAction(Request $request, $projectId, $stageId, $roleId)
+    {
+        $role = $this->container->get('wapistrano_core.role');
+        $role->delete($roleId);
+
+        $session = $request->getSession();
+        $session->getFlashBag()->add('notice', 'Role deleted');
+
+        return $this->redirect($this->generateUrl('projectsStageHome', array("projectId" => $projectId, "stageId" => $stageId)));
+    }
+
+    /**
+     * @Route("/{projectId}/project_stage/{stageId}/role_configuration/list", name="projectsStageRoleList")
+     */
+    public function stageRoleListAction($projectId, $stageId)
+    {
+        $role = $this->container->get('wapistrano_core.role');
+        $role->setProjectId($projectId);
+        $role->setStageId($stageId);
+
+        return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Role:list.html.twig",
+            array("roles" => $role->getRoleList(), "projectId" => $projectId, "stageId" => $stageId, "isAjax" => true)
+        ));
     }
 
 

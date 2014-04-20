@@ -1,0 +1,42 @@
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Host</th>
+        <th>Role</th>
+        <th>Ssh port</th>
+        <th>Attributes</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for role in roles %}
+
+            <tr>
+                <td>{{ role.host.name }}</td>
+                <td>{{ role.name }}</td>
+                <td>{{ role.sshPort }}</td>
+                <td></td>
+                <td></td>
+                <td>
+                    <a href="{{ path('projectsStageRoleEdit', { "projectId" : projectId, "stageId" : stageId, "roleId" : role.id }) }}" class="btn btn-success btn-xs btn-grad popConfigurationAjax">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                    <a href="{{ path('projectsStageRoleDelete', { "projectId" : projectId, "stageId" : stageId, "roleId" : role.id}) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                </td>
+            </tr>
+
+{% endfor %}
+    </tbody>
+</table>
+
+{% if isAjax is defined %}
+    <script language="javaScript">
+        $( document ).ready(  function(  ) {
+            $(".confirm").confirm();
+
+        });
+    </script>
+{% endif %}

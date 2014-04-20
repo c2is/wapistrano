@@ -3,6 +3,7 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Roles
@@ -29,25 +30,26 @@ class Roles
     private $name;
 
     /**
-     * @var integer
+     * @var Stages
      *
-     * @ORM\Column(name="stage_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Stages")
+     * @ORM\JoinColumn(name="stage_id", referencedColumnName="id")
      */
-    private $stageId;
+    private $stage;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="host_id", type="integer", nullable=true)
+     * @var Hosts
+     * @ORM\ManyToOne(targetEntity="Hosts")
+     * @ORM\JoinColumn(name="host_id", referencedColumnName="id")
      */
-    private $hostId;
+    private $host;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="primary", type="integer", nullable=true)
+     * @ORM\Column(name="`primary`", type="boolean", nullable=true)
      */
-    private $primary = '0';
+    private $primary;
 
     /**
      * @var \DateTime
@@ -64,11 +66,11 @@ class Roles
     private $updatedAt;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="no_release", type="integer", nullable=true)
+     * @ORM\Column(name="no_release", type="boolean", nullable=true)
      */
-    private $noRelease = '0';
+    private $noRelease;
 
     /**
      * @var integer
@@ -78,11 +80,11 @@ class Roles
     private $sshPort;
 
     /**
-     * @var integer
+     * @var boolean
      *
-     * @ORM\Column(name="no_symlink", type="integer", nullable=true)
+     * @ORM\Column(name="no_symlink", type="boolean", nullable=true)
      */
-    private $noSymlink = '0';
+    private $noSymlink;
 
 
 
@@ -120,49 +122,49 @@ class Roles
     }
 
     /**
-     * Set stageId
+     * Set stage
      *
-     * @param integer $stageId
+     * @param Stages $stage
      * @return Roles
      */
-    public function setStageId($stageId)
+    public function setStage($stage)
     {
-        $this->stageId = $stageId;
+        $this->stage = $stage;
 
         return $this;
     }
 
     /**
-     * Get stageId
+     * Get stage
      *
-     * @return integer 
+     * @return Stages
      */
-    public function getStageId()
+    public function getStage()
     {
-        return $this->stageId;
+        return $this->stage;
     }
 
     /**
-     * Set hostId
+     * Set host
      *
-     * @param integer $hostId
+     * @param Hosts $host
      * @return Roles
      */
-    public function setHostId($hostId)
+    public function setHost($host)
     {
-        $this->hostId = $hostId;
+        $this->host = $host;
 
         return $this;
     }
 
     /**
-     * Get hostId
+     * Get host
      *
-     * @return integer 
+     * @return Hosts
      */
-    public function getHostId()
+    public function getHost()
     {
-        return $this->hostId;
+        return $this->host;
     }
 
     /**
