@@ -29,24 +29,26 @@ class Stage
     }
 
     public function displayFormAdd() {
-        $configurationType = new StagesTypeAdd();
-        $configuration = new Stages();
+        $stageType = new StagesTypeAdd();
+        $stage = new Stages();
+
+        $project = $this->em->getRepository('WapistranoCoreBundle:Projects')
+            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getProjectId()));
 
 
-        $form = $this->form->create($configurationType, $configuration);
-        $form->add('project_id', 'hidden', array(
-            'data' => $this->projectId
-        ));
+        $form = $this->form->create($stageType, $stage);
+
         $form->add('saveBottom', 'submit');
 
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $today = new \DateTime();
-            $configuration->setCreatedAt($today);
-            $configuration = $form->getData();
+            $stage->setCreatedAt($today);
 
-            $this->em->persist($configuration);
+            $stage->setProject($project);
+
+            $this->em->persist($stage);
             $this->em->flush();
 
         }
@@ -61,7 +63,7 @@ class Stage
     public function displayFormEdit() {
         $stageType = new StagesTypeAdd();
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
-            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
 
 
         $form = $this->form->create($stageType, $stage);
@@ -125,7 +127,7 @@ class Stage
     }
 
     public function getStageList() {
-        $stages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("projectId" => $this->getProjectId()));
+        $stages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("project" => $this->getProjectId()));
 
         return $stages;
     }
@@ -150,7 +152,7 @@ class Stage
 
     public function getRecipes() {
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
-            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
 
         return $stage->getRecipe();
     }

@@ -29,11 +29,12 @@ class Stages
     private $name;
 
     /**
-     * @var integer
+     * @var Projects
      *
-     * @ORM\Column(name="project_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Projects")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
      */
-    private $projectId;
+    private $project;
 
     /**
      * @var \DateTime
@@ -116,26 +117,26 @@ class Stages
     }
 
     /**
-     * Set projectId
+     * Set project
      *
-     * @param integer $projectId
-     * @return Stages
+     * @param integer $project
+     * @return Projects
      */
-    public function setProjectId($projectId)
+    public function setProject($project)
     {
-        $this->projectId = $projectId;
+        $this->project = $project;
 
         return $this;
     }
 
     /**
-     * Get projectId
+     * Get project
      *
-     * @return integer 
+     * @return Projects
      */
-    public function getProjectId()
+    public function getProject()
     {
-        return $this->projectId;
+        return $this->project;
     }
 
     /**
