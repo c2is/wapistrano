@@ -131,6 +131,18 @@
 
     <script language="javascript">
 
+        $("body").on("click", "#optionaSubFormManager", function() {
+            console.log("//subform");
+            if($(this).is(":visible")) {
+                $(".optionaSubForm").toggle("fast");
+                $(this).children("i").attr('class', 'glyphicon glyphicon-plus');
+            } else if ($(".optionaSubForm").is(":hidden")){
+                $(".optionaSubForm").show("fast");
+                $(this).children("i").attr('class', 'glyphicon glyphicon-minus');
+            }
+
+        });
+
 
         /* Ajax bPopup */
         /* used to create or update a stage */

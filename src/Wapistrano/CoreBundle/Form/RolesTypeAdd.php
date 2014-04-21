@@ -28,6 +28,7 @@ class RolesTypeAdd extends AbstractType
                 'property'   => "name",
                 'multiple' => false,
                 'empty_value' => 'Choose',
+                "required" => false
             ))
             ->add('sshPort')
             ->add('primary', 'checkbox', array("required" => false))

@@ -1,4 +1,6 @@
 $( document ).ready(function() {
+    $.ajaxSetup({ cache: false });
+
     $("#flashMessageClose").click(function(){
         $("#flashMessage").toggle("slow");
     });
@@ -15,9 +17,6 @@ $( document ).ready(function() {
 
     });
 
-
-
-
     $("body").on("click", "#flashMessagePopinClose", function() {
         $("#flashMessagePopin").toggle("slow");
     });
@@ -31,6 +30,7 @@ $( document ).ready(function() {
         cancelButton: "Cancel"
     }
 });
+
 
 
 var oSettingsBPopupDefault = {

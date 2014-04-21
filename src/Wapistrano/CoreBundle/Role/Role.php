@@ -4,6 +4,7 @@ namespace Wapistrano\CoreBundle\Role;
 
 use Wapistrano\CoreBundle\Entity\Stages;
 use Wapistrano\CoreBundle\Entity\Roles;
+use Wapistrano\CoreBundle\Entity\Hosts;
 use Wapistrano\CoreBundle\Form\RolesTypeAdd;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,8 +45,20 @@ class Role
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $data = $form->get("toto")->getData();
-            var_dump($data);
+            $today = new \DateTime();
+
+            if ("" != $form->get("hostName")->getData()) {
+                $host = new Hosts();
+                $host->setName($form->get("hostName")->getData());
+                $host->setAlias($form->get("hostAlias")->getData());
+                $host->setDescription($form->get("hostDescription")->getData());
+                $host->setCreatedAt($today);
+
+                $this->em->persist($host);
+
+                $role->setHost($host);
+            }
+
             $today = new \DateTime();
             $role->setCreatedAt($today);
             $role->setStage($stage);

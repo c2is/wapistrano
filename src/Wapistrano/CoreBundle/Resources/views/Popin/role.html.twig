@@ -81,19 +81,7 @@
 
     {{ form_end(form, {'render_rest': true}) }}
 
-    <script language="javascript">
 
-        $("body").on("click", "#optionaSubFormManager", function() {
-            if($(".optionaSubForm").is(":visible")) {
-                $(".optionaSubForm").toggle("fast");
-                $("#optionaSubFormManager").children("i").attr('class', 'glyphicon glyphicon-plus');
-            } else {
-                $(".optionaSubForm").show("fast");
-                $("#optionaSubFormManager").children("i").attr('class', 'glyphicon glyphicon-minus');
-            }
-
-        });
-    </script>
 
 {% endblock content %}
 

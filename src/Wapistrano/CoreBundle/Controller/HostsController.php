@@ -161,12 +161,24 @@ class HostsController extends Controller
      */
     public function deleteAction(Request $request, $id)
     {
+        $session = $request->getSession();
         $em = $this->container->get('doctrine')->getManager();
         $Host = $em->getRepository('WapistranoCoreBundle:hosts')->findOneBy(array("id" => $id));
+
+        $Roles = $em->getRepository('WapistranoCoreBundle:Roles')->findBy(array("host" => $id));
+        if (null != $Roles) {
+            $msg = array();
+            foreach ($Roles as $role) {
+                $msg[] = $role->getStage()->getName();
+            }
+            $session->getFlashBag()->add('notice', 'Host '.$Host->getName()." could not be deleted because it's used in stage(s) : ".implode(", ", $msg));
+            return $this->redirect($this->generateUrl('hostsList'));
+        }
+
         $em->remove($Host);
         $em->flush();
 
-        $session = $request->getSession();
+
         $session->getFlashBag()->add('notice', 'Host '.$Host->getName().' deleted');
         return $this->redirect($this->generateUrl('hostsList'));
     }
