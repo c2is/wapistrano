@@ -132,15 +132,16 @@
     <script language="javascript">
 
         $("body").on("click", "#optionaSubFormManager", function() {
-            console.log("//subform");
-            if($(this).is(":visible")) {
+            if($(this).hasClass("visible")) {
                 $(".optionaSubForm").toggle("fast");
-                $(this).children("i").attr('class', 'glyphicon glyphicon-plus');
-            } else if ($(".optionaSubForm").is(":hidden")){
+                $(this).children().attr('class', 'glyphicon glyphicon-plus');
+                $(this).removeClass("visible");
+            } else{
                 $(".optionaSubForm").show("fast");
-                $(this).children("i").attr('class', 'glyphicon glyphicon-minus');
+                $(this).children().attr('class', 'glyphicon glyphicon-minus');
+                $(this).addClass("visible");
             }
-
+            event.preventDefault();
         });
 
 

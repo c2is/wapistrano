@@ -36,7 +36,7 @@ class Role
         $role = new Roles();
 
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
-            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
 
         $form = $this->form->create($roleType, $role);
 

@@ -169,7 +169,7 @@ class HostsController extends Controller
         if (null != $Roles) {
             $msg = array();
             foreach ($Roles as $role) {
-                $msg[] = $role->getStage()->getName();
+                $msg[] = $role->getStage()->getName(). " (" . $role->getStage()->getProject()->getName().")";
             }
             $session->getFlashBag()->add('notice', 'Host '.$Host->getName()." could not be deleted because it's used in stage(s) : ".implode(", ", $msg));
             return $this->redirect($this->generateUrl('hostsList'));
