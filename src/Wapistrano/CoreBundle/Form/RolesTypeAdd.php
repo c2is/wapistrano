@@ -7,6 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Validator\Constraints\Callback;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 class RolesTypeAdd extends AbstractType
 {
@@ -16,6 +19,7 @@ class RolesTypeAdd extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
 
         $builder
             ->add('name', 'choice', array(
@@ -44,12 +48,25 @@ class RolesTypeAdd extends AbstractType
             // Si aucune donnée n'est passée au formulaire, la donnée est "null".
             // Ce doit être considéré comme un nouveau "Role"
             if (!$role || null === $role->getId()) {
-                $form->add('hostName', null, array("mapped" => false))
-                    ->add('hostAlias', null, array("mapped" => false))
-                    ->add('hostDescription', "textarea", array("mapped" => false))
+                $form->add('hostName', null, array("mapped" => false, "required" => false))
+                    ->add('hostAlias', null, array("mapped" => false, "required" => false))
+                    ->add('hostDescription', "textarea", array("mapped" => false, "required" => false))
                 ;
 
             }
+        });
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
+            $form = $event->getForm();
+
+            $host = $form->get("host")->getData();
+            $newHost = $form->get("hostName")->getData();
+
+            if(null == $host && "" == $newHost){
+                $form->addError(new FormError('Yo have to choose a host or ask for creating a new one'));
+            }
+
+
         });
     }
     

@@ -14,16 +14,12 @@
         {% endif %}
     {% endspaceless %}
 {% endblock form_label %}
-{% block choice_widget %}
+{% block form_errors %}
     {% spaceless %}
-        {% if expanded %}
-                {% for child in form %}
-                        {{ form_widget(child) }}
-                        {{ form_label(child) }}
+        {% if errors|length > 0 %}
+                {% for error in errors %}
+                    {{ error.message }}
                 {% endfor %}
-        {% else %}
-            {# just let the choice widget render the select tag #}
-            {{ block('choice_widget') }}
         {% endif %}
     {% endspaceless %}
-{% endblock %}
+{% endblock form_errors %}

@@ -1,8 +1,9 @@
 {% extends 'WapistranoCoreBundle::base_popin.html.twig' %}
+{% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
 {% block content %}
 <div id="flashMessagePopin" class="" style="display:none">
-    <span id="flashMessagePopinText"></span>
     <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+    <span id="flashMessagePopinText">{{ form_errors(form) }}</span>
 </div>
 {{ form_start(form, {'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormRole'} }) }}
     <div class="box primary">
