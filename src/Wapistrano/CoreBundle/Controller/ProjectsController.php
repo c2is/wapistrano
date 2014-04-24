@@ -124,7 +124,6 @@ class ProjectsController extends Controller
 
     /**
      * @Route("/{id}/edit", name="projectsEdit")
-     * @Template("WapistranoCoreBundle:Form:projects_update.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
@@ -156,8 +155,17 @@ class ProjectsController extends Controller
             return $this->redirect($this->generateUrl('projectsList'));
         }
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView());
-        // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
+        // ajax call
+        if ($request->isXmlHttpRequest()) {
+            return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Popin:project.html.twig",
+                array("popinTitle" => "Edit a stage", 'sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView())
+            ));
+        } else {
+            return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Form:projects_update.html.twig",
+                array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView())
+            ));
+        }
+
     }
 
     /**

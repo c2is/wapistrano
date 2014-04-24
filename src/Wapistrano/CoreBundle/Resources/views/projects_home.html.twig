@@ -30,10 +30,10 @@
                     <br>
                     {{ project.description }}
                         <div class="action">
-                            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                            <a href="{{ path('projectsEdit', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad popProjectAjax" data-original-title="" title="">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>
-                            <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Delete', 'id': project.id })) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                            <a href="{{ path('projectsDelete', { 'id': project.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </a>
                         </div>
@@ -94,6 +94,22 @@
     </div>
 </div>
     <script language="javascript">
+        /* Ajax bPopup */
+        /* used to create or update a project */
+        $('body').on('click','.popProjectAjax',function(e){
+            e.preventDefault();
+            ajaxBPopup($(this).attr('href'));
+        });
+        $("body").on("submit", "#sendFormProject", function() {
+            var form = $(this);
+            $.post($(this).attr("action"), form.serialize(),
+                    function success(data){
+                        $("#flashMessagePopinText").html("Element updated successfully!");
+                        $("#flashMessagePopin").show("slow");
+                    });
+
+            return false;
+        })
 
         /* Ajax bPopup */
         /* used to create or update a stage */

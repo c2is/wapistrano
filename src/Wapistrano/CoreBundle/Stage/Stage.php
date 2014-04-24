@@ -33,7 +33,7 @@ class Stage
         $stage = new Stages();
 
         $project = $this->em->getRepository('WapistranoCoreBundle:Projects')
-            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getProjectId()));
+            ->findOneBy(array( "id" => $this->getProjectId()));
 
 
         $form = $this->form->create($stageType, $stage);

@@ -118,8 +118,7 @@ function loadData(url,returned,callback,param,request,loader,fail){
         success:    callback,
         xhrFields: {
             withCredentials: true
-        },
-        crossDomain: true
+        }
     });
 
 
