@@ -140,7 +140,7 @@ class Stage
 
     public function manageRecipes($recipes) {
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
-            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getStageId()));
+            ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
 
 
         $stage->setRecipe($recipes);
