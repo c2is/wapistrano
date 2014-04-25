@@ -5,7 +5,7 @@
     <span id="flashMessagePopinText"></span>
     <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
 </div>
-{{ form_start(form, { 'attr': {'class': 'form-horizontal', id : 'sendFormProject'} }) }}
+{{ form_start(form, { 'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormProject'} }) }}
 <div class="box primary">
     <div class="body collapse in" id="div1">
         <div class="form-group">
@@ -24,6 +24,6 @@
     </div>
 </div>
 
-{{ form_widget(form.save, { 'attr': {'class': 'btn btn-success btn-sm btn-grad'} }) }}
+{{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-success btn-sm btn-grad'} }) }}
 {{ form_end(form, {'render_rest': true}) }}
 {% endblock content %}

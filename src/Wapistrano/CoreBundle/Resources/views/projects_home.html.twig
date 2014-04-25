@@ -104,8 +104,8 @@
             var form = $(this);
             $.post($(this).attr("action"), form.serialize(),
                     function success(data){
-                        $("#flashMessagePopinText").html("Element updated successfully!");
-                        $("#flashMessagePopin").show("slow");
+                        $(".popStageAjax").bPopup().close();
+                        location.reload();
                     });
 
             return false;

@@ -1,7 +1,7 @@
 {% extends 'WapistranoCoreBundle::base.html.twig' %}
 {% block content %}
     {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    {{ form_start(form, { 'action': formUrl,'attr': {'class': 'form-horizontal'} }) }}
     <div class="box primary">
         <header>
             <div class="icons">

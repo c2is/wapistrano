@@ -135,7 +135,7 @@ class ProjectsController extends Controller
 
 
         $form = $this->get('form.factory')->create($projectType, $project);
-        $form->add('save', 'submit');
+        $form->add('saveTop', 'submit');
 
         if (! $request->isXmlHttpRequest()) {
             $form->add('saveBottom', 'submit');
@@ -155,18 +155,22 @@ class ProjectsController extends Controller
 
             $session = $request->getSession();
             $session->getFlashBag()->add('notice', 'Project '.$project->getName().' updated');
+            if (! $request->isXmlHttpRequest()) {
+                return $this->redirect($this->generateUrl('projectsList'));
+            }
 
-            return $this->redirect($this->generateUrl('projectsList'));
         }
-
+        $formUrl = $this->generateUrl('projectsEdit', array("id" => $id));
         // ajax call
         if ($request->isXmlHttpRequest()) {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Popin:project.html.twig",
-                array("popinTitle" => "Edit a stage", 'sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView())
+                array("popinTitle" => "Edit a stage", 'sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(),
+                    'title' => 'Update', 'form' => $form->createView(), 'formUrl' => $formUrl)
             ));
         } else {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Form:projects_update.html.twig",
-                array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Update', 'form' => $form->createView())
+                array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(),
+                    'title' => 'Update', 'form' => $form->createView(), 'formUrl' => $formUrl)
             ));
         }
 
