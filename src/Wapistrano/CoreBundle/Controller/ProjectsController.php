@@ -135,8 +135,12 @@ class ProjectsController extends Controller
 
 
         $form = $this->get('form.factory')->create($projectType, $project);
-        $form->add('saveTop', 'submit');
-        $form->add('saveBottom', 'submit');
+        $form->add('save', 'submit');
+
+        if (! $request->isXmlHttpRequest()) {
+            $form->add('saveBottom', 'submit');
+        }
+
 
         $form->handleRequest($request);
 
