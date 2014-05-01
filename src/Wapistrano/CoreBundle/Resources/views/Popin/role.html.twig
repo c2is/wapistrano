@@ -9,7 +9,7 @@
     <div class="box primary">
         <div class="body collapse in" id="div1">
             <div class="form-group">
-                {{ form_label(form.name, null, { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
+                {{ form_label(form.name, 'Role', { 'label_attr': {'class': 'control-label col-lg-4'} }) }}
                 <div class="col-lg-4">
                     {{ form_widget(form.name, { 'attr': {'class': 'form-control'} }) }}
                 </div>
@@ -19,9 +19,11 @@
                 <div class="col-lg-4">
                     {{ form_widget(form.host, { 'attr': {'class': 'form-control'} }) }}
                 </div>
-                <div id="optionaSubFormManager" class="btn btn-success btn-sm btn-grad">
+                {% if form.hostName is defined %}
+                <div id="optionaSubFormManager" class="btn btn-success btn-sm btn-grad" title="Create a new host">
                     <i class="glyphicon glyphicon-plus"></i>
                 </div>
+                {% endif %}
             </div>
             {% if form.hostName is defined %}
             <div class="optionaSubForm">

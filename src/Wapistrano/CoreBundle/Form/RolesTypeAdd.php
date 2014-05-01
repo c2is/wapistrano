@@ -57,15 +57,18 @@ class RolesTypeAdd extends AbstractType
         });
 
         $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
-            $form = $event->getForm();
+            $role = $event->getData();
 
-            $host = $form->get("host")->getData();
-            $newHost = $form->get("hostName")->getData();
 
-            if(null == $host && "" == $newHost){
-                $form->addError(new FormError('Yo have to choose a host or ask for creating a new one'));
+            if (!$role || null === $role->getId()) {
+                $form = $event->getForm();
+                $host = $form->get("host")->getData();
+                $newHost = $form->get("hostName")->getData();
+
+                if(null == $host && "" == $newHost){
+                    $form->addError(new FormError('Yo have to choose a host or ask for creating a new one'));
+                }
             }
-
 
         });
     }
