@@ -120,7 +120,5 @@ function loadData(url,returned,callback,param,request,loader,fail){
             withCredentials: true
         }
     });
-
-
 }
 

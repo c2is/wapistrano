@@ -44,7 +44,7 @@ class RolesTypeAdd extends AbstractType
             $role = $event->getData();
             $form = $event->getForm();
 
-            // vérifie si l'objet Product est "nouveau"
+            // vérifie si l'objet Roles est "nouveau"
             // Si aucune donnée n'est passée au formulaire, la donnée est "null".
             // Ce doit être considéré comme un nouveau "Role"
             if (!$role || null === $role->getId()) {
