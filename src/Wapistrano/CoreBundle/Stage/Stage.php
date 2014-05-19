@@ -143,7 +143,10 @@ class Stage
         $this->em->remove($stage);
         $this->em->flush();
 
-        $this->publishStage($this->getProjectId(), $this->getStageId());
+        $gmclient = $this->gearman;
+
+        $jobId = $gmclient->doBackgroundAsync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
+
     }
 
     public function manageRecipes($recipes) {
