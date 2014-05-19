@@ -147,7 +147,7 @@ class Configuration
         // if it's a generic project configuration, update all stages
         if (null == $configuration->getStageId()) {
             foreach ($this->stage->getStageList() as $stage) {
-                $this->stage->publishStage($this->getProjectId(), $stage->getId());
+                $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
             }
         } else {
             $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
