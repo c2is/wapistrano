@@ -232,7 +232,7 @@ class Stage
 
         $gmclient = $this->gearman;
 
-        $jobId = $gmclient->doBackgroundAsync("publish_stage", json_encode(array("projectId"=>$projectId, "stageId" => $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        $jobId = $gmclient->doBackgroundAsync("publish_stage", json_encode(array("projectId"=>$projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
 
         if(!$jobId) {
             echo "pas glop";

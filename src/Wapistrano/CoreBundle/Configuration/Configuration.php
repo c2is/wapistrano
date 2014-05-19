@@ -19,8 +19,6 @@ class Configuration
 
     public $projectId;
     public $configurationId;
-
-
     public $stageId;
 
     public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $stage)
@@ -65,7 +63,7 @@ class Configuration
             // if it's a generic project configuration, update all stages
             if (null == $configuration->getStageId()) {
                 foreach ($this->stage->getStageList() as $stage) {
-                    $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
+                    $this->stage->publishStage($this->getProjectId(), $stage->getId());
                 }
             } else {
                 $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
@@ -111,7 +109,7 @@ class Configuration
             // if it's a generic project configuration, update all stages
             if (null == $configuration->getStageId()) {
                 foreach ($this->stage->getStageList() as $stage) {
-                    $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
+                    $this->stage->publishStage($this->getProjectId(), $stage->getId());
                 }
             } else {
                 $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
@@ -147,7 +145,7 @@ class Configuration
         // if it's a generic project configuration, update all stages
         if (null == $configuration->getStageId()) {
             foreach ($this->stage->getStageList() as $stage) {
-                $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
+                $this->stage->publishStage($this->getProjectId(), $stage->getId());
             }
         } else {
             $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
