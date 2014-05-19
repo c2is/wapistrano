@@ -68,7 +68,7 @@ class ProjectsConfigurationController extends Controller
     public function configurationDeleteAction(Request $request, $projectId, $configurationId)
     {
         $configuration = $this->container->get('wapistrano_core.configuration');
-        $configuration->setProjectId($configurationId) ;
+        $configuration->setProjectId($projectId) ;
         $configuration->delete($configurationId);
 
         $session = $request->getSession();

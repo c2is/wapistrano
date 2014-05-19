@@ -16,19 +16,21 @@ class Role
     private $form;
     private $twig;
     private $router;
+    private $stage;
 
     public $projectId;
     public $stageId;
     public $roleId;
     public $hostId;
 
-    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router)
+    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $stage)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
         $this->form = $form;
         $this->twig = $twig;
         $this->router = $router;
+        $this->stage = $stage;
     }
 
     public function displayFormAdd() {
@@ -66,6 +68,8 @@ class Role
             $this->em->persist($role);
             $this->em->flush();
 
+            $this->stage->publishStage($this->getProjectId(), $this->getStageId());
+
         }
 
         $formUrl = $this->router->generate("projectsStageRoleAdd", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId()));
@@ -94,6 +98,7 @@ class Role
             $this->em->persist($role);
             $this->em->flush();
 
+            $this->stage->publishStage($this->getProjectId(), $this->getStageId());
         }
 
         $formUrl = $this->router->generate("projectsStageRoleEdit", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId(), "roleId"=>$this->getRoleId()));
@@ -113,6 +118,8 @@ class Role
         $stage = $this->em->getRepository('WapistranoCoreBundle:Roles')->findOneBy(array("id" => $id));
         $this->em->remove($stage);
         $this->em->flush();
+
+        $this->stage->publishStage($this->getProjectId(), $this->getStageId());
     }
 
     /**

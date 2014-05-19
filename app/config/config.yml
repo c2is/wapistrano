@@ -67,3 +67,11 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+wapistrano_core:
+    gearman:
+        host: 127.0.0.1
+        port: 4730
+    redis:
+        host: 127.0.0.1
+        port: 6379

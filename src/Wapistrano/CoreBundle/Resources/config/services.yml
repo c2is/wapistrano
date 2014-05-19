@@ -29,12 +29,16 @@ services:
 
     wapistrano_core.configuration:
         class: Wapistrano\CoreBundle\Configuration\Configuration
-        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router ]
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.stage ]
 
     wapistrano_core.stage:
         class: Wapistrano\CoreBundle\Stage\Stage
-        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router ]
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.gearman ]
 
     wapistrano_core.role:
         class: Wapistrano\CoreBundle\Role\Role
-        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router ]
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.stage ]
+
+    wapistrano_core.gearman:
+        class:  Wapistrano\CoreBundle\Broker\Gearman
+        arguments: [ %wapistrano_core% ]

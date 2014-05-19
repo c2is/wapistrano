@@ -22,22 +22,20 @@ class HomeController extends Controller
      */
     public function indexAction()
     {
-        # Create our client object.
-        $client= new \GearmanClient();
 
-        # Add default server (app.gearmanhq.com).
-        $client->addServer();
+        $gmclient = $this->get("wapistrano_core.gearman");
 
-        echo "Sending job...\n";
-        # Send reverse job
+        $status = $gmclient->doBackgroundAsync("publish_stage", "this is a test");
 
-        $result = $client->doBackground("reverse", "Hello World!");
-        echo "Result: {$result}" . PHP_EOL;
+        if(!$status) {
+            echo "pas glop";
+        }
 
         $txt = "";
 
         return new Response($txt);
     }
+
 
     /**
      * A worker, just for example
@@ -52,6 +50,23 @@ class HomeController extends Controller
         while ($worker->work());
     }
 
+    public function clientTest() {
+        flush();
+
+        # Create our client object.
+        $client= new \GearmanClient();
+        # Add default server (app.gearmanhq.com).
+        $client->addServer();
+        echo "Sending job...\n";
+        flush();
+        # Send reverse job
+        $result = $client->doNormal("reverse", "Hello World!");
+        echo "Result: {$result}" . PHP_EOL;
+
+        $txt = "";
+
+        return new Response($txt);
+    }
     public function test()
     {
         ini_set("implicit_flush", 1);
@@ -100,4 +115,8 @@ class HomeController extends Controller
         $redis->connect("127.0.0.1", 6379);
     }
 
+
+
 }
+
+

@@ -142,6 +142,7 @@ class ProjectsStageController extends Controller
     {
         $stage = $this->container->get('wapistrano_core.stage');
         $stage->setProjectId($projectId) ;
+        $stage->setStageId($stageId);
         $stage->delete($stageId);
 
         $session = $request->getSession();
@@ -157,7 +158,7 @@ class ProjectsStageController extends Controller
     {
         $stage = $this->container->get('wapistrano_core.stage');
         $stage->setProjectId($projectId) ;
-        $stage->setStageId($stageId) ;
+        $stage->setStageId($stageId);
 
 
         $formReturn = $stage->displayFormRecipeManage();
@@ -202,6 +203,8 @@ class ProjectsStageController extends Controller
     public function stageRoleDeleteAction(Request $request, $projectId, $stageId, $roleId)
     {
         $role = $this->container->get('wapistrano_core.role');
+        $role->setProjectId($projectId) ;
+        $role->setStageId($stageId);
         $role->delete($roleId);
 
         $session = $request->getSession();

@@ -15,6 +15,7 @@ class Configuration
     private $form;
     private $twig;
     private $router;
+    private $stage;
 
     public $projectId;
     public $configurationId;
@@ -22,13 +23,14 @@ class Configuration
 
     public $stageId;
 
-    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router)
+    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $stage)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
         $this->form = $form;
         $this->twig = $twig;
         $this->router = $router;
+        $this->stage = $stage;
     }
 
     public function displayFormAdd() {
@@ -58,6 +60,16 @@ class Configuration
 
             $this->em->persist($configuration);
             $this->em->flush();
+
+            $this->stage->setProjectId($this->getProjectId());
+            // if it's a generic project configuration, update all stages
+            if (null == $configuration->getStageId()) {
+                foreach ($this->stage->getStageList() as $stage) {
+                    $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
+                }
+            } else {
+                $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+            }
 
         }
 
@@ -95,6 +107,16 @@ class Configuration
             $this->em->persist($configuration);
             $this->em->flush();
 
+            $this->stage->setProjectId($this->getProjectId());
+            // if it's a generic project configuration, update all stages
+            if (null == $configuration->getStageId()) {
+                foreach ($this->stage->getStageList() as $stage) {
+                    $this->stage->publishStage($this->getProjectId(), (string) $stage->getId());
+                }
+            } else {
+                $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+            }
+
         }
 
         $formUrl = $this->router->generate("projectsConfigurationEdit", array("projectId"=>$this->getProjectId(), "configurationId"=>$this->getConfigurationId()));
@@ -120,6 +142,18 @@ class Configuration
         $configuration = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findOneBy(array("id" => $id));
         $this->em->remove($configuration);
         $this->em->flush();
+
+        $this->stage->setProjectId($this->getProjectId());
+        // if it's a generic project configuration, update all stages
+        if (null == $configuration->getStageId()) {
+            foreach ($this->stage->getStageList() as $stage) {
+                $this->stage->publishStage($this->getProjectId(), $stage->getId());
+            }
+        } else {
+            $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+        }
+
+
     }
     /**
      * @param mixed $projectId

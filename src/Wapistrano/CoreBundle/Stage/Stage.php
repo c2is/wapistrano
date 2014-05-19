@@ -15,17 +15,19 @@ class Stage
     private $form;
     private $twig;
     private $router;
+    private $gearman;
 
     public $projectId;
     public $stageId;
 
-    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router)
+    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $gearman)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
         $this->form = $form;
         $this->twig = $twig;
         $this->router = $router;
+        $this->gearman = $gearman;
     }
 
     public function displayFormAdd() {
@@ -51,6 +53,8 @@ class Stage
             $this->em->persist($stage);
             $this->em->flush();
 
+            $this->publishStage($this->getProjectId(), $this->getStageId());
+
         }
 
         $formUrl = $this->router->generate("projectsStageAdd", array("id"=>$this->getProjectId()));
@@ -64,7 +68,6 @@ class Stage
         $stageType = new StagesTypeAdd();
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
             ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
-
 
         $form = $this->form->create($stageType, $stage);
 
@@ -80,6 +83,7 @@ class Stage
             $this->em->persist($stage);
             $this->em->flush();
 
+            $this->publishStage($this->getProjectId(), $this->getStageId());
         }
 
         $formUrl = $this->router->generate("projectsStageEdit", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId()));
@@ -114,6 +118,8 @@ class Stage
 
             $this->manageRecipes($recipes);
 
+            $this->publishStage($this->getProjectId(), $this->getStageId());
+
             return "redirect";
         }
         $options = $form->get('recipes')->getConfig()->getOptions();
@@ -136,6 +142,8 @@ class Stage
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $id));
         $this->em->remove($stage);
         $this->em->flush();
+
+        $this->publishStage($this->getProjectId(), $this->getStageId());
     }
 
     public function manageRecipes($recipes) {
@@ -148,6 +156,8 @@ class Stage
         $this->em->persist($stage);
         $this->em->flush();
 
+        $this->publishStage($this->getProjectId(), $this->getStageId());
+
     }
 
     public function getRecipes() {
@@ -156,11 +166,88 @@ class Stage
 
         return $stage->getRecipe();
     }
+
     public function getAllRecipes() {
         $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')
             ->findAll();
 
         return $recipes;
+    }
+
+    public function getRoles() {
+        $roles = $this->em->getRepository('WapistranoCoreBundle:Roles')->findBy(array("stage" => $this->getStageId()));
+
+        return $roles;
+    }
+
+    public function getConfigurations() {
+        $projectConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL));
+        $stageConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => $this->getStageId()));
+
+        $configurations = array();
+        foreach($projectConfigurations as $configuration) {
+            $configurations[$configuration->getName()] = $configuration->getValue();
+        }
+        foreach($stageConfigurations as $configuration) {
+            $configurations[$configuration->getName()] = $configuration->getValue();
+        }
+
+        return $configurations;
+    }
+
+    /*
+     * build the .rb filecontent and sent it to broker
+     */
+    public function publishStage($projectId, $stageId) {
+        $this->setProjectId($projectId);
+        $this->setStageId($stageId);
+
+        $recipes = array();
+        foreach($this->getRecipes() as $recipe) {
+            $recipes[] = $recipe->getBody();
+
+        }
+
+        $roles = array();
+        foreach($this->getRoles() as $role) {
+            $sshPort = "22";
+            if("" != $role->getSshPort()) {
+                $sshPort = $role->getSshPort();
+            }
+            $roles[] = 'role :'.$role->getName().', "'.$role->getHost()->getName().':'.$sshPort.'"';
+
+        }
+
+        $configurations = array();
+        foreach($this->getConfigurations() as $confName=>$confValue) {
+            if(strpos($confValue, ":") !== 0 && "false" != $confValue && "true" != $confValue) {
+                $confValue = '"'.$confValue.'"';
+            }
+            $configurations[] = 'set :'.$confName.', '.$confValue;
+        }
+
+        $configurationsBlock = implode("\n", $configurations);
+        $rolesBlock = implode("\n", $roles);
+        $recipeBlock = implode(" \n", $recipes);
+
+        $gmclient = $this->gearman;
+
+        $jobId = $gmclient->doBackgroundAsync("publish_stage", json_encode(array("projectId"=>$projectId, "stageId" => $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+
+        if(!$jobId) {
+            echo "pas glop";
+        }
+
+        /*
+        $jobId = $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$projectId, "capCommand" => "./test.sh"  )));
+
+        if(!$jobId) {
+            echo "pas glop";
+        }
+        */
+        file_put_contents("/tmp/debudede.txt", $jobId);
+
+
     }
 
     /**

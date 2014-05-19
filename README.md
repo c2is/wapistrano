@@ -5,8 +5,16 @@ php-gearman 1.1
 
 *** Capistrano server side ***
 python
-python-gearman (https://github.com/Yelp/python-gearman)
+python-gearman (sudo easy_install gearman) (https://github.com/Yelp/python-gearman)
+redis (sudo easy_install redis)
+Need capistrano/ext/multistage installed
 
 ***  Somewhere on an accessible server ***
 gearman
 redis
+
+Todo : command to check if env is ok (services installed, capistrano path and rights ok etc.)
+
+INSTALL
+*** Capistrano server side
+
