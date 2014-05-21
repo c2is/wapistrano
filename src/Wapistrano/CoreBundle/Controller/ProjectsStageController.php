@@ -194,7 +194,7 @@ class ProjectsStageController extends Controller
         $session = $request->getSession();
         $session->getFlashBag()->add('notice', 'Role deleted');
 
-        return $this->redirect($this->generateUrl('projectsStageHome', array("projectId" => $projectId, "stageId" => $stageId)));
+        return $this->redirect($this->generateUrl('projectsStageHome', array("id" => $projectId, "stageId" => $stageId)));
     }
 
     /**
