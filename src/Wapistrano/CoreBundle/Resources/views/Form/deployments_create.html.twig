@@ -1,0 +1,68 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+    {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="box primary">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>Stage {{ stage.name }}</h5>
+            <div class="toolbar">
+
+            </div>
+        </header>
+        {% if null != flashMessage %}
+            <div id="flashMessage" class="" style="">
+                <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+                {{ flashMessage }}
+
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div id="collapse2" class="body">
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="body">
+                    <div id="headBoxLeft">
+                        <div class="form-group">
+                            {{ form_label(form.task, null, { 'attr': {'class': 'control-label col-lg-4'} }) }}
+                            <div class="col-lg-4">
+                                {{ form_widget(form.task, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.description) }}
+                            <div class="col-lg-4">
+                                {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+
+                        {{ form_widget(form.saveBottom, { 'attr': {'class': 'btn btn-warning btn-sm'}, 'label' : 'Execute' }) }}
+                    </div>
+                    {{ form_end(form, {'render_rest': true}) }}
+
+                </div><!-- /.body -->
+            </div><!-- /.box -->
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <div class="body">
+                    <div id="headBoxRight">
+                        <strong>Deployments actions</strong>
+                        <ul>
+
+                        </ul>
+
+                    </div><!-- /#trigo -->
+                </div><!-- /.body -->
+            </div><!-- /.box -->
+        </div>
+    </div>
+{% endblock content %}
+
+
+

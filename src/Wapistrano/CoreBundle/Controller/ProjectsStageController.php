@@ -7,24 +7,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\Projects;
+use Wapistrano\CoreBundle\Entity\Stages;
 use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/projects")
+ * @Breadcrumb("Projects", routeName="projectsList")
  */
 class ProjectsStageController extends Controller
 {
-    private $sectionTitle;
     private $sectionAction;
-    private $sectionUrl;
-
-    public function getSectionTitle() {
-        if (null == $this->sectionTitle) {
-            $this->sectionTitle = 'Projects';
-        }
-        return $this->sectionTitle;
-    }
 
     public function getSectionAction() {
         if (null == $this->sectionAction) {
@@ -33,42 +28,31 @@ class ProjectsStageController extends Controller
         return $this->sectionAction;
     }
 
-    public function getSectionUrl() {
-        if (null == $this->sectionUrl) {
-            $this->sectionUrl = $this->generateUrl('projectsList');
-        }
-        return $this->sectionUrl;
-    }
-
     /**
-     * @Route("/{projectId}/project_stage/{stageId}", requirements={"projectId" = "\d+", "stageId" = "\d+"}, name="projectsStageHome")
+     * @Route("/{id}/project_stage/{stageId}", requirements={"id" = "\d+", "stageId" = "\d+"}, name="projectsStageHome")
+     * @ParamConverter("stage", options={"id" = "stageId"})
+     * @Breadcrumb("{project.name}", routeName="projectsHome", routeParameters={"id"="{id}"})
+     * @Breadcrumb("{stage.name}", routeName="projectsStageHome", routeParameters={"id"="{id}", "stageId"="{stageId}"})
      * @Template("WapistranoCoreBundle::projects_stage_home.html.twig")
      */
-    public function stageHomeAction(Request $request, $projectId, $stageId)
+    public function stageHomeAction(Request $request, Projects $project, Stages $stage)
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $projectId));
-        $stage = $em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $stageId));
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        $newConfigurationUrl = $this->generateUrl('stageConfigurationAdd', array("projectId" =>$projectId, "stageId" => $stageId));
-        $newRoleUrl = $this->generateUrl('projectsStageRoleAdd', array("projectId" =>$projectId, "stageId" => $stageId));
+        $newConfigurationUrl = $this->generateUrl('stageConfigurationAdd', array("projectId" =>$project->getId(), "stageId" => $stage->getId()));
+        $newRoleUrl = $this->generateUrl('projectsStageRoleAdd', array("projectId" =>$project->getId(), "stageId" => $stage->getId()));
 
         $twigVars = array();
-        $twigVars['sectionTitle'] = $this->getSectionTitle();
-        $twigVars['sectionAction'] = $this->getSectionAction();
-        $twigVars['sectionUrl'] = $this->getSectionUrl();
-        $twigVars['subSectionTitle'] = $project->getName();
-        $twigVars['subSectionUrl'] = $this->generateUrl('projectsHome', array("id" =>$projectId));
-        $twigVars['title'] = 'Home';
+        $twigVars['barTitle'] = $stage->getName();
         $twigVars['project'] = $project;
         $twigVars['stage'] = $stage;
         $twigVars['flashMessage'] = $flashMessage;
         $twigVars['newConfigurationUrl'] = $newConfigurationUrl;
         $twigVars['newRoleUrl'] = $newRoleUrl;
+        $twigVars['deploymentActions'] = array("Deploy" => $this->generateUrl('projectsStageDeploymentAdd', array("id" =>$project->getId(), "stageId" => $stage->getId(), "taskCommand" => "deploy")));
 
         return $twigVars;
     }

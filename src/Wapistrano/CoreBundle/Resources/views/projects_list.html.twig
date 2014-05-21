@@ -6,7 +6,7 @@
             <div class="icons">
                 <i class="fa fa-building-o"></i>
             </div>
-            <h5>{{ title }} {{ sectionTitle }}</h5>
+            <h5>{{ barTitle }}</h5>
             <div class="toolbar">
 
             </div>
@@ -33,14 +33,14 @@
         {% for project in projects %}
             <tr>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Home', 'id': project.id })) }}">{{ project.getName }}</a>
+                    <a href="{{ path('projectsHome', { 'id': project.id }) }}">{{ project.getName }}</a>
                 </td>
                 <td>Internet Explorer 4.0</td>
-                <td><a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Edit', 'id': project.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                <td><a href="{{ path('projectsEdit', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                             <i class="glyphicon glyphicon-edit"></i>
                 </a></td>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Projects:getUrl', { 'action': 'Delete', 'id': project.id })) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                    <a href="{{ path('projectsDelete', { 'id': project.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
                     <i class="glyphicon glyphicon-remove"></i>
                     </a>
                 </td>

@@ -8,37 +8,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\recipes;
 use Wapistrano\CoreBundle\Form\recipesTypeAdd;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/recipes")
+ * @Breadcrumb("Recipes", routeName="recipesList")
  */
 class RecipesController extends Controller
 {
-    private $sectionTitle;
     private $sectionAction;
-    private $sectionUrl;
-
-    public function getSectionTitle() {
-        if (null == $this->sectionTitle) {
-            $this->sectionTitle = 'recipes';
-        }
-        return $this->sectionTitle;
-    }
 
     public function getSectionAction() {
         if (null == $this->sectionAction) {
             $this->sectionAction = $this->generateUrl('recipesAdd');
         }
+
         return $this->sectionAction;
     }
 
-    public function getSectionUrl() {
-        if (null == $this->sectionUrl) {
-            $this->sectionUrl = $this->generateUrl('recipesList');
-        }
-        return $this->sectionUrl;
-    }
     /**
      * @Route("/", name="recipesList")
      * @Template("WapistranoCoreBundle::recipes_list.html.twig")
@@ -53,26 +42,7 @@ class RecipesController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'recipes'=> $recipes, "flashMessage" => $flashMessage);
-    }
-
-    /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="recipesHome")
-     * @Template("WapistranoCoreBundle::recipes_list.html.twig")
-     */
-    public function indexAction(Request $request)
-    {
-
-        $em = $this->container->get('doctrine')->getManager();
-        $recipes = $em->getRepository('WapistranoCoreBundle:Recipes')->findAll();
-
-        $session = $request->getSession();
-        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
-        $session->getFlashBag()->clear('notice');
-
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'recipes'=> $recipes, "flashMessage" => $flashMessage);
+        return array('barTitle' =>  'Recipes list', 'sectionAction' => $this->getSectionAction(),  'recipes'=> $recipes, "flashMessage" => $flashMessage);
     }
 
     public function getUrlAction($action, $id = ""){
@@ -115,24 +85,20 @@ class RecipesController extends Controller
 
             return $this->redirect($this->generateUrl('recipesList'));
         }
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
+        return array('barTitle' =>  'Add new recipe', 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**
      * @Route("/{id}/edit", name="recipesEdit")
+     * @Breadcrumb("{recipe.name}", routeName="recipesEdit", routeParameters={"id"="{id}"})
      * @Template("WapistranoCoreBundle:Form:recipes_update.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Recipes $recipe)
     {
-
-        $em = $this->container->get('doctrine')->getManager();
-        $Recipe = $em->getRepository('WapistranoCoreBundle:recipes')->findOneBy(array("id" => $id));
-
         $RecipeType = new recipesTypeAdd();
 
-
-        $form = $this->get('form.factory')->create($RecipeType, $Recipe);
+        $form = $this->get('form.factory')->create($RecipeType, $recipe);
         $form->add('saveTop', 'submit');
         $form->add('saveBottom', 'submit');
 
@@ -140,20 +106,19 @@ class RecipesController extends Controller
 
         if ($form->isValid()) {
             $today = new \DateTime();
-            $Recipe->setCreatedAt($today);
-            $Recipe = $form->getData();
+            $recipe->setCreatedAt($today);
+            $recipe = $form->getData();
 
             $manager = $this->getDoctrine()->getManager();
-            $manager->persist($Recipe);
+            $manager->persist($recipe);
             $manager->flush();
 
             $session = $request->getSession();
-            $session->getFlashBag()->add('notice', 'Recipe '.$Recipe->getName().' updated');
+            $session->getFlashBag()->add('notice', 'Recipe '.$recipe->getName().' updated');
 
             return $this->redirect($this->generateUrl('recipesList'));
         }
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
-        // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
+        return array('barTitle' =>  $recipe->getName(), 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
     }
 
     /**

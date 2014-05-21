@@ -6,7 +6,7 @@
             <div class="icons">
                 <i class="fa fa-building-o"></i>
             </div>
-            <h5>Stage {{ stage.name }}</h5>
+            <h5>{{ barTitle }}</h5>
             <div class="toolbar">
 
             </div>
@@ -49,7 +49,12 @@
                 <div class="body">
                     <div id="headBoxRight">
                         <strong>Deployments actions</strong>
-                        <br>
+                        <ul>
+                        {% for name, route in deploymentActions %}
+                            <li><a href="{{ route }}">{{ name }}</a></li>
+
+                        {% endfor %}
+                        </ul>
 
                     </div><!-- /#trigo -->
                 </div><!-- /.body -->

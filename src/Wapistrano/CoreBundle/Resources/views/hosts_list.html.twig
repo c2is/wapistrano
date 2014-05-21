@@ -6,7 +6,7 @@
             <div class="icons">
                 <i class="fa fa-building-o"></i>
             </div>
-            <h5>{{ title }} {{ sectionTitle }}</h5>
+            <h5>{{ barTitle }}</h5>
             <div class="toolbar">
 
             </div>
@@ -33,14 +33,13 @@
         {% for host in hosts %}
             <tr>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Edit', 'id': host.id })) }}">{{ host.getName }}
-                    </a>
+                    <a href="{{ path('hostsEdit', { 'id': host.id }) }}">{{ host.getName }}</a>
                 </td>
                 <td>Internet Explorer 4.0</td>
-                <td><a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Edit', 'id': host.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                <td><a href="{{ path('hostsEdit', { 'id': host.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                             <i class="glyphicon glyphicon-edit"></i>
                 </a></td>
-                <td><a href="{{ render(controller('WapistranoCoreBundle:Hosts:getUrl', { 'action': 'Delete', 'id': host.id })) }}" class="btn btn-danger btn-xs btn-grad confirm" data-original-title="" title="">
+                <td><a href="{{ path('hostsDelete', { 'id': host.id }) }}" class="btn btn-danger btn-xs btn-grad confirm" data-original-title="" title="">
                         <i class="glyphicon glyphicon-remove"></i>
                     </a></td>
             </tr>

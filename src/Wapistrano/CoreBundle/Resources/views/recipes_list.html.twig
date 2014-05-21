@@ -6,7 +6,7 @@
             <div class="icons">
                 <i class="fa fa-building-o"></i>
             </div>
-            <h5>{{ title }} {{ sectionTitle }}</h5>
+            <h5>{{ barTitle }}</h5>
             <div class="toolbar">
 
             </div>
@@ -34,17 +34,17 @@
             <tr>
                 <td>
 
-                    <a href="{{ render(controller('WapistranoCoreBundle:Recipes:getUrl', { 'action': 'Edit', 'id': recipe.id })) }}">{{ recipe.getName }}
+                    <a href="{{ path('recipesEdit', { 'id': recipe.id }) }}">{{ recipe.getName }}
                     </a>
                 </td>
                 <td>Internet Explorer 4.0</td>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Recipes:getUrl', { 'action': 'Edit', 'id': recipe.id })) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                    <a href="{{ path('recipesEdit', { 'id': recipe.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
                 </td>
                 <td>
-                    <a href="{{ render(controller('WapistranoCoreBundle:Recipes:getUrl', { 'action': 'Delete', 'id': recipe.id })) }}" class="btn btn-danger btn-xs btn-grad confirm" data-original-title="" title="">
+                    <a href="{{ path('recipesDelete', { 'id': recipe.id }) }}" class="btn btn-danger btn-xs btn-grad confirm" data-original-title="" title="">
                             <i class="glyphicon glyphicon-remove"></i>
                     </a>
                 </td>

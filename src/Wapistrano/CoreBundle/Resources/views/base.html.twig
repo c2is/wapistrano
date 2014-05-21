@@ -149,14 +149,11 @@
         <div class="main-bar">
             <h3>
                 <i class="fa fa-home"></i>
-                <a href="{{ sectionUrl }}">{{ sectionTitle }}</a>
-                {% if subSectionTitle is defined %}
-                    / <a href="{{ subSectionUrl }}">{{ subSectionTitle }}</a>
-                {% endif %}
+                {{ apy_breadcrumb_trail_render("WapistranoCoreBundle:Breadcrumb:breadcrumb.html.twig") }}
+
                 {% if sectionAction is defined %}
                     <a href="{{ sectionAction }}" class="btn btn-success btn-sm btn-grad" data-original-title="" title="">Add new</a>
                 {% endif %}
-
             </h3>
         </div><!-- /.main-bar -->
     </header>

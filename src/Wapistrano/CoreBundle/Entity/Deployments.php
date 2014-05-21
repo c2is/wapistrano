@@ -3,6 +3,7 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Deployments
@@ -36,11 +37,13 @@ class Deployments
     private $log;
 
     /**
-     * @var integer
+     * @var Projects
      *
-     * @ORM\Column(name="stage_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Stages")
+     * @ORM\JoinColumn(name="stage_id", referencedColumnName="id")
+     * @Assert\NotBlank()
      */
-    private $stageId;
+    private $stage;
 
     /**
      * @var \DateTime
@@ -164,26 +167,26 @@ class Deployments
     }
 
     /**
-     * Set stageId
+     * Set stage
      *
-     * @param integer $stageId
+     * @param integer $stage
      * @return Deployments
      */
-    public function setStageId($stageId)
+    public function setStageId($stage)
     {
-        $this->stageId = $stageId;
+        $this->stage = $stage;
 
         return $this;
     }
 
     /**
-     * Get stageId
+     * Get stage
      *
      * @return integer 
      */
-    public function getStageId()
+    public function getStage()
     {
-        return $this->stageId;
+        return $this->stage;
     }
 
     /**

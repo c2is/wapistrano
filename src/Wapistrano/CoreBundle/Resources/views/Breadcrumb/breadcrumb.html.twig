@@ -1,0 +1,16 @@
+{%- if breadcrumbs.count %}
+
+        {% for breadcrumb in breadcrumbs %}
+            {%- if breadcrumb.url is null -%}
+                {{ breadcrumb.title|trans }}
+            {%- else -%}
+                <a href="{{ breadcrumb.url }}">{{ breadcrumb.title|trans }}</a>
+            {%- endif -%}
+
+            {%- if  not loop.last -%}
+                &nbsp;/&nbsp;
+            {%- endif -%}
+
+        {% endfor %}
+
+{%- endif -%}

@@ -8,23 +8,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/projects")
+ * @Breadcrumb("Projects", routeName="projectsList")
  */
 class ProjectsController extends Controller
 {
-    private $sectionTitle;
-    private $sectionAction;
-    private $sectionUrl;
 
-    public function getSectionTitle() {
-        if (null == $this->sectionTitle) {
-            $this->sectionTitle = 'Projects';
-        }
-        return $this->sectionTitle;
-    }
+    private $sectionAction;
 
     public function getSectionAction() {
         if (null == $this->sectionAction) {
@@ -33,12 +27,7 @@ class ProjectsController extends Controller
         return $this->sectionAction;
     }
 
-    public function getSectionUrl() {
-        if (null == $this->sectionUrl) {
-            $this->sectionUrl = $this->generateUrl('projectsList');
-        }
-        return $this->sectionUrl;
-    }
+
     /**
      * @Route("/", name="projectsList")
      * @Template("WapistranoCoreBundle::projects_list.html.twig")
@@ -53,28 +42,25 @@ class ProjectsController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'projects'=>$projects, "flashMessage" => $flashMessage);
+        return array( 'barTitle' =>  'Projects list', 'sectionAction' => $this->getSectionAction(), 'projects'=>$projects, "flashMessage" => $flashMessage);
     }
 
     /**
      * @Route("/{id}", requirements={"id" = "\d+"}, name="projectsHome")
+     * @Breadcrumb("{project.name}", routeName="projectsHome", routeParameters={"id"="{id}"})
      * @Template("WapistranoCoreBundle::projects_home.html.twig")
      */
-    public function indexAction(Request $request, $id)
+    public function indexAction(Request $request, Projects $project)
     {
-        $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        $newConfigurationUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$id));
-        $newStageUrl = $this->generateUrl('projectsStageAdd', array("id" =>$id));
+        $newConfigurationUrl = $this->generateUrl('projectsConfigurationAdd', array("id" =>$project->getId()));
+        $newStageUrl = $this->generateUrl('projectsStageAdd', array("id" =>$project->getId()));
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'Home', 'project'=>$project,
+        return array('barTitle' =>  $project->getName(), 'project'=>$project,
             "flashMessage" => $flashMessage, "newConfigurationUrl" => $newConfigurationUrl, "newStageUrl" => $newStageUrl);
     }
 
@@ -118,18 +104,17 @@ class ProjectsController extends Controller
 
             return $this->redirect($this->generateUrl('projectsList'));
         }
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
+        return array('barTitle' =>  'Add new project', 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**
      * @Route("/{id}/edit", name="projectsEdit")
+     * @Breadcrumb("{project.name}", routeName="projectsHome", routeParameters={"id"="{id}"})
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Projects $project)
     {
 
-        $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
 
         $projectType = new ProjectsTypeAdd();
 
@@ -160,17 +145,15 @@ class ProjectsController extends Controller
             }
 
         }
-        $formUrl = $this->generateUrl('projectsEdit', array("id" => $id));
+        $formUrl = $this->generateUrl('projectsEdit', array("id" => $project->getId()));
         // ajax call
         if ($request->isXmlHttpRequest()) {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Popin:project.html.twig",
-                array("popinTitle" => "Edit a stage", 'sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(),
-                    'title' => 'Update', 'form' => $form->createView(), 'formUrl' => $formUrl)
+                array("popinTitle" => "Edit a project", 'barTitle' =>  $this->getBarTitle(), 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView(), 'formUrl' => $formUrl)
             ));
         } else {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Form:projects_update.html.twig",
-                array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(),
-                    'title' => 'Update', 'form' => $form->createView(), 'formUrl' => $formUrl)
+                array('barTitle' =>  'Edit '.$project->getName(), 'sectionAction' => $this->getSectionAction(),'form' => $form->createView(), 'formUrl' => $formUrl)
             ));
         }
 
@@ -179,10 +162,9 @@ class ProjectsController extends Controller
     /**
      * @Route("/{id}/delete", name="projectsDelete")
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, Projects $project)
     {
         $em = $this->container->get('doctrine')->getManager();
-        $project = $em->getRepository('WapistranoCoreBundle:Projects')->findOneBy(array("id" => $id));
         $em->remove($project);
         $em->flush();
 

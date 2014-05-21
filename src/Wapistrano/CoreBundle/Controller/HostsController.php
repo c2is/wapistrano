@@ -7,37 +7,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\hosts;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Wapistrano\CoreBundle\Form\hostsTypeAdd;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/hosts")
+ * @Breadcrumb("Hosts", routeName="hostsList")
  */
 class HostsController extends Controller
 {
-    private $sectionTitle;
     private $sectionAction;
-    private $sectionUrl;
-
-    public function getSectionTitle() {
-        if (null == $this->sectionTitle) {
-            $this->sectionTitle = 'hosts';
-        }
-        return $this->sectionTitle;
-    }
 
     public function getSectionAction() {
         if (null == $this->sectionAction) {
             $this->sectionAction = $this->generateUrl('hostsAdd');
         }
         return $this->sectionAction;
-    }
-
-    public function getSectionUrl() {
-        if (null == $this->sectionUrl) {
-            $this->sectionUrl = $this->generateUrl('hostsList');
-        }
-        return $this->sectionUrl;
     }
     /**
      * @Route("/", name="hostsList")
@@ -53,26 +39,7 @@ class HostsController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'hosts'=>$hosts, "flashMessage" => $flashMessage);
-    }
-
-    /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="hostsHome")
-     * @Template("WapistranoCoreBundle::hosts_list.html.twig")
-     */
-    public function indexAction(Request $request)
-    {
-
-        $em = $this->container->get('doctrine')->getManager();
-        $hosts = $em->getRepository('WapistranoCoreBundle:hosts')->findAll();
-
-        $session = $request->getSession();
-        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
-        $session->getFlashBag()->clear('notice');
-
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(),
-            'sectionUrl' => $this->getSectionUrl(), 'title' => 'List', 'hosts'=>$hosts, "flashMessage" => $flashMessage);
+        return array('barTitle' =>  'Hosts list', 'sectionAction' => $this->getSectionAction(), 'hosts'=>$hosts, "flashMessage" => $flashMessage);
     }
 
     public function getUrlAction($action, $id = ""){
@@ -83,7 +50,6 @@ class HostsController extends Controller
             return new Response($this->generateUrl('hosts'.$action, array("id" => $id)));
 
         }
-
     }
     /**
      * @Route("/add", name="hostsAdd")
@@ -115,24 +81,20 @@ class HostsController extends Controller
 
             return $this->redirect($this->generateUrl('hostsList'));
         }
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
+        return array('barTitle' =>  'Add new host', 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**
      * @Route("/{id}/edit", name="hostsEdit")
+     * @Breadcrumb("{host.name}", routeName="hostsEdit", routeParameters={"id"="{id}"})
      * @Template("WapistranoCoreBundle:Form:hosts_update.html.twig")
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Hosts $host)
     {
+        $hostType = new hostsTypeAdd();
 
-        $em = $this->container->get('doctrine')->getManager();
-        $Host = $em->getRepository('WapistranoCoreBundle:hosts')->findOneBy(array("id" => $id));
-
-        $HostType = new hostsTypeAdd();
-
-
-        $form = $this->get('form.factory')->create($HostType, $Host);
+        $form = $this->get('form.factory')->create($hostType, $host);
         $form->add('saveTop', 'submit');
         $form->add('saveBottom', 'submit');
 
@@ -140,19 +102,20 @@ class HostsController extends Controller
 
         if ($form->isValid()) {
             $today = new \DateTime();
-            $Host->setCreatedAt($today);
-            $Host = $form->getData();
+            $host->setCreatedAt($today);
+            $host = $form->getData();
 
             $manager = $this->getDoctrine()->getManager();
-            $manager->persist($Host);
+            $manager->persist($host);
             $manager->flush();
 
             $session = $request->getSession();
-            $session->getFlashBag()->add('notice', 'Host '.$Host->getName().' updated');
+            $session->getFlashBag()->add('notice', 'Host '.$host->getName().' updated');
 
             return $this->redirect($this->generateUrl('hostsList'));
         }
-        return array('sectionTitle' =>  $this->getSectionTitle(), 'sectionAction' => $this->getSectionAction(), 'sectionUrl' => $this->getSectionUrl(), 'title' => 'Add', 'form' => $form->createView());
+
+        return array('barTitle' =>  $host->getName(), 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
         // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
