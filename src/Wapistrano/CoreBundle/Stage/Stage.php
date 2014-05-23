@@ -243,7 +243,7 @@ class Stage
 
         $gmclient = $this->gearman;
         $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
-        $state = $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        $state = $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
 
         return $state;
 
