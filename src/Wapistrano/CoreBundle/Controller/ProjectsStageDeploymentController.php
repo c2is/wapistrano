@@ -105,7 +105,7 @@ class ProjectsStageDeploymentController extends Controller
         if ($form->isValid()) {
 
             if(! $stageService->publishStage($project->getId(), $stage->getId(), $confPrompted)) {
-                $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published");
+                $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published, deploy aborted");
             } else {
                 $today = new \DateTime();
                 $deployment->setCreatedAt($today);
