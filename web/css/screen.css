@@ -101,3 +101,19 @@
 #breadcrumbtrail {
 
 }
+
+
+pre code {
+    width:100%;
+}
+
+.CodeMirror {
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+    background: #F7F7F9;
+    color: black;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+

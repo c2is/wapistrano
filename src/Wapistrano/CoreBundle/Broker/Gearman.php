@@ -11,11 +11,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class Gearman extends \GearmanClient
 {
+    private $logger;
+    private $redis;
 
-    public function __construct($config)
+    public function __construct($config, $logger)
     {
         parent::__construct();
         $this->addServer($config["gearman"]["host"], $config["gearman"]["port"]);
+
+        $this->redis = new \Redis();
+        $this->redis->connect("127.0.0.1", 6379);
+
+        $this->logger = $logger;
     }
 
     public function doBackgroundAsync($function, $workload) {
@@ -28,7 +35,11 @@ class Gearman extends \GearmanClient
             $status = $jobId;
         }
 
-        return $status;
+        if($status) {
+            return $this->terminate($jobId);
+        } else {
+            return $status;
+        }
     }
 
     public function doBackgroundSync($function, $workload) {
@@ -51,7 +62,27 @@ class Gearman extends \GearmanClient
             while(!$done);
         }
 
-        return $status;
+        if($status) {
+            return $this->terminate($job_handle);
+        } else {
+            return $status;
+        }
+
+    }
+
+    private function terminate($job_handle) {
+        $redisJobLog = $this->redis->get($job_handle);
+        // if log hasn't been deleted by python worker, an exception occured
+        if($redisJobLog) {
+            $this->redis->del($job_handle);
+            $this->logger->error("Job error log: ". $redisJobLog);
+
+            return false;
+        }
+        $this->logger->info("Job log: ". $this->redis->get($job_handle));
+
+        return true;
+
     }
 
 }

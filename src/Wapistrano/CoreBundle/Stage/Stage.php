@@ -16,11 +16,12 @@ class Stage
     private $twig;
     private $router;
     private $gearman;
+    private $logger;
 
     public $projectId;
     public $stageId;
 
-    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $gearman)
+    public function __construct(RequestStack $requestStack, $em, $form, \Twig_Environment $twig, $router, $gearman, $logger)
     {
         $this->em = $em;
         $this->request = $requestStack->getCurrentRequest();
@@ -28,6 +29,7 @@ class Stage
         $this->twig = $twig;
         $this->router = $router;
         $this->gearman = $gearman;
+        $this->logger = $logger;
     }
 
     public function displayFormAdd() {
@@ -189,10 +191,10 @@ class Stage
 
         $configurations = array();
         foreach($projectConfigurations as $configuration) {
-            $configurations[$configuration->getName()] = $configuration->getValue();
+            $configurations[$configuration->getName()] = $configuration;
         }
         foreach($stageConfigurations as $configuration) {
-            $configurations[$configuration->getName()] = $configuration->getValue();
+            $configurations[$configuration->getName()] = $configuration;
         }
 
         return $configurations;
@@ -201,7 +203,7 @@ class Stage
     /*
      * build the .rb filecontent and sent it to broker
      */
-    public function publishStage($projectId, $stageId) {
+    public function publishStage($projectId, $stageId, array $confOverrided = null) {
         $this->setProjectId($projectId);
         $this->setStageId($stageId);
 
@@ -222,7 +224,13 @@ class Stage
         }
 
         $configurations = array();
-        foreach($this->getConfigurations() as $confName=>$confValue) {
+        foreach($this->getConfigurations() as $confName=>$configuration) {
+            if(null != $confOverrided && array_key_exists($confName, $confOverrided)) {
+                $confValue = $confOverrided[$confName]->getValue();
+            } else {
+                $confValue = $configuration->getValue();
+            }
+
             if(strpos($confValue, ":") !== 0 && "false" != $confValue && "true" != $confValue) {
                 $confValue = '"'.$confValue.'"';
             }
@@ -234,22 +242,28 @@ class Stage
         $recipeBlock = implode(" \n", $recipes);
 
         $gmclient = $this->gearman;
+        $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
+        $state = $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
 
-        $jobId = $gmclient->doBackgroundAsync("publish_stage", json_encode(array("projectId"=>$projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        return $state;
+
+    }
+
+    /*
+     * build the .rb filecontent and sent it to broker
+     */
+    public function deployStage($task) {
+
+        $gmclient = $this->gearman;
+
+        $exec = "cap ".(string) $this->getStageId()." ".$task;
+
+        $this->logger->info("Sending job 'cap_command' to Gearman, projectId: ".$this->getProjectId()." capCommand: ".$exec);
+        $jobId = $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$this->getProjectId(), "capCommand" => $exec )));
 
         if(!$jobId) {
-            echo "pas glop";
+            $this->logger->error("Access to Gearman returned an error, job was 'cap_command', projectId: ".$this->getProjectId(). " capCommand:".$exec);
         }
-
-        /*
-        $jobId = $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$projectId, "capCommand" => "./test.sh"  )));
-
-        if(!$jobId) {
-            echo "pas glop";
-        }
-        */
-        file_put_contents("/tmp/debudede.txt", $jobId);
-
 
     }
 

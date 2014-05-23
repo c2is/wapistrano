@@ -82,7 +82,6 @@ class HostsController extends Controller
             return $this->redirect($this->generateUrl('hostsList'));
         }
         return array('barTitle' =>  'Add new host', 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView());
-        // return $this->render('WapistranoCoreBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
 
     /**

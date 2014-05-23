@@ -7,7 +7,7 @@ php-gearman 1.1
 python
 python-gearman (sudo easy_install gearman) (https://github.com/Yelp/python-gearman)
 redis (sudo easy_install redis)
-Need capistrano/ext/multistage installed
+Need capistrano/ext/multistage installed (gem install capistrano-ext)
 
 ***  Somewhere on an accessible server ***
 gearman

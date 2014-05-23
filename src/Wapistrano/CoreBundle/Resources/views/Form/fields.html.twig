@@ -23,3 +23,15 @@
         {% endif %}
     {% endspaceless %}
 {% endblock form_errors %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group">
+            {{ form_label(form) }}
+            {{ form_errors(form) }}
+            <div class="col-lg-4">
+            {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}

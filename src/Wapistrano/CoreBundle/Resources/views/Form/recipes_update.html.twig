@@ -27,17 +27,22 @@
                     {{ form_widget(form.description, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-
+            {{ form_label(form.body) }}
             <div class="form-group">
-                {{ form_label(form.body) }}
-                <div class="col-lg-4">
+                <div class="col-lg-12">
                     {{ form_widget(form.body, { 'attr': {'class': 'form-control'} }) }}
                 </div>
             </div>
-
             {{ form_widget(form.saveBottom, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
         </div>
     </div>
     {{ form_end(form, {'render_rest': true}) }}
+
+    <script>
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("wapistrano_corebundle_recipes_body"), {
+            lineWrapping: true
+        });
+    </script>
 {% endblock content %}
 

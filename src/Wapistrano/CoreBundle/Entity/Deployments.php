@@ -41,7 +41,6 @@ class Deployments
      *
      * @ORM\ManyToOne(targetEntity="Stages")
      * @ORM\JoinColumn(name="stage_id", referencedColumnName="id")
-     * @Assert\NotBlank()
      */
     private $stage;
 
@@ -172,7 +171,7 @@ class Deployments
      * @param integer $stage
      * @return Deployments
      */
-    public function setStageId($stage)
+    public function setStage($stage)
     {
         $this->stage = $stage;
 

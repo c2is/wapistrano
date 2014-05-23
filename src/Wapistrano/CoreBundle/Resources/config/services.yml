@@ -33,7 +33,7 @@ services:
 
     wapistrano_core.stage:
         class: Wapistrano\CoreBundle\Stage\Stage
-        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.gearman ]
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.gearman, @logger ]
 
     wapistrano_core.role:
         class: Wapistrano\CoreBundle\Role\Role
@@ -41,4 +41,4 @@ services:
 
     wapistrano_core.gearman:
         class:  Wapistrano\CoreBundle\Broker\Gearman
-        arguments: [ %wapistrano_core% ]
+        arguments: [ %wapistrano_core%, @logger ]
