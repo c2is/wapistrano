@@ -13,6 +13,8 @@ class Gearman extends \GearmanClient
 {
     private $logger;
     private $redis;
+    private $jobHandle;
+    private $terminateStatus;
 
     public function __construct($config, $logger)
     {
@@ -25,7 +27,13 @@ class Gearman extends \GearmanClient
         $this->logger = $logger;
     }
 
+    public function init() {
+        $this->jobHandle = "";
+        $this->terminateStatus = "";
+    }
+
     public function doBackgroundAsync($function, $workload) {
+        $this->init();
         $status = false;
 
         $jobId = $this->doBackground($function, $workload);
@@ -35,14 +43,18 @@ class Gearman extends \GearmanClient
             $status = $jobId;
         }
 
+        $this->jobHandle = $jobId;
+
         if($status) {
             return $this->terminate($jobId);
         } else {
-            return $status;
+            $this->terminateStatus = "error";
+            return $this;
         }
     }
 
     public function doBackgroundSync($function, $workload) {
+        $this->init();
         $status = false;
 
         $job_handle = $this->doBackground($function, $workload);
@@ -50,6 +62,7 @@ class Gearman extends \GearmanClient
         if ($this->returnCode() == GEARMAN_SUCCESS)
         {
             $status = true;
+            $this->jobHandle = $job_handle;
 
             $done = false;
             do
@@ -65,7 +78,8 @@ class Gearman extends \GearmanClient
         if($status) {
             return $this->terminate($job_handle);
         } else {
-            return $status;
+            $this->terminateStatus = "error";
+            return $this;
         }
 
     }
@@ -76,13 +90,29 @@ class Gearman extends \GearmanClient
         if($redisJobLog) {
             $this->redis->del($job_handle);
             $this->logger->error("Job error log: ". $redisJobLog);
-
-            return false;
+            $this->terminateStatus = "error";
+        } else {
+            $this->logger->info("Job log: ". $this->redis->get($job_handle));
+            $this->terminateStatus = "success";
         }
-        $this->logger->info("Job log: ". $this->redis->get($job_handle));
 
-        return true;
-
+        return $this;
     }
+
+    public function getLog($jobHandle) {
+        $redisJobLog = $this->redis->get($jobHandle);
+
+        return $redisJobLog;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTerminateStatus()
+    {
+        return $this->terminateStatus;
+    }
+
+
 
 }

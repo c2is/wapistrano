@@ -33,37 +33,14 @@ class ProjectsStageDeploymentController extends Controller
     /**
      * @Route("/{id}/project_stage/{stageId}/deployment/{deploymentId}", requirements={"projectId" = "\d+", "stageId" = "\d+", "deploymentId" = "\d+"}, name="projectsStageDeploymentHome")
      * @ParamConverter("stage", options={"id" = "stageId"})
-     * @ParamConverter("deplyment", options={"id" = "deploymentId"})
-     * @Breadcrumb("{project.name}", routeName="projectsHome", routeParameters={"id"="{id}"})
+     * @ParamConverter("deployment", options={"id" = "deploymentId"})
      * @Template("WapistranoCoreBundle::projects_stage_home.html.twig")
      */
-    public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage)
+    public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage, Deployments $deployment)
     {
+        $gmClient = $this->get("wapistrano_core.gearman");
 
-        $session = $request->getSession();
-        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
-        $session->getFlashBag()->clear('notice');
-
-        $newConfigurationUrl = $this->generateUrl('stageConfigurationAdd', array("projectId" =>$project->getId(), "stageId" => $stage->getId()));
-        $newRoleUrl = $this->generateUrl('projectsStageRoleAdd', array("projectId" =>$project->getId(), "stageId" => $stage->getId()));
-
-        $twigVars = array();
-        $twigVars['sectionTitle'] = $this->getSectionTitle();
-        $twigVars['sectionAction'] = $this->getSectionAction();
-        $twigVars['sectionUrl'] = $this->getSectionUrl();
-        $twigVars['subSectionTitle'] = $project->getName();
-        $twigVars['subSectionUrl'] = $this->generateUrl('projectsHome', array("id" =>$project->getId()));
-
-        $twigVars['breadCrumb'] = array($this->getSectionTitle() => $this->getSectionUrl());
-        $twigVars['breadCrumbAction'] = array("Add" =>  $this->generateUrl('projectsHome', array("id" =>$project->getId())));
-        $twigVars['title'] = 'Home';
-        $twigVars['project'] = $project;
-        $twigVars['stage'] = $stage;
-        $twigVars['flashMessage'] = $flashMessage;
-        $twigVars['newConfigurationUrl'] = $newConfigurationUrl;
-        $twigVars['newRoleUrl'] = $newRoleUrl;
-
-        return $twigVars;
+        return new Response($gmClient->getLog());
     }
 
     /**
@@ -75,7 +52,7 @@ class ProjectsStageDeploymentController extends Controller
      */
     public function stageDeploymentAddAction(Request $request, Projects $project,Stages $stage, $taskCommand)
     {
-
+        $twigVars = array();
         $stageService = $this->get("wapistrano_core.stage");
         $stageService->setProjectId($project->getId());
         $stageService->setStageId($stage->getId());
@@ -103,8 +80,13 @@ class ProjectsStageDeploymentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            foreach($confPrompted as $confName => $configurations) {
+                $configurations->setValue($form->get($confName)->getData());
+            }
 
-            if(! $stageService->publishStage($project->getId(), $stage->getId(), $confPrompted)) {
+            $job = $stageService->publishStage($project->getId(), $stage->getId(), $confPrompted);
+
+            if("error" == $job->getTerminateStatus()) {
                 $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published, deploy aborted");
             } else {
                 $today = new \DateTime();
@@ -117,13 +99,13 @@ class ProjectsStageDeploymentController extends Controller
                 $manager->persist($deployment);
                 $manager->flush();
 
-                foreach($confPrompted as $confName => $configurations) {
-                    $configurations->setValue($form->get($confName)->getData());
-                }
+
 
                 $session = $request->getSession();
                 $session->getFlashBag()->add('notice', 'Deployment '.$deployment->getTask().' added');
             }
+
+            $twigVars['jobHandle'] = $job;
 
 
             // $stageService->deployStage($taskCommand);
@@ -134,13 +116,14 @@ class ProjectsStageDeploymentController extends Controller
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
         $session->getFlashBag()->clear('notice');
 
-        $twigVars = array();
+
         $twigVars['barTitle'] = 'Deploy';
         $twigVars['project'] = $project;
         $twigVars['stage'] = $stage;
         $twigVars['flashMessage'] = $flashMessage;
         $twigVars['form'] = $form->createView();
         $twigVars['roles'] = $roles;
+
 
         return $twigVars;
     }

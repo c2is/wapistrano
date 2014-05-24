@@ -243,9 +243,9 @@ class Stage
 
         $gmclient = $this->gearman;
         $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
-        $state = $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
 
-        return $state;
+        return $gmclient;
 
     }
 
@@ -259,11 +259,9 @@ class Stage
         $exec = "cap ".(string) $this->getStageId()." ".$task;
 
         $this->logger->info("Sending job 'cap_command' to Gearman, projectId: ".$this->getProjectId()." capCommand: ".$exec);
-        $jobId = $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$this->getProjectId(), "capCommand" => $exec )));
+        $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$this->getProjectId(), "capCommand" => $exec )));
 
-        if(!$jobId) {
-            $this->logger->error("Access to Gearman returned an error, job was 'cap_command', projectId: ".$this->getProjectId(). " capCommand:".$exec);
-        }
+        return $gmclient;
 
     }
 
