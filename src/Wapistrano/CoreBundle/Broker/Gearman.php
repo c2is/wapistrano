@@ -87,16 +87,20 @@ class Gearman extends \GearmanClient
     private function terminate($job_handle) {
         $redisJobLog = $this->redis->get($job_handle);
         // if log hasn't been deleted by python worker, an exception occured
-        if($redisJobLog) {
-            $this->redis->del($job_handle);
-            $this->logger->error("Job error log: ". $redisJobLog);
-            $this->terminateStatus = "error";
-        } else {
+        if (false !== strpos($redisJobLog, "Wapistrano job ended")) {
             $this->logger->info("Job log: ". $this->redis->get($job_handle));
             $this->terminateStatus = "success";
+        } elseif (false !== strpos($redisJobLog, "Job failed")) {
+
+            $this->logger->error("Job error log: ". $redisJobLog);
+            $this->terminateStatus = "error";
         }
 
         return $this;
+    }
+
+    public function delRedisLog($jobHandle) {
+        $this->redis->del($jobHandle);
     }
 
     public function getLog($jobHandle) {

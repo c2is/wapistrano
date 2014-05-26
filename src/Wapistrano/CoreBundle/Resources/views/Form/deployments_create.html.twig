@@ -74,9 +74,7 @@
         <div class="col-lg-12">
             <div class="box">
                 <div class="body">
-                    <h4>Execution log
-
-                    </h4>
+                    <h4>Execution log</h4>
                     <div id="log">
 
                     </div>
@@ -88,34 +86,27 @@
     <script language="JavaScript">
 
         {% if jobHandle is defined %}
-           // $( document ).ready(function() {
-                var status = "";
+           $( document ).ready(function() {
+                var status = "start";
                 while(status != "end") {
                     var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": jobHandle.jobHandle }) }}";
-                    var oParam = {};
 
-                    var displayMessage = function(data){
-                        if(data == "Wapistrano job ended") {
+                    var displayMessage = function(data) {
+                        if(data["status"] == "complete") {
                             status = "end";
+                            $("#log").html((data["log"] || ''));
                         }
-                        else if(data.indexOf("Python worker throw an error") > -1) {
+                        else if(data["status"] == "failed") {
                             status = "end";
-                            $("#log").html((data || '') + status);
-                        }
-                        else {
-                            alert('uu');
-                            status = "end";
-                            $("#log").html((data || '') + "hello");
-                        }
+                            $("#log").html((data["log"] || ''));
 
+                        } else if(data["status"] == "running") {
+                            $("#log").html((data["log"] || ''));
+                        }
                     };
-                    status = "end";
-                    loadData(url, "html", displayMessage, oParam);
+                    checkJobLog(url,  displayMessage);
                 }
-           // });
-
-
-
+           });
         {% endif %}
     </script>
 {% endblock content %}

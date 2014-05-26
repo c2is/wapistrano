@@ -100,14 +100,6 @@ function loadData(url,returned,callback,param,request,loader,fail){
     }
 
 
-    //console.log("url: "+url);
-    //console.log("datType: "+returned);
-    //console.log("success: "+callback);
-    //console.log("data: "+param);
-    //console.log("type: "+request);
-    //console.log("beforeSend: "+loader);
-    //console.log("error: "+fail);
-
     $.ajax({
         type:       request ,
         url:        url,
@@ -115,6 +107,52 @@ function loadData(url,returned,callback,param,request,loader,fail){
         dataType:   returned,
         error:      failed,
         beforeSend: loading,
+        cache:      false,
+        async:      false,
+        success:    callback,
+        xhrFields: {
+            withCredentials: true
+        }
+    });
+}
+
+function checkJobLog(url,callback,request,loader,fail){
+    loader = loader || false;
+    fail = fail || false;
+    request = request || 'GET';
+    var loading,
+        param,
+        failed;
+
+
+    if ( $.isFunction(loader) ) {
+        loading = loader;
+    }
+    else {
+        loading = function(jqXHR,settings){
+            //console.log("~~~~~~~~ beforeSend ~~~~~~~~");
+        }
+    }
+
+    if ( $.isFunction(fail) ) {
+        failed = fail;
+    }
+    else {
+        failed = function(jqXHR,textStatus,errorThrown){
+            //console.log("~~~~~~~~ error ~~~~~~~~");
+        }
+    }
+
+
+    $.ajax({
+        type:       request ,
+        url:        url,
+        data:       param,
+        dataType:   "json",
+        error:      failed,
+        beforeSend: loading,
+        cache:      false,
+        async:      false,
         success:    callback,
         xhrFields: {
             withCredentials: true

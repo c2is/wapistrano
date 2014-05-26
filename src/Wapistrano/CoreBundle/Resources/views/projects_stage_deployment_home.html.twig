@@ -1,0 +1,95 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+{% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
+<div class="box primary">
+    <header>
+        <div class="icons">
+            <i class="fa fa-building-o"></i>
+        </div>
+        <h5> {{ barTitle }}</h5>
+        <div class="toolbar">
+
+        </div>
+    </header>
+    {% if null != flashMessage %}
+        <div id="flashMessage" class="" style="">
+            <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+            {{ flashMessage }}
+
+        </div>
+    {% endif %}
+
+</div>
+<div id="collapse2" class="body">
+    <div class="col-lg-6">
+        <div class="box">
+            <div class="body">
+                <div id="headBoxLeft">
+                    <div class="">
+                        {{ deployment.task }}
+                    </div>
+                    <div class="">
+                        {{ deployment.description }}
+                    </div>
+                </div>
+
+
+            </div><!-- /.body -->
+        </div><!-- /.box -->
+    </div>
+    <div class="col-lg-6">
+        <div class="box">
+            <div class="body">
+                <div id="headBoxRight">
+                    <strong>Status</strong>
+                    {{ deployment.status }}
+
+                </div><!-- /#trigo -->
+            </div><!-- /.body -->
+        </div><!-- /.box -->
+    </div>
+</div>
+    <div id="collapse1" class="body">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="body">
+                    <h4>Execution log</h4>
+                    <div id="log">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script language="JavaScript">
+        {% if jobHandle is defined %}
+        $( document ).ready(function() {
+            var status = "start";
+            while(status != "end") {
+                var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": jobHandle.jobHandle }) }}";
+
+                var displayMessage = function(data) {
+                    if(data["status"] == "complete") {
+                        status = "end";
+                        $("#log").html((data["log"] || ''));
+                    }
+                    else if(data["status"] == "failed") {
+                        status = "end";
+                        $("#log").html((data["log"] || ''));
+
+                    } else if(data["status"] == "running") {
+                        $("#log").html((data["log"] || ''));
+                    }
+                };
+                checkJobLog(url,  displayMessage);
+            }
+        });
+        {% endif %}
+    </script>
+{% endblock content %}
+
+
+

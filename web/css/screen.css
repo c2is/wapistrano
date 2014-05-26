@@ -117,3 +117,11 @@ pre code {
     border-radius: 4px;
 }
 
+#log {
+    white-space: normal;
+}
+
+#menu li>ul{
+    z-index:10000
+}
+

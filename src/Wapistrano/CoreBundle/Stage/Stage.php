@@ -259,7 +259,7 @@ class Stage
         $exec = "cap ".(string) $this->getStageId()." ".$task;
 
         $this->logger->info("Sending job 'cap_command' to Gearman, projectId: ".$this->getProjectId()." capCommand: ".$exec);
-        $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>$this->getProjectId(), "capCommand" => $exec )));
+        $gmclient->doBackgroundAsync("cap_command", json_encode(array("projectId"=>(string) $this->getProjectId(), "capCommand" => $exec )));
 
         return $gmclient;
 

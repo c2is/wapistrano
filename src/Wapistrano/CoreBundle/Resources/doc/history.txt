@@ -12,5 +12,6 @@ then import, ie make doctrine generate corresponding entities
 
 add field alias and description in hosts entity
 changed field primary noRelease noSymlink from integer to boolean
+add field jo_handle in deployments entity
 
 

@@ -94,6 +94,13 @@ class Deployments
     private $revision;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="job_handle", type="string", length=255, nullable=true)
+     */
+    private $jobHandle;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="pid", type="integer", nullable=true)
@@ -393,5 +400,28 @@ class Deployments
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Set jobHandle
+     *
+     * @param string $jobHandle
+     * @return Deployments
+     */
+    public function setJobHandle($jobHandle)
+    {
+        $this->jobHandle = $jobHandle;
+
+        return $this;
+    }
+
+    /**
+     * Get jobHandle
+     *
+     * @return string 
+     */
+    public function getJobHandle()
+    {
+        return $this->jobHandle;
     }
 }

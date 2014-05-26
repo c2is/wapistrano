@@ -51,6 +51,13 @@ class Projects
      */
     private $updatedAt;
 
+    /**
+     * @var @var string
+     *
+     * @ORM\Column(name="template", type="text", nullable=true, options={"comment" = "Legacy field"})
+     */
+    private $template;
+
 
 
     /**
@@ -153,5 +160,28 @@ class Projects
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set template
+     *
+     * @param string $template
+     * @return Projects
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    /**
+     * Get template
+     *
+     * @return string 
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 }

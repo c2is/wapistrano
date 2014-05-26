@@ -41,7 +41,10 @@ class ProjectsStageDeploymentController extends Controller
      */
     public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage, Deployments $deployment)
     {
+        $twigVars = array();
+        $twigVars["deployment"] = $deployment;
 
+        return $twigVars;
     }
 
     /**
@@ -54,6 +57,7 @@ class ProjectsStageDeploymentController extends Controller
         $gmClient = $this->get("wapistrano_core.gearman");
         $jobLog = $gmClient->getLog($jobHandle);
         $em = $this->container->get('doctrine')->getManager();
+        $logger = $this->get('logger');
         // regenerate original stage rb file
 
         if (false !== strpos($jobLog, "Wapistrano job ended")) {
@@ -64,7 +68,13 @@ class ProjectsStageDeploymentController extends Controller
             $deployment->setStatus("success");
             $em->persist($deployment);
             $em->flush();
-            $jobLog = "Wapistrano job ended";
+
+            $gmClient->delRedisLog($jobHandle);
+
+            $logger->info("Job ended on status success: ".$jobLog);
+
+            $status = "complete";
+
         } elseif (false !== strpos($jobLog, "Job failed")) {
             $today = new \DateTime();
             $deployment->setUpdatedAt($today);
@@ -74,10 +84,16 @@ class ProjectsStageDeploymentController extends Controller
             $em->persist($deployment);
             $em->flush();
 
-            $jobLog = "Python worker throw an error: ".$jobLog;
+            $gmClient->delRedisLog($jobHandle);
+
+            $logger->info("Job ended on status failed: ".$jobLog);
+            $status = "failed";
+        } else {
+            $logger->info("executing job:".$jobLog."".$jobHandle);
+            $status = "running";
         }
 
-        return new Response($jobLog);
+        return new Response(json_encode(array("status"=>$status, "log" => $jobLog)));
     }
 
     /**
@@ -108,11 +124,11 @@ class ProjectsStageDeploymentController extends Controller
         foreach($stageService->getConfigurations() as $confName=>$configuration) {
             if($configuration->getPromptOnDeploy()) {
                 $confPrompted[$confName] = $configuration;
-                $form->add($confName, null, array('mapped' => false, 'attr' => array('class'=>'form-control', 'label'=>'Execute')));
+                $form->add($confName, null, array('mapped' => false, 'attr' => array('class'=>'form-control')));
             }
         }
 
-        $form->add('saveBottom', 'submit', array('attr' => array('class'=>'btn btn-warning btn-sm')));
+        $form->add('saveBottom', 'submit', array('attr' => array('class'=>'btn btn-warning btn-sm'), "label" => "Start deployment"));
 
         $form->handleRequest($request);
 
@@ -125,6 +141,7 @@ class ProjectsStageDeploymentController extends Controller
 
             if("error" == $job->getTerminateStatus()) {
                 $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published, deploy aborted");
+                $job->delRedisLog($job->getJobHandle());
             } else {
                 $today = new \DateTime();
                 $deployment->setCreatedAt($today);
@@ -146,12 +163,7 @@ class ProjectsStageDeploymentController extends Controller
                 $twigVars['jobHandle'] = $job;
             }
 
-
-
-
-            // $stageService->deployStage($taskCommand);
-
-           // return $this->redirect($this->generateUrl('projectsList'));
+           // return $this->redirect($this->generateUrl('projectsStageDeploymentHome'));
         }
 
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));

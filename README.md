@@ -18,3 +18,7 @@ Todo : command to check if env is ok (services installed, capistrano path and ri
 INSTALL
 *** Capistrano server side
 
+
+Export your capistrano db like this:
+mysqldump -u root -p webistrano_prod --no-create-info -c > /tmp/webistrano-data.sql
+
