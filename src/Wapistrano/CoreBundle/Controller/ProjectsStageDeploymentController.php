@@ -31,16 +31,53 @@ class ProjectsStageDeploymentController extends Controller
     }
 
     /**
-     * @Route("/{id}/project_stage/{stageId}/deployment/{deploymentId}", requirements={"projectId" = "\d+", "stageId" = "\d+", "deploymentId" = "\d+"}, name="projectsStageDeploymentHome")
+     * @Route("/{id}/project_stage/{stageId}/deployment/{deploymentId}",
+     * requirements={"projectId" = "\d+", "stageId" = "\d+", "deploymentId" = "\d+"}, name="projectsStageDeploymentHome")
      * @ParamConverter("stage", options={"id" = "stageId"})
      * @ParamConverter("deployment", options={"id" = "deploymentId"})
-     * @Template("WapistranoCoreBundle::projects_stage_home.html.twig")
+     * @Breadcrumb("{project.name}", routeName="projectsHome", routeParameters={"id"="{id}"})
+     * @Breadcrumb("{stage.name}", routeName="projectsStageHome", routeParameters={"id"="{id}", "stageId"="{stageId}"})
+     * @Template("WapistranoCoreBundle::projects_stage_deployment_home.html.twig")
      */
     public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage, Deployments $deployment)
     {
-        $gmClient = $this->get("wapistrano_core.gearman");
 
-        return new Response($gmClient->getLog());
+    }
+
+    /**
+     * @Route("/{id}/project_stage/{stageId}/deployment/{deploymentId}/{jobHandle}",
+     * requirements={"projectId" = "\d+", "stageId" = "\d+", "deploymentId" = "\d+"}, name="projectsStageDeploymentDeploy")
+     * @ParamConverter("stage", options={"id" = "stageId"})
+     * @ParamConverter("deployment", options={"id" = "deploymentId"})
+     */
+    public function stageDeployAction(Request $request, Projects $project, Stages $stage, Deployments $deployment, $jobHandle) {
+        $gmClient = $this->get("wapistrano_core.gearman");
+        $jobLog = $gmClient->getLog($jobHandle);
+        $em = $this->container->get('doctrine')->getManager();
+        // regenerate original stage rb file
+
+        if (false !== strpos($jobLog, "Wapistrano job ended")) {
+            $today = new \DateTime();
+            $deployment->setUpdatedAt($today);
+            $deployment->setCompletedAt($today);
+            $deployment->setLog($jobLog);
+            $deployment->setStatus("success");
+            $em->persist($deployment);
+            $em->flush();
+            $jobLog = "Wapistrano job ended";
+        } elseif (false !== strpos($jobLog, "Job failed")) {
+            $today = new \DateTime();
+            $deployment->setUpdatedAt($today);
+            $deployment->setCompletedAt($today);
+            $deployment->setLog($jobLog);
+            $deployment->setStatus("failed");
+            $em->persist($deployment);
+            $em->flush();
+
+            $jobLog = "Python worker throw an error: ".$jobLog;
+        }
+
+        return new Response($jobLog);
     }
 
     /**
@@ -94,18 +131,22 @@ class ProjectsStageDeploymentController extends Controller
                 $deployment = $form->getData();
 
                 $deployment->setStage($stage);
+                $deployment->setStatus("running");
 
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($deployment);
                 $manager->flush();
 
-
+                $twigVars['deployment'] = $deployment;
 
                 $session = $request->getSession();
                 $session->getFlashBag()->add('notice', 'Deployment '.$deployment->getTask().' added');
+
+                $job = $stageService->deployStage($taskCommand);
+                $twigVars['jobHandle'] = $job;
             }
 
-            $twigVars['jobHandle'] = $job;
+
 
 
             // $stageService->deployStage($taskCommand);

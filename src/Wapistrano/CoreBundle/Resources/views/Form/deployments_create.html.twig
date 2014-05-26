@@ -77,11 +77,47 @@
                     <h4>Execution log
 
                     </h4>
+                    <div id="log">
 
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script language="JavaScript">
+
+        {% if jobHandle is defined %}
+           // $( document ).ready(function() {
+                var status = "";
+                while(status != "end") {
+                    var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": jobHandle.jobHandle }) }}";
+                    var oParam = {};
+
+                    var displayMessage = function(data){
+                        if(data == "Wapistrano job ended") {
+                            status = "end";
+                        }
+                        else if(data.indexOf("Python worker throw an error") > -1) {
+                            status = "end";
+                            $("#log").html((data || '') + status);
+                        }
+                        else {
+                            alert('uu');
+                            status = "end";
+                            $("#log").html((data || '') + "hello");
+                        }
+
+                    };
+                    status = "end";
+                    loadData(url, "html", displayMessage, oParam);
+                }
+           // });
+
+
+
+        {% endif %}
+    </script>
 {% endblock content %}
 
 

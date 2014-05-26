@@ -40,5 +40,12 @@
         </div>
     </div>
     {{ form_end(form, {'render_rest': true}) }}
+
+    <script>
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("wapistrano_corebundle_recipes_body"), {
+            lineWrapping: true
+        });
+    </script>
 {% endblock content %}
 

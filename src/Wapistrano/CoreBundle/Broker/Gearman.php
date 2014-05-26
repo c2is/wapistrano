@@ -113,6 +113,14 @@ class Gearman extends \GearmanClient
         return $this->terminateStatus;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getJobHandle()
+    {
+        return $this->jobHandle;
+    }
+
 
 
 }
