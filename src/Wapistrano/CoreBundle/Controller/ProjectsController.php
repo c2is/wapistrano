@@ -149,7 +149,7 @@ class ProjectsController extends Controller
         // ajax call
         if ($request->isXmlHttpRequest()) {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Popin:project.html.twig",
-                array("popinTitle" => "Edit a project", 'barTitle' =>  $this->getBarTitle(), 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView(), 'formUrl' => $formUrl)
+                array("popinTitle" => "Edit a project", 'barTitle' =>  "Edit a project", 'sectionAction' => $this->getSectionAction(), 'form' => $form->createView(), 'formUrl' => $formUrl)
             ));
         } else {
             return new Response($this->container->get("templating")->render("WapistranoCoreBundle:Form:projects_update.html.twig",
