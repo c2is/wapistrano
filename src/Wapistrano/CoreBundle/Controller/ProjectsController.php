@@ -36,7 +36,7 @@ class ProjectsController extends Controller
     {
 
         $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findAll();
+        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
