@@ -55,7 +55,8 @@ class Stage
             $this->em->persist($stage);
             $this->em->flush();
 
-            $this->publishStage($this->getProjectId(), $this->getStageId());
+            $job = $this->publishStage($this->getProjectId(), $stage->getId());
+            $job->delRedisLog($job->getJobHandle());
 
         }
 
@@ -243,6 +244,7 @@ class Stage
 
         $gmclient = $this->gearman;
         $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
+        $this->logger->debug($configurationsBlock."\n".$rolesBlock."\n".$recipeBlock);
         $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
 
         return $gmclient;
