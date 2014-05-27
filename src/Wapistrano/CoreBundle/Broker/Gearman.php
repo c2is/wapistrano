@@ -11,10 +11,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class Gearman extends \GearmanClient
 {
+    public $timeOutForEndingJob; // in second
+
     private $logger;
     private $redis;
     private $jobHandle;
     private $terminateStatus;
+
+    private $startMicroTime;
 
     public function __construct($config, $logger)
     {
@@ -25,6 +29,8 @@ class Gearman extends \GearmanClient
         $this->redis->connect("127.0.0.1", 6379);
 
         $this->logger = $logger;
+
+        $this->timeOutForEndingJob = 60;
     }
 
     public function init() {
@@ -55,6 +61,8 @@ class Gearman extends \GearmanClient
 
     public function doBackgroundSync($function, $workload) {
         $this->init();
+        $this->startMicroTime = microtime(true);
+
         $status = false;
 
         $job_handle = $this->doBackground($function, $workload);
@@ -67,10 +75,16 @@ class Gearman extends \GearmanClient
             $done = false;
             do
             {
-                usleep(1000);
+                usleep(1000000);
+                $duration = microtime(true) - $this->startMicroTime;
                 $stat = $this->jobStatus($job_handle);
                 if (!$stat[0]) // the job is unknown so it is done
                     $done = true;
+
+                if($duration > $this->timeOutForEndingJob) {
+                    $this->logger->info("Timeout thrown while waiting for end of job. Please check if workers are running");
+                    break;
+                }
             }
             while(!$done);
         }
@@ -94,6 +108,10 @@ class Gearman extends \GearmanClient
 
             $this->logger->error("Job error log: ". $redisJobLog);
             $this->terminateStatus = "error";
+        }
+        else {
+            $this->logger->warning("Job error log: ". $redisJobLog);
+            $this->terminateStatus = "running";
         }
 
         return $this;
