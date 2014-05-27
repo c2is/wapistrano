@@ -65,6 +65,9 @@ class ConfigurationExtension extends \Twig_Extension
 
         $configurationsList = array_merge($configurations->getProjectConfigurationList(), $configurations->getStageConfigurationList());
 
+        usort($configurationsList, function($a, $b){
+            return strcmp($a->getName(), $b->getName());
+        });
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Configuration:effective_list.html.twig",
             array("configurations" => $configurationsList, "projectId" => $parameters["projectId"]));

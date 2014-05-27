@@ -186,8 +186,8 @@ class Stage
     }
 
     public function getConfigurations() {
-        $projectConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL));
-        $stageConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => $this->getStageId()));
+        $projectConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL), array("name" => "ASC"));
+        $stageConfigurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("stageId" => $this->getStageId()), array("name" => "ASC"));
 
         $configurations = array();
         foreach($projectConfigurations as $configuration) {
@@ -196,7 +196,7 @@ class Stage
         foreach($stageConfigurations as $configuration) {
             $configurations[$configuration->getName()] = $configuration;
         }
-
+        ksort($configurations);
         return $configurations;
     }
 

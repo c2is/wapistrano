@@ -125,13 +125,13 @@ class Configuration
     }
 
     public function getProjectConfigurationList() {
-        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL));
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => NULL), array("name" => "ASC"));
 
         return $configurations;
     }
 
     public function getStageConfigurationList() {
-        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("stageId" => $this->getStageId()));
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("stageId" => $this->getStageId()), array("name" => "ASC"));
 
         return $configurations;
     }

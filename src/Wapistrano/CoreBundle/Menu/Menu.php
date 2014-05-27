@@ -11,21 +11,21 @@ class Menu
     }
 
     public function getMenuProjectItems() {
-        $projects = $this->em->getRepository('WapistranoCoreBundle:Projects')->findAll();
+        $projects = $this->em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
 
         return $projects;
 
     }
 
     public function getMenuHostItems() {
-        $hosts = $this->em->getRepository('WapistranoCoreBundle:Hosts')->findAll();
+        $hosts = $this->em->getRepository('WapistranoCoreBundle:Hosts')->findBy(array(), array("name" => "ASC"));
 
         return $hosts;
 
     }
 
     public function getMenuRecipeItems() {
-        $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')->findAll();
+        $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')->findBy(array(), array("name" => "ASC"));
 
         return $recipes;
 
