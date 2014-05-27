@@ -131,7 +131,7 @@ class Configuration
     }
 
     public function getStageConfigurationList() {
-        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("projectId" => $this->getProjectId(), "stageId" => $this->getStageId()));
+        $configurations = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')->findBy(array("stageId" => $this->getStageId()));
 
         return $configurations;
     }
