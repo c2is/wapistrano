@@ -18,7 +18,9 @@ Todo : command to check if env is ok (services installed, capistrano path and ri
 INSTALL
 *** Capistrano server side
 
-
+*** MIGRATION FROM WEBISTRANO ***
 Export your capistrano db like this:
 mysqldump -u root -p webistrano_prod --no-create-info -c > /tmp/webistrano-data.sql
+sed -i -e "s/\`recipe_id\`, \`stage_id\`/\`recipes_id\`, \`stages_id\`/g" /Users/andre/Downloads/webistrano-data.sql
+mysql -h 127.0.0.1 -u root wapistrano < /Users/andre/Downloads/webistrano-data.sql-e
 

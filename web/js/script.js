@@ -107,8 +107,6 @@ function loadData(url,returned,callback,param,request,loader,fail){
         dataType:   returned,
         error:      failed,
         beforeSend: loading,
-        cache:      false,
-        async:      false,
         success:    callback,
         xhrFields: {
             withCredentials: true
