@@ -119,7 +119,7 @@
         });
         $("body").on("submit", "#sendFormStage", function() {
             $("#flashMessagePopin").show("slow");
-            $("#flashMessagePopinText").html("<img src='{{asset('img/ajax-loader-electro.gif') }}'> Sending informations");
+            $("#flashMessagePopinText").html("{{ wapi_render_loader({"message" : "Sending informations..."}) }}");
             var form = $(this);
             $.post($(this).attr("action"), form.serialize(),
                     function success(data){
