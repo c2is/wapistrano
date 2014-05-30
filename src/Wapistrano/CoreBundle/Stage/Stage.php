@@ -67,8 +67,6 @@ class Stage
                 $twigVars["flashMessagePopinText"] = "Timeout thrown while waiting for end of job. Please check if workers are running";
             }
 
-
-
         }
 
         $formUrl = $this->router->generate("projectsStageAdd", array("id"=>$this->getProjectId()));
@@ -160,7 +158,7 @@ class Stage
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $id));
 
         $gmclient = $this->gearman;
-        if($gmclient->getBrokerErrors() == 0) {
+        if(count($gmclient->getBrokerErrors()) == 0) {
             $this->em->remove($stage);
             $this->em->flush();
             $jobId = $gmclient->doBackgroundAsync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
@@ -260,7 +258,7 @@ class Stage
         $recipeBlock = implode(" \n", $recipes);
 
         $gmclient = $this->gearman;
-        if($gmclient->getBrokerErrors() == 0) {
+        if(count($gmclient->getBrokerErrors()) == 0) {
             $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
             $this->logger->debug($configurationsBlock."\n".$rolesBlock."\n".$recipeBlock);
             $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
