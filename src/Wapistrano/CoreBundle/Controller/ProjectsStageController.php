@@ -153,7 +153,7 @@ class ProjectsStageController extends Controller
         $formReturn = $stage->displayFormRecipeManage();
 
         if ($formReturn == "redirect") {
-            $redirectUrl = $this->generateUrl("projectsStageHome", array("projectId"=>$projectId, "stageId"=>$stageId));
+            $redirectUrl = $this->generateUrl("projectsStageHome", array("id"=>$projectId, "stageId"=>$stageId));
             return $this->redirect($redirectUrl);
         } else {
             return new Response($formReturn);
