@@ -10,7 +10,7 @@
 {% for stage in stages %}
 
             <tr>
-                <td>{{ stage.name }}</td>
+                <td><a href="{{ path('projectsStageHome', { 'id': projectId, "stageId" : stage.id }) }}">{{ stage.name }}</a></td>
                 <td>{{ stage.alertEmails }}</td>
                 <td>
                     <a href="{{ path('projectsStageEdit', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-success btn-xs btn-grad popConfigurationAjax">

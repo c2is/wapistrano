@@ -151,14 +151,20 @@
             ajaxBPopup($(this).attr('href'));
         });
         $("body").on("submit", "#sendFormConfiguration", function() {
+            $("#flashMessagePopin").show("slow");
+            $("#flashMessagePopinText").html("{{ wapi_render_loader({"message" : "Sending informations..."}) }}");
             var form = $(this);
             $.post($(this).attr("action"), form.serialize(),
                     function success(data){
+                        $("#popinContent").html(data);
+
                         var reg=new RegExp("edit","gi");
-                        if(form.attr("action").match(reg)) {
-                            $("#flashMessagePopinText").html("Element updated successfully!");
-                        } else {
-                            $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
+                        if ($("#flashMessagePopinText").html().trim() == "") {
+                            if(form.attr("action").match(reg)) {
+                                $("#flashMessagePopinText").html("Element updated successfully!");
+                            } else {
+                                $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
+                            }
                         }
 
                         $("#flashMessagePopin").show("slow");

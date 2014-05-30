@@ -34,7 +34,7 @@ class Configuration
     public function displayFormAdd() {
         $configurationType = new ConfigurationParametersTypeAdd();
         $configuration = new ConfigurationParameters();
-
+        $twigVars = array();
 
         $form = $this->form->create($configurationType, $configuration);
         $form->add('project_id', 'hidden', array(
@@ -63,10 +63,17 @@ class Configuration
             // if it's a generic project configuration, update all stages
             if (null == $configuration->getStageId()) {
                 foreach ($this->stage->getStageList() as $stage) {
-                    $this->stage->publishStage($this->getProjectId(), $stage->getId());
+                    $job = $this->stage->publishStage($this->getProjectId(), $stage->getId());
+                    if(! is_object($job)) {
+                        $twigVars["flashMessagePopinText"] .= "<br>".$job;
+                    }
+
                 }
             } else {
-                $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+                $job = $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+                if(! is_object($job)) {
+                    $twigVars["flashMessagePopinText"] = $job;
+                }
             }
 
         }
@@ -77,9 +84,13 @@ class Configuration
             $formUrl = $this->router->generate("projectsConfigurationAdd", array("id"=>$this->getProjectId()));
         }
 
+        $twigVars["form"] = $form->createView();
+        $twigVars["formUrl"] = $formUrl;
+        $twigVars["projectId"] = $this->projectId;
+        $twigVars["popinTitle"] = "Add a configuration";
 
         return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig",
-            array("form"=>$form->createView(), "formUrl" => $formUrl, "projectId"=>$this->projectId, "popinTitle" => "Add a configuration"));
+            $twigVars);
 
     }
 

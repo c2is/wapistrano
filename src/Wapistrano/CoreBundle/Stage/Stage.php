@@ -7,6 +7,7 @@ use Wapistrano\CoreBundle\Entity\Recipes;
 use Wapistrano\CoreBundle\Form\StagesTypeAdd;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Doctrine\ORM\EntityRepository;
 
 class Stage
 {
@@ -109,6 +110,10 @@ class Stage
 
         $form->add('recipes', 'entity', array(
             'class'   => "WapistranoCoreBundle:Recipes",
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.name', 'ASC');
+                },
             'property'   => "name",
             'data' => $this->getRecipes(),
             'multiple'  => true,
@@ -143,7 +148,7 @@ class Stage
     }
 
     public function getStageList() {
-        $stages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("project" => $this->getProjectId()));
+        $stages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("project" => $this->getProjectId()), array("name" => "ASC"));
 
         return $stages;
     }
@@ -189,13 +194,24 @@ class Stage
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')
             ->findOneBy(array("project" => $this->getProjectId(), "id" => $this->getStageId()));
 
-        return $stage->getRecipe();
+        $recipes = $stage->getRecipe();
+
+        if (is_array($recipes)) {
+            usort($recipes, function($a, $b){
+                return strcmp($a->getName(), $b->getName());
+            });
+        }
+
+        return $recipes;
     }
 
     public function getAllRecipes() {
         $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')
-            ->findAll();
+            ->findBy(array(), array("name" => "ASC"));
 
+        usort($recipes, function($a, $b){
+            return strcmp($a->getName(), $b->getName());
+        });
         return $recipes;
     }
 
