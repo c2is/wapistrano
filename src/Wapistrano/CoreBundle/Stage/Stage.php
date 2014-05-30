@@ -133,7 +133,14 @@ class Stage
 
             $this->manageRecipes($recipes);
 
-            $this->publishStage($this->getProjectId(), $this->getStageId());
+            $job = $this->publishStage($this->getProjectId(), $this->getStageId());
+
+            if(! is_object($job)) {
+                $session = $this->request->getSession();
+                $msg = "<br>Configuration has been saved locally but not published on deployment server";
+                $msg .= "<br>It will be at the next stage configuration update, if workers are up...";
+                $session->getFlashBag()->add('notice', $job.$msg);
+            }
 
             return "redirect";
         }
@@ -196,12 +203,6 @@ class Stage
 
         $recipes = $stage->getRecipe();
 
-        if (is_array($recipes)) {
-            usort($recipes, function($a, $b){
-                return strcmp($a->getName(), $b->getName());
-            });
-        }
-
         return $recipes;
     }
 
@@ -209,9 +210,6 @@ class Stage
         $recipes = $this->em->getRepository('WapistranoCoreBundle:Recipes')
             ->findBy(array(), array("name" => "ASC"));
 
-        usort($recipes, function($a, $b){
-            return strcmp($a->getName(), $b->getName());
-        });
         return $recipes;
     }
 

@@ -14,7 +14,7 @@
         {% if null != flashMessage %}
         <div id="flashMessage" class="" style="">
             <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
-           {{ flashMessage }}
+           {{ flashMessage|raw }}
 
         </div>
         {% endif %}

@@ -78,6 +78,7 @@ class Stages
      *      joinColumns={@ORM\JoinColumn(name="stages_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipes_id", referencedColumnName="id")}
      *      ))
+     * @ORM\OrderBy({"name"="ASC"})
      */
     protected $recipe;
 
