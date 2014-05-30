@@ -42,7 +42,7 @@ class Gearman extends \GearmanClient
 
 
 
-        $this->timeOutForEndingJob = 10;
+        $this->timeOutForEndingJob = 30;
     }
 
     public function init() {
@@ -119,7 +119,7 @@ class Gearman extends \GearmanClient
         if (false !== strpos($redisJobLog, "Wapistrano job ended")) {
             $this->logger->info("Job log: ". $this->redis->get($job_handle));
             $this->terminateStatus = "success";
-        } elseif (false !== strpos($redisJobLog, "Job failed")) {
+        } elseif (false !== strpos($redisJobLog, "Wapistrano Job failed")) {
 
             $this->logger->error("Job error log: ". $redisJobLog);
             $this->terminateStatus = "error";

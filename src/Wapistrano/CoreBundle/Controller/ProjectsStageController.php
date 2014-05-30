@@ -131,8 +131,8 @@ class ProjectsStageController extends Controller
 
         $session = $request->getSession();
 
-        if(count($job->getBrokerErrors()) > 0) {
-            $session->getFlashBag()->add('notice', implode(" ", $job->getBrokerErrors()). "<br>The stage hasn't been deleted");
+        if(! is_object($job)) {
+            $session->getFlashBag()->add('notice',$job);
         } else {
             $session->getFlashBag()->add('notice', 'Stage deleted');
         }

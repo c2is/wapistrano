@@ -57,14 +57,8 @@ class Stage
             $this->em->flush();
 
             $job = $this->publishStage($this->getProjectId(), $stage->getId());
-            if(count($job->getBrokerErrors()) > 0) {
-                $twigVars["flashMessagePopinText"] = implode(" ", $job->getBrokerErrors()). "<br>The configuration hasn't been published on deployment server";
-            } else {
-                $job->delRedisLog($job->getJobHandle());
-            }
-
-            if($job->getTerminateStatus() == "running") {
-                $twigVars["flashMessagePopinText"] = "Timeout thrown while waiting for end of job. Please check if workers are running";
+            if(! is_object($job)) {
+                $twigVars["flashMessagePopinText"] = $job;
             }
 
         }
@@ -159,12 +153,22 @@ class Stage
 
         $gmclient = $this->gearman;
         if(count($gmclient->getBrokerErrors()) == 0) {
-            $this->em->remove($stage);
-            $this->em->flush();
-            $jobId = $gmclient->doBackgroundAsync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
-        }
+            $this->logger->info("Sending job 'delete_stage' to Gearman, stageId: ".$id);
+            $gmclient->doBackgroundSync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
 
-        return $gmclient;
+            if($gmclient->getTerminateStatus() == "running") {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                return "Timeout thrown while waiting for end of job. Please check if workers are running<br>The stage hasn't been deleted";
+            } else {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                $this->em->remove($stage);
+                $this->em->flush();
+                return $gmclient;
+            }
+
+        } else {
+            return implode(" ", $gmclient->getBrokerErrors()). "<br>The stage hasn't been deleted";
+        }
     }
 
     public function manageRecipes($recipes) {
@@ -262,10 +266,18 @@ class Stage
             $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
             $this->logger->debug($configurationsBlock."\n".$rolesBlock."\n".$recipeBlock);
             $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+
+            if($gmclient->getTerminateStatus() == "running") {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                return "Timeout thrown while waiting for end of job. Please check if workers are running";
+            } else {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                return $gmclient;
+            }
+
+        } else {
+            return implode(" ", $gmclient->getBrokerErrors()). "<br>The configuration hasn't been published on deployment server";
         }
-
-
-        return $gmclient;
 
     }
 
