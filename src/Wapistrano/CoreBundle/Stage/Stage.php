@@ -35,6 +35,7 @@ class Stage
     public function displayFormAdd() {
         $stageType = new StagesTypeAdd();
         $stage = new Stages();
+        $twigVars = array();
 
         $project = $this->em->getRepository('WapistranoCoreBundle:Projects')
             ->findOneBy(array( "id" => $this->getProjectId()));
@@ -56,14 +57,28 @@ class Stage
             $this->em->flush();
 
             $job = $this->publishStage($this->getProjectId(), $stage->getId());
-            $job->delRedisLog($job->getJobHandle());
+            if(count($job->getBrokerErrors()) > 0) {
+                $twigVars["flashMessagePopinText"] = implode(" ", $job->getBrokerErrors()). "<br>The configuration hasn't been published on deployment server";
+            } else {
+                $job->delRedisLog($job->getJobHandle());
+            }
+
+            if($job->getTerminateStatus() == "running") {
+                $twigVars["flashMessagePopinText"] = "Timeout thrown while waiting for end of job. Please check if workers are running";
+            }
+
+
 
         }
 
         $formUrl = $this->router->generate("projectsStageAdd", array("id"=>$this->getProjectId()));
 
-        return $this->twig->render("WapistranoCoreBundle:Popin:stage.html.twig",
-            array("form"=>$form->createView(), "formUrl" => $formUrl, "projectId"=>$this->projectId, "popinTitle" => "Add a stage"));
+        $twigVars["form"] = $form->createView();
+        $twigVars["formUrl"] = $formUrl;
+        $twigVars["projectId"] = $this->projectId;
+        $twigVars["popinTitle"] = "Add a stage";
+
+        return $this->twig->render("WapistranoCoreBundle:Popin:stage.html.twig", $twigVars);
 
     }
 
@@ -143,13 +158,15 @@ class Stage
 
     public function delete($id) {
         $stage = $this->em->getRepository('WapistranoCoreBundle:Stages')->findOneBy(array("id" => $id));
-        $this->em->remove($stage);
-        $this->em->flush();
 
         $gmclient = $this->gearman;
+        if($gmclient->getBrokerErrors() == 0) {
+            $this->em->remove($stage);
+            $this->em->flush();
+            $jobId = $gmclient->doBackgroundAsync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
+        }
 
-        $jobId = $gmclient->doBackgroundAsync("delete_stage", json_encode(array("projectId"=>$this->getProjectId(), "stageId" => (string) $id)));
-
+        return $gmclient;
     }
 
     public function manageRecipes($recipes) {
@@ -243,9 +260,12 @@ class Stage
         $recipeBlock = implode(" \n", $recipes);
 
         $gmclient = $this->gearman;
-        $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
-        $this->logger->debug($configurationsBlock."\n".$rolesBlock."\n".$recipeBlock);
-        $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        if($gmclient->getBrokerErrors() == 0) {
+            $this->logger->info("Sending job 'publish_stage' to Gearman, projectId: ".$projectId." stageId: ".$stageId);
+            $this->logger->debug($configurationsBlock."\n".$rolesBlock."\n".$recipeBlock);
+            $gmclient->doBackgroundSync("publish_stage", json_encode(array("projectId"=> (string) $projectId, "stageId" => (string) $stageId, "content" => $configurationsBlock."\n".$rolesBlock."\n".$recipeBlock  )));
+        }
+
 
         return $gmclient;
 

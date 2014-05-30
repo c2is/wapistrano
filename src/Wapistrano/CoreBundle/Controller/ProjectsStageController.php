@@ -127,10 +127,15 @@ class ProjectsStageController extends Controller
         $stage = $this->container->get('wapistrano_core.stage');
         $stage->setProjectId($projectId) ;
         $stage->setStageId($stageId);
-        $stage->delete($stageId);
+        $job = $stage->delete($stageId);
 
         $session = $request->getSession();
-        $session->getFlashBag()->add('notice', 'Stage deleted');
+
+        if(count($job->getBrokerErrors()) > 0) {
+            $session->getFlashBag()->add('notice', implode(" ", $job->getBrokerErrors()). "<br>The stage hasn't been deleted");
+        } else {
+            $session->getFlashBag()->add('notice', 'Stage deleted');
+        }
 
         return $this->redirect($this->generateUrl('projectsHome', array("id" => $projectId)));
     }

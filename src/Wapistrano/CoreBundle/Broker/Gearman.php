@@ -13,6 +13,7 @@ class Gearman extends \GearmanClient
 {
     public $timeOutForEndingJob; // in second
 
+    private $brokerErrors = array();
     private $logger;
     private $redis;
     private $jobHandle;
@@ -22,20 +23,34 @@ class Gearman extends \GearmanClient
 
     public function __construct($config, $logger)
     {
+
         parent::__construct();
-        $this->addServer($config["gearman"]["host"], $config["gearman"]["port"]);
+
+        $this->logger = $logger;
+
+        try {
+            $this->addServer($config["gearman"]["host"], $config["gearman"]["port"]);
+        } catch(\Exception $e) {
+            $msg = "Gearman server seems to be unavailable";
+            $this->logger->warning($msg);
+            $this->brokerErrors[] = $msg;
+        }
+
 
         $this->redis = new \Redis();
         $this->redis->connect("127.0.0.1", 6379);
 
-        $this->logger = $logger;
 
-        $this->timeOutForEndingJob = 60;
+
+        $this->timeOutForEndingJob = 10;
     }
 
     public function init() {
         $this->jobHandle = "";
         $this->terminateStatus = "";
+        if(count($this->getBrokerErrors()) > 0) {
+
+        }
     }
 
     public function doBackgroundAsync($function, $workload) {
@@ -141,6 +156,14 @@ class Gearman extends \GearmanClient
     public function getJobHandle()
     {
         return $this->jobHandle;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBrokerErrors()
+    {
+        return $this->brokerErrors;
     }
 
 

@@ -1,7 +1,11 @@
 {% extends 'WapistranoCoreBundle::base_popin.html.twig' %}
 {% block content %}
 <div id="flashMessagePopin" class="" style="display:none">
-    <span id="flashMessagePopinText"></span>
+    <span id="flashMessagePopinText">
+        {% if flashMessagePopinText is defined %}
+            {{ flashMessagePopinText|raw }}
+        {% endif %}
+        </span>
     <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
 </div>
 {{ form_start(form, {'action': formUrl, 'attr': {'class': 'form-horizontal', id : 'sendFormStage'} }) }}

@@ -14,7 +14,7 @@
         {% if null != flashMessage %}
         <div id="flashMessage" class="" style="">
             <i id="flashMessageClose" class="glyphicon glyphicon-remove" style="float:right"></i>
-           {{ flashMessage }}
+           {{ flashMessage|raw }}
 
         </div>
         {% endif %}
@@ -118,18 +118,26 @@
             ajaxBPopup($(this).attr('href'));
         });
         $("body").on("submit", "#sendFormStage", function() {
+            $("#flashMessagePopin").show("slow");
+            $("#flashMessagePopinText").html("<img src='{{asset('img/ajax-loader-electro.gif') }}'> Sending informations");
             var form = $(this);
             $.post($(this).attr("action"), form.serialize(),
                     function success(data){
+                        $("#popinContent").html(data);
+
                         var reg=new RegExp("edit","gi");
-                        if(form.attr("action").match(reg)) {
-                            $("#flashMessagePopinText").html("Element updated successfully!");
-                        } else {
-                            $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
+                        if ($("#flashMessagePopinText").html().trim() == "") {
+                            if(form.attr("action").match(reg)) {
+                                $("#flashMessagePopinText").html("Element updated successfully!");
+                            } else {
+                                $("#flashMessagePopinText").html("Element created successfully! <br>You can now create another one or just close the window.");
+                            }
                         }
 
                         $("#flashMessagePopin").show("slow");
                         updateStageList();
+                    }).fail( function(xhr, textStatus, errorThrown) {
+                        $("#flashMessagePopinText").html(xhr.responseText);
                     });
 
             return false;
