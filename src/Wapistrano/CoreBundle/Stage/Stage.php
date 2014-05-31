@@ -137,7 +137,7 @@ class Stage
 
             if(! is_object($job)) {
                 $session = $this->request->getSession();
-                $msg = "<br>Configuration has been saved locally but not published on deployment server";
+                $msg = "<br>The configuration has been saved locally";
                 $msg .= "<br>It will be at the next stage configuration update, if workers are up...";
                 $session->getFlashBag()->add('notice', $job.$msg);
             }
