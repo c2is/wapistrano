@@ -120,10 +120,16 @@ class Configuration
             // if it's a generic project configuration, update all stages
             if (null == $configuration->getStageId()) {
                 foreach ($this->stage->getStageList() as $stage) {
-                    $this->stage->publishStage($this->getProjectId(), $stage->getId());
+                    $job = $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+                    if(! is_object($job)) {
+                        $twigVars["flashMessagePopinText"] = $job;
+                    }
                 }
             } else {
-                $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+                $job = $this->stage->publishStage($this->getProjectId(), $configuration->getStageId());
+                if(! is_object($job)) {
+                    $twigVars["flashMessagePopinText"] = $job;
+                }
             }
 
         }

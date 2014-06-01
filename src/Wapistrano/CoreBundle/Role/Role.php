@@ -69,7 +69,9 @@ class Role
             $this->em->flush();
 
             $job = $this->stage->publishStage($this->getProjectId(), $this->getStageId());
-            $job->delRedisLog($job->getJobHandle());
+            if(! is_object($job)) {
+                $twigVars["flashMessagePopinText"] = $job;
+            }
 
         }
 
@@ -99,7 +101,10 @@ class Role
             $this->em->persist($role);
             $this->em->flush();
 
-            $this->stage->publishStage($this->getProjectId(), $this->getStageId());
+            $job = $this->stage->publishStage($this->getProjectId(), $this->getStageId());
+            if(! is_object($job)) {
+                $twigVars["flashMessagePopinText"] = $job;
+            }
         }
 
         $formUrl = $this->router->generate("projectsStageRoleEdit", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId(), "roleId"=>$this->getRoleId()));

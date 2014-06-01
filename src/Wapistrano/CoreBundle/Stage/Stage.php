@@ -94,7 +94,6 @@ class Stage
             $this->em->persist($stage);
             $this->em->flush();
 
-            $this->publishStage($this->getProjectId(), $this->getStageId());
         }
 
         $formUrl = $this->router->generate("projectsStageEdit", array("projectId"=>$this->getProjectId(), "stageId"=>$this->getStageId()));
@@ -138,7 +137,7 @@ class Stage
             if(! is_object($job)) {
                 $session = $this->request->getSession();
                 $msg = "<br>The configuration has been saved locally";
-                $msg .= "<br>It will be at the next stage configuration update, if workers are up...";
+                $msg .= "<br>It will be at the next stage configuration update, if gearman and workers are up...";
                 $session->getFlashBag()->add('notice', $job.$msg);
             }
 

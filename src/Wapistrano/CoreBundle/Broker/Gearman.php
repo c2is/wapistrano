@@ -38,7 +38,7 @@ class Gearman extends \GearmanClient
 
 
         $this->redis = new \Redis();
-        $this->redis->connect("127.0.0.1", 6379);
+        $this->redis->connect($config["redis"]["host"], $config["redis"]["port"]);
 
 
 
