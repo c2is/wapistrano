@@ -46,7 +46,11 @@
                 <div id="headBoxRight" style="text-align: center">
                     <strong>Status</strong>
                     <div id="status">
-                        {{ wapi_render_loader({"loader" : "bgWhite", "message" : "<br>Deploy running..."}) }}
+                        {% if "running" == deployment.status %}
+                            {{ wapi_render_loader({"loader" : "bgWhite", "message" : "<br>Deploy running..."}) }}
+                        {% else %}
+                            <img src="{{asset('img/status_' ~ deployment.status ~ '.gif') }}">
+                        {% endif %}
                     </div>
 
                 </div><!-- /#trigo -->
@@ -60,7 +64,7 @@
                 <div class="body">
                     <h4>Execution log</h4>
                     <div id="log">
-
+                        {{ deployment.log }}
                     </div>
                 </div>
             </div>
@@ -69,7 +73,7 @@
 
     <script language="JavaScript">
 
-        {% if deployment.jobHandle is defined %}
+        {% if "" != deployment.jobHandle %}
         $( document ).ready(function() {
             var status = "start";
             while(status != "end") {

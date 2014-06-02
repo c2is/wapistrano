@@ -50,15 +50,17 @@ class DeploymentExtension extends \Twig_Extension
         $stageService = $this->container->get('wapistrano_core.stage');
         $stageService->setProjectId($parameters["projectId"]);
 
+        $stageId = "";
         if(isset($parameters["stageId"])) {
             $stageService->setStageId($parameters["stageId"]);
+            $stageId = $parameters["stageId"];
         }
 
 
         $deployments = $stageService->getDeploymentList();
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Stage:deployment_list.html.twig",
-            array("deployments" => $deployments, "projectId" => $parameters["projectId"], "stageId" => $parameters["stageId"]));
+            array("deployments" => $deployments, "projectId" => $parameters["projectId"], "stageId" => $stageId));
 
     }
 }

@@ -163,14 +163,15 @@ class Stage
 
         $deploymentRepo = $this->em->getRepository('WapistranoCoreBundle:Deployments');
         if("" == $this->getStageId()) {
-            $deployments = $deploymentRepo->findBy(array("stage" => $this->getStageId()), array("completedAt" => "DESC"));
-        } else {
             $projectStages = $this->em->getRepository('WapistranoCoreBundle:Stages')->findBy(array("project" => $this->getProjectId()), array("name" => "ASC"));
             $stageIds = array();
             foreach ($projectStages as $projectStage) {
                 $stageIds[] = $projectStage->getId();
             }
             $deployments = $deploymentRepo->findBy(array("stage" => $stageIds), array("completedAt" => "DESC"));
+
+        } else {
+            $deployments = $deploymentRepo->findBy(array("stage" => $this->getStageId()), array("completedAt" => "DESC"));
         }
 
 
