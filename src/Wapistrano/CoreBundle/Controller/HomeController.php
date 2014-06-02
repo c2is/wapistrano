@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
 use Symfony\Component\HttpFoundation\Request;
+use Wapistrano\CoreBundle\Broker\Libs\PhpGearmanAdmin\GearmanAdmin as Gadm;
 
 /**
  * @Route("/")
@@ -19,21 +20,36 @@ class HomeController extends Controller
 
     /**
      * @Route("/",  name="home")
+     * @Template("WapistranoCoreBundle::home.html.twig")
      */
     public function indexAction()
     {
+        $brokerService = $this->container->get('wapistrano_core.gearman');
+        $twigVars = array();
+        $twigVars['barTitle'] = "Wapistrano Status";
 
-        $gmclient = $this->get("wapistrano_core.gearman");
+        if(count($brokerService->getBrokerErrors()) == 0) {
+            $admin = new Gadm();
 
-        $status = $gmclient->doBackgroundAsync("publish_stage", "this is a test");
+            $twigVars["brokerIsUp"] = true;
+            $twigVars["brokerVersion"] = 'gearman version: ' . $admin->getVersion() . "\n";
+            $twigVars["brokerStatus"] = $admin->getStatus();
+            $twigVars["brokerWorkers"] = $admin->getWorkers();
+        } else {
+            $twigVars["brokerIsUp"] = false;
 
-        if(!$status) {
-            echo "pas glop";
+            if (!$sock = @fsockopen('www.google.fr', 80, $num, $error, 5)) {
+                $twigVars["message"] = "Internet connexion seems to be down";
+            } else {
+                $twigVars["message"] = "Gearman broker is not available";
+            }
+
         }
 
-        $txt = "";
 
-        return new Response($txt);
+
+
+        return $twigVars;
     }
 
 

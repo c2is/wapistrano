@@ -42,7 +42,16 @@ class ProjectsStageDeploymentController extends Controller
     public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage, Deployments $deployment)
     {
         $twigVars = array();
+        $stageService = $this->get("wapistrano_core.stage");
+        $stageService->setProjectId($project->getId());
+        $stageService->setStageId($stage->getId());
+        // $roles = $stageService->getRoles();
+        // $session = $request->getSession();
+        $twigVars['flashMessage'] = "";
+        $twigVars['barTitle'] = 'Deploy';
         $twigVars["deployment"] = $deployment;
+        $twigVars["project"] = $project;
+        $twigVars["stage"] = $stage;
 
         return $twigVars;
     }
@@ -60,38 +69,45 @@ class ProjectsStageDeploymentController extends Controller
         $logger = $this->get('logger');
         // regenerate original stage rb file
 
-        if (false !== strpos($jobLog, "Wapistrano job ended")) {
-            $today = new \DateTime();
-            $deployment->setUpdatedAt($today);
-            $deployment->setCompletedAt($today);
-            $deployment->setLog($jobLog);
-            $deployment->setStatus("success");
-            $em->persist($deployment);
-            $em->flush();
+        if($deployment->getStatus() == "running")
+        {
+            if (false !== strpos($jobLog, "Wapistrano job ended")) {
+                $today = new \DateTime();
+                $deployment->setUpdatedAt($today);
+                $deployment->setCompletedAt($today);
+                $deployment->setLog($jobLog);
+                $deployment->setStatus("success");
+                $em->persist($deployment);
+                $em->flush();
 
-            $gmClient->delRedisLog($jobHandle);
+                $gmClient->delRedisLog($jobHandle);
 
-            $logger->info("Job ended on status success: ".$jobLog);
+                $logger->info("Job ended on status success: ".$jobLog);
 
-            $status = "complete";
+                $status = "success";
 
-        } elseif (false !== strpos($jobLog, "Job failed")) {
-            $today = new \DateTime();
-            $deployment->setUpdatedAt($today);
-            $deployment->setCompletedAt($today);
-            $deployment->setLog($jobLog);
-            $deployment->setStatus("failed");
-            $em->persist($deployment);
-            $em->flush();
+            } elseif (false !== strpos($jobLog, "Wapistrano Job failed")) {
+                $today = new \DateTime();
+                $deployment->setUpdatedAt($today);
+                $deployment->setCompletedAt($today);
+                $deployment->setLog($jobLog);
+                $deployment->setStatus("failed");
+                $em->persist($deployment);
+                $em->flush();
 
-            $gmClient->delRedisLog($jobHandle);
+                $gmClient->delRedisLog($jobHandle);
 
-            $logger->info("Job ended on status failed: ".$jobLog);
-            $status = "failed";
+                $logger->info("Job ended on status failed: ".$jobLog);
+                $status = "failed";
+            } else {
+                $logger->info("executing job:".$jobLog."".$jobHandle);
+                $status = "running";
+            }
         } else {
-            $logger->info("executing job:".$jobLog."".$jobHandle);
-            $status = "running";
+            $jobLog = $deployment->getLog();
+            $status = $deployment->getStatus();
         }
+
 
         return new Response(json_encode(array("status"=>$status, "log" => $jobLog)));
     }
@@ -150,9 +166,6 @@ class ProjectsStageDeploymentController extends Controller
                 $deployment->setStage($stage);
                 $deployment->setStatus("running");
 
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($deployment);
-                $manager->flush();
 
                 $twigVars['deployment'] = $deployment;
 
@@ -160,10 +173,16 @@ class ProjectsStageDeploymentController extends Controller
                 $session->getFlashBag()->add('notice', 'Deployment '.$deployment->getTask().' added');
 
                 $job = $stageService->deployStage($taskCommand);
-                $twigVars['jobHandle'] = $job;
-            }
+                $deployment->setJobHandle($job->getJobHandle());
 
-           // return $this->redirect($this->generateUrl('projectsStageDeploymentHome'));
+                $manager = $this->getDoctrine()->getManager();
+                $manager->persist($deployment);
+                $manager->flush();
+
+                $twigVars['jobHandle'] = $job;
+
+                return $this->redirect($this->generateUrl('projectsStageDeploymentHome', array("id" => $project->getId(), "stageId" => $stage->getId(), "deploymentId" => $deployment->getId())));
+            }
         }
 
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
@@ -176,6 +195,7 @@ class ProjectsStageDeploymentController extends Controller
         $twigVars['flashMessage'] = $flashMessage;
         $twigVars['form'] = $form->createView();
         $twigVars['roles'] = $roles;
+
 
 
         return $twigVars;

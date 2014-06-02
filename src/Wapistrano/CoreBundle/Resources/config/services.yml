@@ -23,6 +23,12 @@ services:
         tags:
             - { name: twig.extension }
 
+    wapistrano_core.twig.deployment_extension:
+            class: Wapistrano\CoreBundle\Twig\DeploymentExtension
+            arguments: [ @service_container ]
+            tags:
+                - { name: twig.extension }
+
     wapistrano_core.twig.misc_extension:
         class: Wapistrano\CoreBundle\Twig\MiscExtension
         arguments: [ @service_container ]

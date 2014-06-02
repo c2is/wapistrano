@@ -125,3 +125,16 @@ pre code {
     z-index:10000
 }
 
+.warning {
+    color: red;
+    font-size: 1.7em;
+}
+.loaderTextRight {
+    display:inline;
+    margin-left : 15px;
+
+}
+.loaderTextBottom {
+
+}
+

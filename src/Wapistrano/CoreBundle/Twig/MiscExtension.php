@@ -43,9 +43,23 @@ class MiscExtension extends \Twig_Extension
 
     public function renderLoader($parameters = array(), $name = null)
     {
+        if(isset($parameters["loader"])) {
+            $loader = $parameters["loader"];
+        } else {
+            $loader = "";
+        }
+
+        switch($loader) {
+            case "bgWhite":
+                $loader = "ajax-loader-electro-bgwhite.gif";
+                break;
+
+            default:
+                $loader = "ajax-loader-electro.gif";
+        }
 
         return $this->container->get("templating")->render("WapistranoCoreBundle:Misc:loader.html.twig",
-            array("message" => $parameters["message"]));
+            array("loader" => $loader,"message" => $parameters["message"]));
 
     }
 

@@ -1,0 +1,32 @@
+<table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+    <thead>
+    <tr>
+        <th>Status</th>
+        <th>Stage</th>
+        <th>Task</th>
+        <th>Completed at</th>
+    </tr>
+    </thead>
+    <tbody>
+{% for deployment in deployments %}
+
+            <tr>
+                <td><a href="{{ path('projectsStageDeploymentHome', { 'id': projectId, "stageId" : deployment.stage.id, "deploymentId" : deployment.id }) }}">
+                        <img src="{{asset('img/status_' ~ deployment.status ~ '_small.gif') }}"></a></td>
+                <td>{{ deployment.stage.name }}</td>
+                <td>{{ deployment.task }}</td>
+                <td>{{ deployment.createdAt|date('Y-m-d i:s') }}</td>
+            </tr>
+
+{% endfor %}
+    </tbody>
+</table>
+
+{% if isAjax is defined %}
+    <script language="javaScript">
+        $( document ).ready(  function(  ) {
+            $(".confirm").confirm();
+
+        });
+    </script>
+{% endif %}

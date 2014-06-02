@@ -1,0 +1,37 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+
+<div class="box primary">
+    <header>
+        <div class="icons">
+            <i class="fa fa-building-o"></i>
+        </div>
+        <h5>{{ barTitle }}</h5>
+        <div class="toolbar">
+
+        </div>
+    </header>
+
+</div>
+<div class="col-lg-8">
+    <div class="box">
+        <header><h5>Broker</h5></header>
+        <div class="body">
+            {% if brokerIsUp %}
+               {{ brokerVersion }}<br><br>
+               <strong>Status</strong><br>
+                {{ brokerStatus|replace({'\n':'<br>'})|raw }}<br>
+                <strong>Workers</strong><br>
+               {{ brokerWorkers|replace({'\n':'<br>'})|raw }}
+            {% else %}
+                <span class="" style="width:150px">
+                    <i class="glyphicon glyphicon-warning-sign warning"></i>
+                </span>
+                {{ message }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

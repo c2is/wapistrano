@@ -1,7 +1,5 @@
 {% extends 'WapistranoCoreBundle::base.html.twig' %}
 {% block content %}
-{% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
-{{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
 
 <div class="box primary">
     <header>
@@ -28,10 +26,13 @@
             <div class="body">
                 <div id="headBoxLeft">
                     <div class="">
-                        {{ deployment.task }}
+                        Task executed: {{ deployment.task }}
                     </div>
                     <div class="">
+                        Description:<br>
                         {{ deployment.description }}
+                        Started at: {{ deployment.createdAt|date('Y-m-d i:s') }}<br>
+                        Completed at: {{ deployment.completedAt|date('Y-m-d i:s') }}<br>
                     </div>
                 </div>
 
@@ -39,12 +40,14 @@
             </div><!-- /.body -->
         </div><!-- /.box -->
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-2">
         <div class="box">
             <div class="body">
-                <div id="headBoxRight">
+                <div id="headBoxRight" style="text-align: center">
                     <strong>Status</strong>
-                    {{ deployment.status }}
+                    <div id="status">
+                        {{ wapi_render_loader({"loader" : "bgWhite", "message" : "<br>Deploy running..."}) }}
+                    </div>
 
                 </div><!-- /#trigo -->
             </div><!-- /.body -->
@@ -65,24 +68,28 @@
     </div>
 
     <script language="JavaScript">
-        {% if jobHandle is defined %}
+
+        {% if deployment.jobHandle is defined %}
         $( document ).ready(function() {
             var status = "start";
             while(status != "end") {
-                var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": jobHandle.jobHandle }) }}";
+                var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": deployment.jobHandle }) }}";
 
                 var displayMessage = function(data) {
-                    if(data["status"] == "complete") {
+                    if(data["status"] == "success") {
                         status = "end";
                         $("#log").html((data["log"] || ''));
+                        $("#status").html("<img src='{{asset('img/status_success.gif') }}'>");
                     }
                     else if(data["status"] == "failed") {
                         status = "end";
                         $("#log").html((data["log"] || ''));
+                        $("#status").html("<img src='{{asset('img/status_failed.gif') }}'>");
 
                     } else if(data["status"] == "running") {
                         $("#log").html((data["log"] || ''));
                     }
+
                 };
                 checkJobLog(url,  displayMessage);
             }
