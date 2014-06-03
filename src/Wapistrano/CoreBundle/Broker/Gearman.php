@@ -28,19 +28,23 @@ class Gearman extends \GearmanClient
 
         $this->logger = $logger;
 
-        try {
-            $this->addServer($config["gearman"]["host"], $config["gearman"]["port"]);
-        } catch(\Exception $e) {
-            $msg = "Gearman server seems to be unavailable";
+        $numServersUnavailable = 0;
+        foreach($config["gearman"] as $server) {
+            try {
+            $this->addServer($server["host"], $server["port"]);
+            } catch(\Exception $e) {
+                $numServersUnavailable ++;
+            }
+        }
+
+        if($numServersUnavailable == count($config["gearman"])) {
+            $msg = "No Gearman server available";
             $this->logger->warning($msg);
             $this->brokerErrors[] = $msg;
         }
 
-
         $this->redis = new \Redis();
         $this->redis->connect($config["redis"]["host"], $config["redis"]["port"]);
-
-
 
         $this->timeOutForEndingJob = 30;
     }

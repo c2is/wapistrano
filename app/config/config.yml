@@ -70,8 +70,7 @@ swiftmailer:
 
 wapistrano_core:
     gearman:
-        host: 127.0.0.1
-        port: 4730
+        - { host: 127.0.0.1, port: 4730}
     redis:
         host: 127.0.0.1
         port: 6379
