@@ -4,7 +4,7 @@
         <th>Status</th>
         <th>Stage</th>
         <th>Task</th>
-        <th>Completed at</th>
+        <th>Created at</th>
     </tr>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
                         <img src="{{asset('img/status_' ~ deployment.status ~ '_small.gif') }}"></a></td>
                 <td>{{ deployment.stage.name }}</td>
                 <td>{{ deployment.task }}</td>
-                <td>{{ deployment.createdAt|date('Y-m-d i:s') }}</td>
+                <td>{{ deployment.createdAt|date('Y-m-d H:i:s') }}</td>
             </tr>
 
 {% endfor %}

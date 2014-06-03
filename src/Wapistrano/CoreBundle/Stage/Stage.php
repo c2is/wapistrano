@@ -292,6 +292,19 @@ class Stage
         $configurationsBlock = implode("\n", $configurations);
         $rolesBlock = implode("\n", $roles);
         $recipeBlock = implode(" \n", $recipes);
+        $recipeBlock .= "\nnamespace :deploy do
+           task :restart, :roles => :app, :except => { :no_release => true } do
+             # do nothing
+           end
+
+           task :start, :roles => :app, :except => { :no_release => true } do
+             # do nothing
+           end
+
+           task :stop, :roles => :app, :except => { :no_release => true } do
+             # do nothing
+           end
+         end";
 
         $gmclient = $this->gearman;
         if(count($gmclient->getBrokerErrors()) == 0) {

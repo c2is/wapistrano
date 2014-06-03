@@ -41,6 +41,10 @@ class ProjectsStageDeploymentController extends Controller
      */
     public function stageDeploymentHomeAction(Request $request, Projects $project, Stages $stage, Deployments $deployment)
     {
+        $session = $request->getSession();
+        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
+        $session->getFlashBag()->clear('notice');
+
         $twigVars = array();
         $stageService = $this->get("wapistrano_core.stage");
         $stageService->setProjectId($project->getId());
@@ -52,6 +56,7 @@ class ProjectsStageDeploymentController extends Controller
         $twigVars["deployment"] = $deployment;
         $twigVars["project"] = $project;
         $twigVars["stage"] = $stage;
+        $twigVars["flashMessage"] = $flashMessage;
 
         return $twigVars;
     }
@@ -172,7 +177,7 @@ class ProjectsStageDeploymentController extends Controller
                 $session = $request->getSession();
                 $session->getFlashBag()->add('notice', 'Deployment '.$deployment->getTask().' added');
 
-                $job = $stageService->deployStage($taskCommand);
+                $job = $stageService->deployStage($deployment->getTask());
                 $deployment->setJobHandle($job->getJobHandle());
 
                 $manager = $this->getDoctrine()->getManager();

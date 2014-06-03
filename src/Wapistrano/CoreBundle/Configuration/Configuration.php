@@ -98,7 +98,7 @@ class Configuration
         $configurationType = new ConfigurationParametersTypeAdd();
 
         $configuration = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')
-            ->findOneBy(array("projectId" => $this->getProjectId(), "id" => $this->getConfigurationId()));
+            ->findOneBy(array("id" => $this->getConfigurationId()));
 
 
 

@@ -13,7 +13,7 @@
     </header>
 
 </div>
-<div class="col-lg-8">
+<div class="col-lg-6">
     <div class="box">
         <header><h5>Broker</h5></header>
         <div class="body">
@@ -32,6 +32,99 @@
         </div>
     </div>
 </div>
+
+    <div class="col-lg-6">
+        <div class="box">
+            <header><h5>Deployments Running</h5></header>
+            <div class="body">
+                <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Created at</th>
+                        <th>Project</th>
+                        <th>Stage</th>
+                        <th>Task</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for deployment in deploymentsRunning %}
+
+                        <tr>
+                            <td><a href="{{ path('projectsStageDeploymentHome', { 'id': deployment.stage.project.id, "stageId" : deployment.stage.id, "deploymentId" : deployment.id }) }}">
+                                    {{ deployment.createdAt|date('Y-m-d H:i:s') }}</a></td>
+                            <td><a href="{{ path('projectsHome', { 'id': deployment.stage.project.id}) }}">{{ deployment.stage.project.name }}</a></td>
+                            <td>{{ deployment.stage.name }}</td>
+                            <td>{{ deployment.task }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="box">
+            <header><h5>Last 5 failed deployments </h5></header>
+            <div class="body">
+                <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Created at</th>
+                        <th>Project</th>
+                        <th>Stage</th>
+                        <th>Task</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for deployment in deploymentsFailed %}
+
+                        <tr>
+                            <td><a href="{{ path('projectsStageDeploymentHome', { 'id': deployment.stage.project.id, "stageId" : deployment.stage.id, "deploymentId" : deployment.id }) }}">
+                                    {{ deployment.createdAt|date('Y-m-d H:i:s') }}</a></td>
+                            <td><a href="{{ path('projectsHome', { 'id': deployment.stage.project.id}) }}">{{ deployment.stage.project.name }}</a></td>
+                            <td>{{ deployment.stage.name }}</td>
+                            <td>{{ deployment.task }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12">
+        <div class="box">
+            <header><h5>Last 5 success deployments </h5></header>
+            <div class="body">
+                <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Created at</th>
+                        <th>Project</th>
+                        <th>Stage</th>
+                        <th>Task</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for deployment in deploymentsSuccess %}
+
+                        <tr>
+                            <td><a href="{{ path('projectsStageDeploymentHome', { 'id': deployment.stage.project.id, "stageId" : deployment.stage.id, "deploymentId" : deployment.id }) }}">
+                                    {{ deployment.createdAt|date('Y-m-d H:i:s') }}</a></td>
+                            <td><a href="{{ path('projectsHome', { 'id': deployment.stage.project.id}) }}">{{ deployment.stage.project.name }}</a></td>
+                            <td>{{ deployment.stage.name }}</td>
+                            <td>{{ deployment.task }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
 

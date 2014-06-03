@@ -46,8 +46,17 @@ class HomeController extends Controller
 
         }
 
+        $em = $this->container->get('doctrine')->getManager();
+        $deploymentsRepo = $em->getRepository('WapistranoCoreBundle:Deployments');
 
+        $deploymentsRunning = $deploymentsRepo->findBy(array("status" => "running"), array("createdAt" => "DESC"));
+        $twigVars["deploymentsRunning"] = $deploymentsRunning;
 
+        $deploymentsFailed = $deploymentsRepo->findBy(array("status" => "failed"), array("createdAt" => "DESC"), 5);
+        $twigVars["deploymentsFailed"] = $deploymentsFailed;
+
+        $deploymentsSuccess = $deploymentsRepo->findBy(array("status" => "success"), array("createdAt" => "DESC"), 5);
+        $twigVars["deploymentsSuccess"] = $deploymentsSuccess;
 
         return $twigVars;
     }

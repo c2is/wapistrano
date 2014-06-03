@@ -118,7 +118,7 @@ pre code {
 }
 
 #log {
-    white-space: normal;
+    /*white-space: normal;*/
 }
 
 #menu li>ul{

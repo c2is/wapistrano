@@ -148,7 +148,7 @@
         <!-- ."main-bar -->
         <div class="main-bar">
             <h3>
-                <i class="fa fa-home"></i>
+                <a href="{{ path('home') }}"><i class="fa fa-home"></i></a>
                 {{ apy_breadcrumb_trail_render("WapistranoCoreBundle:Breadcrumb:breadcrumb.html.twig") }}
 
                 {% if sectionAction is defined %}

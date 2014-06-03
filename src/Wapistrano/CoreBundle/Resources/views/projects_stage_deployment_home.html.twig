@@ -31,8 +31,8 @@
                     <div class="">
                         Description:<br>
                         {{ deployment.description }}
-                        Started at: {{ deployment.createdAt|date('Y-m-d i:s') }}<br>
-                        Completed at: {{ deployment.completedAt|date('Y-m-d i:s') }}<br>
+                        Started at: {{ deployment.createdAt|date('Y-m-d H:i:s') }}<br>
+                        Completed at: {{ deployment.completedAt|date('Y-m-d H:i:s') }}<br>
                     </div>
                 </div>
 
@@ -63,9 +63,9 @@
             <div class="box">
                 <div class="body">
                     <h4>Execution log</h4>
-                    <div id="log">
-                        {{ deployment.log }}
-                    </div>
+                    <pre id="log">
+{{ deployment.log }}
+                    </pre>
                 </div>
             </div>
         </div>
@@ -74,29 +74,34 @@
     <script language="JavaScript">
 
         {% if "" != deployment.jobHandle %}
-        $( document ).ready(function() {
+        $(window).ready(function() {
+            var displayMessage = function(data) {
+                if(data["status"] == "success") {
+                    status = "end";
+                    $("#log").html((data["log"] || ''));
+                    $("#status").html("<img src='{{asset('img/status_success.gif') }}'>");
+                    clearInterval(run);
+                }
+                else if(data["status"] == "failed") {
+                    status = "end";
+                    $("#log").html((data["log"] || ''));
+                    $("#status").html("<img src='{{asset('img/status_failed.gif') }}'>");
+                    clearInterval(run);
+
+                } else if(data["status"] == "running") {
+                    $("#log").html((data["log"] || ''));
+                }
+
+            };
+
             var status = "start";
-            while(status != "end") {
-                var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": deployment.jobHandle }) }}";
+            var url = "{{ path('projectsStageDeploymentDeploy', { 'id': project.id, 'stageId': stage.id, "deploymentId": deployment.id, "jobHandle": deployment.jobHandle }) }}";
 
-                var displayMessage = function(data) {
-                    if(data["status"] == "success") {
-                        status = "end";
-                        $("#log").html((data["log"] || ''));
-                        $("#status").html("<img src='{{asset('img/status_success.gif') }}'>");
-                    }
-                    else if(data["status"] == "failed") {
-                        status = "end";
-                        $("#log").html((data["log"] || ''));
-                        $("#status").html("<img src='{{asset('img/status_failed.gif') }}'>");
+            var run = setInterval(function(){checkJobLog(url,  displayMessage)}, 500);
 
-                    } else if(data["status"] == "running") {
-                        $("#log").html((data["log"] || ''));
-                    }
 
-                };
-                checkJobLog(url,  displayMessage);
-            }
+
+
         });
         {% endif %}
     </script>
