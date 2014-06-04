@@ -1,0 +1,7 @@
+parameters:
+#    wapistrano_profile.example.class: Wapistrano\ProfileBundle\Example
+
+services:
+    wapistrano_profile.password_encoder:
+        class: Wapistrano\ProfileBundle\Security\WapistranoPasswordEncoder
+#        arguments: [@service_id, "plain_value", %parameter%]

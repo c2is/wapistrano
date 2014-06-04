@@ -1,3 +1,8 @@
+wapistrano_profile:
+    resource: "@WapistranoProfileBundle/Controller"
+    prefix:   /
+    type: annotation
+
 wapistrano_core:
     resource: "@WapistranoCoreBundle/Controller"
     prefix:   /

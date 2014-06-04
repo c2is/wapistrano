@@ -3,14 +3,15 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Users
  *
  * @ORM\Table(name="users", indexes={@ORM\Index(name="index_users_on_disabled", columns={"disabled"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Wapistrano\CoreBundle\Entity\UsersRepository")
  */
-class Users
+class Users implements UserInterface, \Serializable
 {
     /**
      * @var integer
@@ -413,5 +414,71 @@ class Users
     public function getProject()
     {
         return $this->project;
+    }
+
+    /*** SYMFONY USER INTERFACE IMPLEMENTATION ***/
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize(array($this->id, $this->email));
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        list($this->id,$this->email) = unserialize($serialized);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return array|\Symfony\Component\Security\Core\Role\Role[]
+     */
+    public function getRoles()
+    {
+        return array('ROLE_CLIENT');
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password
+     *
+     * @return Users
+     */
+    public function setPassword($password)
+    {
+        $this->cryptedPassword = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get password
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->cryptedPassword;
+    }
+
+    /**
+     * logout
+     */
+    public function eraseCredentials()
+    {
+
     }
 }
