@@ -38,14 +38,14 @@ class Users
     /**
      * @var string
      *
-     * @ORM\Column(name="crypted_password", type="string", length=40, nullable=true)
+     * @ORM\Column(name="crypted_password", type="string", length=255, nullable=true)
      */
     private $cryptedPassword;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=40, nullable=true)
+     * @ORM\Column(name="salt", type="string", length=255, nullable=true)
      */
     private $salt;
 
