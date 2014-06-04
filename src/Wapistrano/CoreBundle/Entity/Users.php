@@ -98,6 +98,17 @@ class Users
      */
     private $disabled;
 
+    /**
+     * @var integer
+     * @ORM\ManyToMany(targetEntity="Projects", inversedBy="user", cascade={"persist", "merge"})
+     * @ORM\JoinTable(name="projects_users",
+     *      joinColumns={@ORM\JoinColumn(name="users_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="projects_id", referencedColumnName="id")}
+     *      ))
+     * @ORM\OrderBy({"name"="ASC"})
+     */
+    private $project;
+
 
 
     /**
@@ -361,5 +372,46 @@ class Users
     public function getDisabled()
     {
         return $this->disabled;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->project = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+
+    /**
+     * Add project
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Projects $project
+     * @return Users
+     */
+    public function addProject(\Wapistrano\CoreBundle\Entity\Projects $project)
+    {
+        $this->project[] = $project;
+
+        return $this;
+    }
+
+    /**
+     * Remove project
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Projects $project
+     */
+    public function removeProject(\Wapistrano\CoreBundle\Entity\Projects $project)
+    {
+        $this->project->removeElement($project);
+    }
+
+    /**
+     * Get project
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProject()
+    {
+        return $this->project;
     }
 }

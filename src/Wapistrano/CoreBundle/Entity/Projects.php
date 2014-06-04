@@ -58,6 +58,13 @@ class Projects
      */
     private $template;
 
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToMany(targetEntity="Users", mappedBy="project")
+     */
+    private $user;
+
 
 
     /**
@@ -183,5 +190,45 @@ class Projects
     public function getTemplate()
     {
         return $this->template;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add user
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Users $user
+     * @return Projects
+     */
+    public function addUser(\Wapistrano\CoreBundle\Entity\Users $user)
+    {
+        $this->user[] = $user;
+
+        return $this;
+    }
+
+    /**
+     * Remove user
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Users $user
+     */
+    public function removeUser(\Wapistrano\CoreBundle\Entity\Users $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
