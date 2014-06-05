@@ -4,6 +4,7 @@ namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Wapistrano\ProfileBundle\Security\WapistranoPasswordEncoder;
 
 /**
  * Users
@@ -176,7 +177,10 @@ class Users implements UserInterface, \Serializable
      */
     public function setCryptedPassword($cryptedPassword)
     {
-        $this->cryptedPassword = $cryptedPassword;
+        if("" != $cryptedPassword){
+            $encrypt = new WapistranoPasswordEncoder();
+            $this->cryptedPassword = $encrypt->encodePassword($cryptedPassword, $this->getSalt());
+        }
 
         return $this;
     }
@@ -447,7 +451,12 @@ class Users implements UserInterface, \Serializable
      */
     public function getRoles()
     {
-        return array('ROLE_CLIENT');
+        if($this->getAdmin() == 1) {
+            return array('ROLE_ADMIN');
+        } else {
+            return array('ROLE_CLIENT');
+        }
+
     }
 
     /**
@@ -459,7 +468,8 @@ class Users implements UserInterface, \Serializable
      */
     public function setPassword($password)
     {
-        $this->cryptedPassword = $password;
+        $encrypt = new WapistranoPasswordEncoder();
+        $this->cryptedPassword = $encrypt->encodePassword($password, $this->getSalt());
 
         return $this;
     }

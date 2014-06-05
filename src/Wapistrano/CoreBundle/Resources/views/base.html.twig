@@ -73,22 +73,25 @@
             <ul class="nav navbar-nav">
                 <li class='dropdown '>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        User
+                        {{ app.user.login }}
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
                         <li> <a href="{{ path('logout') }}">Logout</a>  </li>
                     </ul>
                 </li>
-                <li class='dropdown '>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Admin
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li> <a href="form-general.html">Users</a>  </li>
-                    </ul>
-                </li>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <li class='dropdown '>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Admin
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li> <a href="{{ path('usersList') }}">Users</a>  </li>
+                        </ul>
+                    </li>
+                {% endif %}
+
             </ul>
 
         </div><!-- /.topnav -->
@@ -140,8 +143,11 @@
 <li class="nav-divider"></li>
 
 {{ wapi_render_menu_project() }}
-{{ wapi_render_menu_host() }}
-{{ wapi_render_menu_recipe() }}
+{% if is_granted("ROLE_ADMIN") %}
+    {{ wapi_render_menu_host() }}
+    {{ wapi_render_menu_recipe() }}
+{% endif%}
+
 
 </ul><!-- /#menu -->
 </div><!-- /#left -->

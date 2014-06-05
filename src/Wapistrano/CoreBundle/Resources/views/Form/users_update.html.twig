@@ -1,0 +1,74 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+    {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="box primary">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>{{ barTitle }}</h5>
+            <div class="toolbar">
+                <a href="{{ path('projectsList') }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
+                {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+            </div>
+        </header>
+        <div class="body collapse in" id="div1">
+            <div class="form-group">
+                {{ form_label(form.login, null, { 'attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.login, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.email) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.email, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-4">
+                    {{ form_widget(form.cryptedPassword) }}
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                {{ form_label(form.admin) }}
+                <div class="col-lg-1">
+                {{ form_widget(form.admin) }}
+                </div>
+            </div>
+
+            {% if form.project is defined %}
+            <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Use</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for child in form.project %}
+                    {% set index = child.vars.value %}
+                    <tr>
+                        <td>{{ form_widget(child) }}</td>
+                        <td>{{ choices[index].name }}</td>
+                        <td>
+                            <div class="wrapCellContent">{{ choices[index].description }}</div></td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+            {% endif %}
+            {{ form_end(form, {'render_rest': true}) }}
+        </div>
+    </div>
+{% endblock content %}
+
