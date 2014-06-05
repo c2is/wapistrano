@@ -46,7 +46,7 @@
             <table id="dataTable" class="table table-bordered table-condensed table-hover table-striped">
                 <thead>
                 <tr>
-                    <th>Use</th>
+                    <th>Access</th>
                     <th>Name</th>
                     <th>Description</th>
                 </tr>
@@ -57,9 +57,9 @@
                     {% set index = child.vars.value %}
                     <tr>
                         <td>{{ form_widget(child) }}</td>
-                        <td>{{ choices[index].name }}</td>
+                        <td> <div class="wrapCellContent" style="width: 12em;">{{ choices[index].name }}</div></td>
                         <td>
-                            <div class="wrapCellContent">{{ choices[index].description }}</div></td>
+                            <div class="wrapCellContent" style="width: 56em;">{{ choices[index].description }}</div></td>
                     </tr>
                 {% endfor %}
 

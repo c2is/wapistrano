@@ -145,7 +145,6 @@ pre code {
 .wrapCellContent {
     display:block;
     word-wrap: break-word;
-    width: 58em;
     white-space: -o-pre-wrap;
     word-wrap: break-word;
     white-space: pre-wrap;

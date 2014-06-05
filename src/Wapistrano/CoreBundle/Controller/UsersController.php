@@ -142,7 +142,7 @@ class UsersController extends Controller
             return $this->redirect($this->generateUrl('usersList'));
         }
 
-        $twigVars["barTitle"] = "Edit".$user->getLogin();
+        $twigVars["barTitle"] = "Edit ".$user->getLogin();
         $twigVars["sectionAction"] = $this->getSectionAction();
         $twigVars["form"] = $form->createView();
 
