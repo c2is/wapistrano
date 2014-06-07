@@ -215,6 +215,10 @@ class Users implements UserInterface, \Serializable
      */
     public function getSalt()
     {
+        if("" == $this->salt) {
+            $encrypt = new WapistranoPasswordEncoder();
+            $this->setSalt($encrypt->genSalt());
+        }
         return $this->salt;
     }
 

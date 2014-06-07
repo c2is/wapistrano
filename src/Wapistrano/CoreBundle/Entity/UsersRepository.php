@@ -20,7 +20,7 @@ class UsersRepository extends EntityRepository implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         return $this->getEntityManager()
-            ->createQuery('SELECT c FROM WapistranoCoreBundle:Users c WHERE c.login = :username')
+            ->createQuery('SELECT c FROM WapistranoCoreBundle:Users c WHERE c.login = :username and c.disabled is null')
             ->setParameter('username', $username)
             ->getOneOrNullResult();
     }

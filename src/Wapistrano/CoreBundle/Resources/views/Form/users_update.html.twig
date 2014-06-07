@@ -9,7 +9,7 @@
             </div>
             <h5>{{ barTitle }}</h5>
             <div class="toolbar">
-                <a href="{{ path('projectsList') }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
+                <a href="{{ path('usersList') }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
                 {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
             </div>
         </header>
@@ -29,8 +29,16 @@
             </div>
 
             <div class="form-group">
+                {{ form_label(form.cryptedPassword.first) }}
                 <div class="col-lg-4">
-                    {{ form_widget(form.cryptedPassword) }}
+                    {{ form_widget(form.cryptedPassword.first) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.cryptedPassword.second) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.cryptedPassword.second) }}
                 </div>
             </div>
 
@@ -39,6 +47,13 @@
                 {{ form_label(form.admin) }}
                 <div class="col-lg-1">
                 {{ form_widget(form.admin) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.deactivated) }}
+                <div class="col-lg-1">
+                    {{ form_widget(form.deactivated) }}
                 </div>
             </div>
 

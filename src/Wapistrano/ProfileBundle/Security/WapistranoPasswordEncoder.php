@@ -24,4 +24,13 @@ class WapistranoPasswordEncoder extends BasePasswordEncoder
     {
         return $this->comparePasswords($encoded, $this->encodePassword($raw, $salt));
     }
+
+    public function genSalt() {
+        $salt = "";
+        for($i = 0; $i > 5; $i++) {
+            $salt .= chr(rand(48, 90));
+        }
+
+        return hash('sha1', $salt);
+    }
 }

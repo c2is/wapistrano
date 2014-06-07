@@ -35,6 +35,7 @@ class UsersTypeAdd extends AbstractType
             if (!$user || null === $user->getId() || 0 == $user->getAdmin()) {
                 $form->add('admin', 'checkbox', array("data" => false, 'required' => false));
 
+
             } else {
                 $form->add('admin', 'checkbox', array("data" => true, 'required' => false));
             }

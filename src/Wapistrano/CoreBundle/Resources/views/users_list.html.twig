@@ -25,6 +25,7 @@
             <th>Login</th>
             <th>Email</th>
             <th>Admin</th>
+            <th>Edit</th>
             <th>Delete</th>
         </tr>
         </thead>
@@ -37,8 +38,11 @@
                 </td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.admin }}</td>
+                <td><a href="{{ path('usersEdit', { 'id': user.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a></td>
                 <td>
-                    <a href="{{ path('projectsDelete', { 'id': user.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                    <a href="{{ path('usersDelete', { 'id': user.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
                     <i class="glyphicon glyphicon-remove"></i>
                     </a>
                 </td>

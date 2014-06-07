@@ -51,6 +51,10 @@ services:
         class: Wapistrano\CoreBundle\Role\Role
         arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @wapistrano_core.stage ]
 
+    wapistrano_core.user:
+        class: Wapistrano\CoreBundle\User\User
+        arguments: [ @request_stack, @doctrine.orm.entity_manager, @form.factory, @twig, @router, @security.context ]
+
     wapistrano_core.gearman:
         class:  Wapistrano\CoreBundle\Broker\Gearman
         arguments: [ %wapistrano_core%, @logger ]
