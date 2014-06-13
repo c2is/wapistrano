@@ -65,8 +65,6 @@ class Projects
      */
     private $user;
 
-
-
     /**
      * Get id
      *
@@ -207,7 +205,13 @@ class Projects
      */
     public function addUser(\Wapistrano\CoreBundle\Entity\Users $user)
     {
-        $this->user[] = $user;
+
+        if (!$this->user->contains($user)) {
+            $this->user->add($user);
+            if (!$user->getProject()->contains($this)) {
+                $user->addProject($this);
+            }
+        }
 
         return $this;
     }

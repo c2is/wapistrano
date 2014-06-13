@@ -3,12 +3,15 @@
 namespace Wapistrano\CoreBundle\User;
 
 use Wapistrano\CoreBundle\Form\UsersTypeAdd;
+use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 use Wapistrano\CoreBundle\Entity\Users;
+use Wapistrano\CoreBundle\Entity\Projects;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class User
 {
@@ -150,6 +153,72 @@ class User
         $this->setFormTwigVars($twigVars);
 
         return $this;
+    }
+
+    public function getFormProjectEdit(Projects $project) {
+        $this->setFormStatus("building");
+        $twigVars = array();
+        $projectType = new ProjectsTypeAdd();
+
+        $form = $this->form->create($projectType, $project);
+        $form->add('saveTop', 'submit');
+        $form->add('name', 'hidden');
+        $form->add('description', 'hidden');
+
+
+        $form->add('user', 'entity', array(
+            'class'   => "WapistranoCoreBundle:Users",
+            'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('r')
+                        ->orderBy('r.login', 'ASC');
+                },
+            'property'   => "login",
+            'multiple'  => true,
+            'expanded'  => true,
+        ));
+
+        $options = $form->get('user')->getConfig()->getOptions();
+        $choices = $options['choice_list']->getChoices();
+        $twigVars["choices"] = $choices;
+
+        $form->add('saveBottom', 'submit', array("label"=>"Save", "attr" => array("class" => "btn btn-default btn-sm")));
+
+        $users = new ArrayCollection();
+        foreach ($project->getUser() as $user) {
+            $users->add($user);
+        }
+
+        $form->handleRequest($this->request);
+        if ($form->isValid()) {
+            $manager = $this->em;
+            $today = new \DateTime();
+            $project->setUpdatedAt($today);
+
+            foreach ($users as $user) {
+                if (false === $project->getUser()->contains($user)) {
+                    $user->getProject()->removeElement($project);
+                    $manager->persist($project);
+                }
+            }
+
+            foreach ($project->getUser() as $user) {
+                $user->addProject($project);
+                $manager->persist($user);
+            }
+
+            $manager->persist($project);
+            $manager->flush();
+
+            $session = $this->request->getSession();
+            $session->getFlashBag()->add('notice', 'User '.$project->getName().' updated');
+            $this->setFormStatus("sent");
+        }
+
+        $twigVars["form"] = $form->createView();
+        $this->setFormTwigVars($twigVars);
+
+        return $this;
+
     }
 
     /**

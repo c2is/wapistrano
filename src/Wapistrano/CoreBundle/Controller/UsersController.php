@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\Users;
+use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CoreBundle\Form\UsersTypeAdd;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,6 +97,41 @@ class UsersController extends Controller
         $session = $request->getSession();
         $session->getFlashBag()->add('notice', 'User '.$user->getLogin().' deleted');
         return $this->redirect($this->generateUrl('usersList'));
+    }
+
+    /**
+     * @Route("/project/", name="usersProjectsList")
+     * @Template("WapistranoCoreBundle::users_projects_list.html.twig")
+     */
+    public function usersProjectsListAction(Request $request)
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
+
+        $session = $request->getSession();
+        $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
+        $session->getFlashBag()->clear('notice');
+
+        return array( 'barTitle' =>  'Projects list', 'sectionAction' => $this->getSectionAction(), 'projects'=>$projects, "flashMessage" => $flashMessage);
+    }
+
+    /**
+     * @Route("/project/{id}/add", name="usersProjectAdd")
+     * @Breadcrumb("{project.name}", routeName="usersProjectAdd", routeParameters={"id"="{id}"})
+     * @Template("WapistranoCoreBundle:Form:users_project_update.html.twig")
+     */
+    public function usersProjectAddAction(Request $request, Projects $project)
+    {
+        $userService = $this->container->get('wapistrano_core.user');
+        $twigVars["barTitle"] = "Manage users ".$project->getName(). " project";
+        $formHandle = $userService->getFormProjectEdit($project);
+
+        if("sent" == $userService->getFormStatus()) {
+            return $this->redirect($this->generateUrl('usersProjectsList'));
+        } else {
+            $twigVars += $formHandle->getFormTwigVars();
+            return $twigVars;
+        }
     }
 
 

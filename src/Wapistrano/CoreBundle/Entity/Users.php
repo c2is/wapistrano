@@ -107,7 +107,7 @@ class Users implements UserInterface, \Serializable
 
     /**
      * @var integer
-     * @ORM\ManyToMany(targetEntity="Projects", inversedBy="user", cascade={"persist", "merge"})
+     * @ORM\ManyToMany(targetEntity="Projects", inversedBy="user")
      * @ORM\JoinTable(name="projects_users",
      *      joinColumns={@ORM\JoinColumn(name="users_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="projects_id", referencedColumnName="id")}
@@ -404,7 +404,9 @@ class Users implements UserInterface, \Serializable
      */
     public function addProject(\Wapistrano\CoreBundle\Entity\Projects $project)
     {
-        $this->project[] = $project;
+        if (!$this->project->contains($project)) {
+            $this->project[] = $project;
+        }
 
         return $this;
     }
