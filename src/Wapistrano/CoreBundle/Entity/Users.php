@@ -438,7 +438,7 @@ class Users implements UserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize(array($this->id, $this->email));
+        return serialize(array($this->id, $this->login));
     }
 
     /**
@@ -446,7 +446,7 @@ class Users implements UserInterface, \Serializable
      */
     public function unserialize($serialized)
     {
-        list($this->id,$this->email) = unserialize($serialized);
+        list($this->id, $this->login) = unserialize($serialized);
     }
 
     /**
@@ -454,7 +454,7 @@ class Users implements UserInterface, \Serializable
      */
     public function getUsername()
     {
-        return $this->email;
+        return $this->login;
     }
 
     /**

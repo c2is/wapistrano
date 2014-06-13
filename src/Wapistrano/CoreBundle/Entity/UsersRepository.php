@@ -32,7 +32,7 @@ class UsersRepository extends EntityRepository implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        return $this->findOneBy(array('email' => $user->getUsername()));
+        return $this->findOneBy(array('login' => $user->getUsername()));
     }
 
     /**
