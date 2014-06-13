@@ -16,7 +16,7 @@
                 {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
             </div>
         </header>
-        {% if flashMessage is defined  or null != form_errors(form) %}
+        {% if flashMessage is defined  or not form.vars.valid %}
             <div id="flashMessagePopin" class="">
                 <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
                 <span id="flashMessagePopinText">{{form_errors(form)}}</span>
