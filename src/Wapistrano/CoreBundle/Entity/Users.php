@@ -5,6 +5,7 @@ namespace Wapistrano\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Wapistrano\ProfileBundle\Security\WapistranoPasswordEncoder;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Users
@@ -34,6 +35,10 @@ class Users implements UserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     * @Assert\Email(
+     *     message = "'{{ value }}' is not a correct email address.",
+     *     checkMX = true
+     * )
      */
     private $email;
 

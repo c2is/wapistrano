@@ -20,7 +20,7 @@ class UsersTypeAdd extends AbstractType
 
         $builder
             ->add('login')
-            ->add('email')
+            ->add('email', null, array('error_bubbling' => true))
             ->add('cryptedPassword', 'repeated', array('type' => 'password', 'required' => false, 'options' => array('required' => false),
                 'first_options'  => array('label' => 'Password', 'attr' => array('class' => 'form-control')),
                 'second_options' => array('label' => 'Password (confirmation)', 'attr' => array('class' => 'form-control')))

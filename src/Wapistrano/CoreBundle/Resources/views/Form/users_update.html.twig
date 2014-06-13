@@ -1,18 +1,27 @@
 {% extends 'WapistranoCoreBundle::base.html.twig' %}
 {% block content %}
     {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
-    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
+
     <div class="box primary">
         <header>
             <div class="icons">
                 <i class="fa fa-building-o"></i>
             </div>
             <h5>{{ barTitle }}</h5>
+            {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+
             <div class="toolbar">
                 <a href="{{ path('usersList') }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
                 {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
             </div>
         </header>
+        {% if flashMessage is defined  or null != form_errors(form) %}
+            <div id="flashMessagePopin" class="">
+                <i id="flashMessagePopinClose" class="glyphicon glyphicon-remove" style="float:right"></i>
+                <span id="flashMessagePopinText">{{form_errors(form)}}</span>
+            </div>
+        {% endif %}
         <div class="body collapse in" id="div1">
             <div class="form-group">
                 {{ form_label(form.login, null, { 'attr': {'class': 'control-label col-lg-4'} }) }}
