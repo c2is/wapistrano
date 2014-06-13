@@ -65,7 +65,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="index.html" class="navbar-brand">
+            <a href="{{ path('home') }}" class="navbar-brand">
                 <img src="{{asset('img/logo.png') }}" alt="">
             </a>
         </header>
@@ -87,8 +87,8 @@
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li> <a href="{{ path('usersList') }}">User/Projects</a>  </li>
-                            <li> <a href="{{ path('usersProjectsList') }}">Project/Users</a>  </li>
+                            <li> <a href="{{ path('usersList') }}">Assign projects to user</a>  </li>
+                            <li> <a href="{{ path('usersProjectsList') }}">Assign users to project</a>  </li>
                         </ul>
                     </li>
                 {% endif %}
@@ -108,6 +108,7 @@
     <!-- header.head -->
     <header class="head">
         <div class="search-bar">
+            <!--
             <a data-original-title="Show/Hide Menu" data-placement="bottom" data-tooltip="tooltip" class="accordion-toggle btn btn-primary btn-sm visible-xs visible-sm" id="menu-toggle">
                 <i class="fa fa-bars"></i>
             </a>
@@ -119,6 +120,7 @@
                                 </span>
                 </div>
             </form>
+             /-->
         </div>
 
         <!-- ."main-bar -->
