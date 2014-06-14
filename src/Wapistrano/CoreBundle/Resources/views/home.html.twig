@@ -22,7 +22,14 @@
                <strong>Status</strong><br>
                 {{ brokerStatus|replace({'\n':'<br>'})|raw }}<br>
                 <strong>Workers</strong><br>
-               {{ brokerWorkers|replace({'\n':'<br>'})|raw }}
+                {% if workersAreUp %}
+                        {{ brokerWorkers|replace({'\n':'<br>'})|raw }}
+                {% else %}
+                    <span class="" style="width:150px">
+                    <i class="glyphicon glyphicon-warning-sign warning"></i>
+                    </span>
+                    {{ message }}
+                {% endif %}
             {% else %}
                 <span class="" style="width:150px">
                     <i class="glyphicon glyphicon-warning-sign warning"></i>

@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
 use Symfony\Component\HttpFoundation\Request;
-use Wapistrano\CoreBundle\Broker\Libs\PhpGearmanAdmin\GearmanAdmin as Gadm;
+use Wapistrano\CoreBundle\Broker\WapistranoGearmanAdmin as Gadm;
 
 /**
  * @Route("/")
@@ -27,14 +27,26 @@ class HomeController extends Controller
         $brokerService = $this->container->get('wapistrano_core.gearman');
         $twigVars = array();
         $twigVars['barTitle'] = "Wapistrano Status";
+        $twigVars["brokerIsUp"] = true;
+        $twigVars["workersAreUp"] = true;
 
         if(count($brokerService->getBrokerErrors()) == 0) {
             $admin = new Gadm();
 
-            $twigVars["brokerIsUp"] = true;
             $twigVars["brokerVersion"] = 'gearman version: ' . $admin->getVersion() . "\n";
             $twigVars["brokerStatus"] = $admin->getStatus();
-            $twigVars["brokerWorkers"] = $admin->getWorkers();
+            if(count($admin->getWorkersAsArray()) == 0) {
+                $twigVars["workersAreUp"] = false;
+                $twigVars["message"] = "No worker running, no task will be handled";
+            } else {
+                $workersOpt = "";
+                foreach ($admin->getWorkersAsArray() as $worker) {
+                    $workersOpt .= sprintf("%16d | %15s | %-10s | %s\n", $worker->getFd(), $worker->getIp(), $worker->getClientId(), implode(' ', $worker->getFunctions()));
+                }
+                $twigVars["brokerWorkers"] = $workersOpt;
+            }
+
+
         } else {
             $twigVars["brokerIsUp"] = false;
 
