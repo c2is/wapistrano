@@ -37,7 +37,7 @@ class HomeController extends Controller
             $twigVars["brokerStatus"] = $admin->getStatus();
             if(count($admin->getWorkersAsArray()) == 0) {
                 $twigVars["workersAreUp"] = false;
-                $twigVars["message"] = "No worker running, no task will be handled";
+                $twigVars["message"] = "No worker running, no task will be handled now";
             } else {
                 $workersOpt = "";
                 foreach ($admin->getWorkersAsArray() as $worker) {
