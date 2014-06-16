@@ -10,12 +10,13 @@ use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CoreBundle\Form\ProjectsTypeAdd;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
+use Wapistrano\ProfileBundle\Controller\UserRightsController;
 
 /**
  * @Route("/projects")
  * @Breadcrumb("Projects", routeName="projectsList")
  */
-class ProjectsController extends Controller
+class ProjectsController extends Controller implements UserRightsController
 {
 
     private $sectionAction;

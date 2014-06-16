@@ -23,6 +23,7 @@ class HostsController extends Controller
         if (null == $this->sectionAction) {
             $this->sectionAction = $this->generateUrl('hostsAdd');
         }
+
         return $this->sectionAction;
     }
     /**

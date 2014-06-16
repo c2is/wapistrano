@@ -24,3 +24,10 @@ mysqldump -u root -p webistrano_prod --no-create-info -c > /tmp/webistrano-data.
 sed -i -e "s/\`recipe_id\`, \`stage_id\`/\`recipes_id\`, \`stages_id\`/g" /Users/andre/Downloads/webistrano-data.sql
 mysql -h 127.0.0.1 -u root wapistrano < /Users/andre/Downloads/webistrano-data.sql-e
 
+
+*** Exclusive admin Grants***
+Add/Edit recipe
+Add/Edit user
+Add/Edit host
+
+
