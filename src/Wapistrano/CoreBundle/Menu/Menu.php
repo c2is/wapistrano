@@ -2,18 +2,29 @@
 
 namespace Wapistrano\CoreBundle\Menu;
 
+use Wapistrano\ProfileBundle\Security\WapistranoUserRights;
+
 class Menu
 {
     private $em;
-    public function __construct($em)
+    public function __construct($em, WapistranoUserRights $wapistranoUserRights)
     {
         $this->em = $em;
+        $this->wapistranoUserRights = $wapistranoUserRights;
     }
 
     public function getMenuProjectItems() {
-        $projects = $this->em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
 
-        return $projects;
+        $allProjects = $this->em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
+
+        $grantedProject = array();
+        foreach($allProjects as $project) {
+            if($this->wapistranoUserRights->isProjectGranted($project->getId())) {
+                $grantedProject[] = $project;
+            }
+        }
+
+        return $grantedProject;
 
     }
 

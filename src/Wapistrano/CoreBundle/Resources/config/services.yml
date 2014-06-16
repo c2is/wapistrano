@@ -37,7 +37,7 @@ services:
 
     wapistrano_core.menu:
         class: Wapistrano\CoreBundle\Menu\Menu
-        arguments: [ @doctrine.orm.entity_manager ]
+        arguments: [ @doctrine.orm.entity_manager, @wapistrano_profile.user_rights ]
 
     wapistrano_core.configuration:
         class: Wapistrano\CoreBundle\Configuration\Configuration
