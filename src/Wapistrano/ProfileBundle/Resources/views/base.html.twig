@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wapistrano</title>
+
+    <!--Mobile first-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--IE Compatibility modes-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="msapplication-TileColor" content="#5bc0de">
+    <meta name="msapplication-TileImage" content="{{ asset('img/metis-tile.png') }}">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ asset('lib/bootstrap/css/bootstrap.min.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{asset('lib/Font-Awesome/css/font-awesome.min.css') }}">
+
+    <!-- Metis core stylesheet -->
+    <link rel="stylesheet" href="{{asset('css/main.min.css') }}">
+    <link rel="stylesheet" href="{{asset('css/theme.css') }}">
+    <link rel="stylesheet" href="{{asset('css/screen.css') }}">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+
+    <!--[if lt IE 9]>
+    <script src="{{asset('lib/html5shiv/html5shiv.js') }}"></script>
+    <script src="{{asset('lib/respond/respond.min.js') }}"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+<div id="wrap">
+<div id="top">
+    <!-- .navbar -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <header class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="{{ path('home') }}" class="navbar-brand">
+                <img src="{{asset('img/logo.png') }}" alt="">
+            </a>
+        </header>
+        <div class="topnav">
+            <ul class="nav navbar-nav">
+
+
+            </ul>
+
+        </div><!-- /.topnav -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+            <!-- .nav -->
+            <ul class="nav navbar-nav">
+
+            </ul><!-- /.nav -->
+        </div>
+    </nav><!-- /.navbar -->
+
+    <!-- header.head -->
+    <header class="head">
+        <div class="search-bar">
+            <!--
+            <a data-original-title="Show/Hide Menu" data-placement="bottom" data-tooltip="tooltip" class="accordion-toggle btn btn-primary btn-sm visible-xs visible-sm" id="menu-toggle">
+                <i class="fa fa-bars"></i>
+            </a>
+            <form class="main-search">
+                <div class="input-group">
+                    <input type="text" class="input-small form-control" placeholder="Live Search ...">
+                <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm text-muted" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                </div>
+            </form>
+             /-->
+        </div>
+
+        <!-- ."main-bar -->
+        <div class="main-bar">
+            <h3>
+
+            </h3>
+        </div><!-- /.main-bar -->
+    </header>
+
+    <!-- end header.head -->
+</div><!-- /#top -->
+<div id="content" style="width:800px; text-align:center">
+    <div class="outer">
+        <div class="inner">
+            <div class="row">
+                <div class="" style="width:500px;">
+
+                {% block content %}
+                default content
+                {% endblock content %}
+
+                </div>
+            </div>
+        <!-- end .inner -->
+        </div>
+    <!-- end .outer -->
+    </div>
+</div>
+<!-- end #content -->
+</div><!-- /#wrap -->
+<div id="footer">
+    <p>2014 &copy; C2IS</p>
+</div>
+
+
+
+</body>
+</html>
