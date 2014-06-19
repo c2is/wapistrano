@@ -13,7 +13,6 @@ Need capistrano/ext/multistage installed (gem install capistrano-ext)
 gearman
 redis
 
-Todo : command to check if env is ok (services installed, capistrano path and rights ok etc.)
 
 INSTALL
 *** Capistrano server side
@@ -29,5 +28,10 @@ mysql -h 127.0.0.1 -u root wapistrano < /Users/andre/Downloads/webistrano-data.s
 Add/Edit recipe
 Add/Edit user
 Add/Edit host
+
+*** Todo ***
+- command to check if env is ok (services installed, capistrano path and rights ok etc.)
+- cron which update deploy status calling redis log and repuplish stage withour overriden vars (security)
+- tune rights high secure on capistrano deploy files written by worker
 
 
