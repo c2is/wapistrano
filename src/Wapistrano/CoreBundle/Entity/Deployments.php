@@ -74,8 +74,8 @@ class Deployments
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="user_id", type="integer", nullable=true)
+     * @ORM\ManyToOne(targetEntity="Users", inversedBy="deployments")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      */
     private $userId;
 

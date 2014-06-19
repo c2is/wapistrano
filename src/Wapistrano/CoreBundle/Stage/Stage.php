@@ -315,6 +315,9 @@ class Stage
             if($gmclient->getTerminateStatus() == "running") {
                 $gmclient->delRedisLog($gmclient->getJobHandle());
                 return "Timeout thrown while waiting for end of job. Please check if workers are running";
+            } elseif($gmclient->getTerminateStatus() == "error with Gearman reception") {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                return "Error with Gearman. Please check if brokers are up";
             } else {
                 $gmclient->delRedisLog($gmclient->getJobHandle());
                 return $gmclient;

@@ -72,6 +72,7 @@ class ProjectsStageDeploymentController extends Controller
         $jobLog = $gmClient->getLog($jobHandle);
         $em = $this->container->get('doctrine')->getManager();
         $logger = $this->get('logger');
+
         // regenerate original stage rb file
 
         if($deployment->getStatus() == "running")
@@ -133,6 +134,7 @@ class ProjectsStageDeploymentController extends Controller
         $roles = $stageService->getRoles();
 
         $session = $request->getSession();
+        $user = $this->container->get('security.context')->getToken()->getUser();
 
         $deploymentType = new DeploymentsTypeAdd();
         $deployment = new Deployments();
@@ -160,17 +162,19 @@ class ProjectsStageDeploymentController extends Controller
 
             $job = $stageService->publishStage($project->getId(), $stage->getId(), $confPrompted);
 
-            if("error" == $job->getTerminateStatus()) {
+            if(! is_object($job)) {
+                $session->getFlashBag()->add('notice', $job);
+            }elseif("error" == $job->getTerminateStatus()) {
                 $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published, deploy aborted");
                 $job->delRedisLog($job->getJobHandle());
             } else {
                 $today = new \DateTime();
                 $deployment->setCreatedAt($today);
                 $deployment = $form->getData();
+                $deployment->setUserId($user);
 
                 $deployment->setStage($stage);
                 $deployment->setStatus("running");
-
 
                 $twigVars['deployment'] = $deployment;
 

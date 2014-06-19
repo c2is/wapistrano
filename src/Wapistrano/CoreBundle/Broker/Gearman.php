@@ -111,7 +111,7 @@ class Gearman extends \GearmanClient
         if($status) {
             return $this->terminate($job_handle);
         } else {
-            $this->terminateStatus = "error";
+            $this->terminateStatus = "error with Gearman reception";
             return $this;
         }
 

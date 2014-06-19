@@ -116,7 +116,11 @@ class Users implements UserInterface, \Serializable
      */
     private $project;
 
-
+    /**
+     * @var string
+     * @ORM\OneToMany(targetEntity="Deployments", mappedBy="userId")
+     */
+    private $deployments;
 
     /**
      * Get id
