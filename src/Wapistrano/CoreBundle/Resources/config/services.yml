@@ -58,3 +58,7 @@ services:
     wapistrano_core.gearman:
         class:  Wapistrano\CoreBundle\Broker\Gearman
         arguments: [ %wapistrano_core%, @logger ]
+
+    wapistrano_core.collector:
+        class:  Wapistrano\CoreBundle\Collector\Collector
+        arguments: [ @doctrine.orm.entity_manager, @wapistrano_core.gearman ]

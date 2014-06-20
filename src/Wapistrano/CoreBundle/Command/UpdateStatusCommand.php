@@ -19,27 +19,9 @@ class UpdateStatusCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $gmClient = $this->getContainer()->get("wapistrano_core.gearman");
-        $em = $this->getContainer()->get('doctrine')->getManager();
-        $repoDeployments  = $em->getRepository('WapistranoCoreBundle:Deployments');
+        $collector = $this->getContainer()->get("wapistrano_core.collector");
+        $numUpdated = $collector->updateDeploymentsStatus();
 
-        $runningDeployments = $repoDeployments->findBy(array("status" => "running"));
-
-        foreach ($runningDeployments as $deploy) {
-            $jobLog = $gmClient->getLog($deploy->getJobHandle());
-
-            if (false !== strpos($jobLog, "Wapistrano job ended")) {
-                $output->writeln("deploy id ".$deploy->getId()." ended, redis jobHandle: ".$deploy->getJobHandle()." now deleting log...");
-                $gmClient->delRedisLog($deploy->getJobHandle());
-                $deploy->setStatus("success");
-                $em->persist($deploy);
-            } elseif (false !== strpos($jobLog, "Wapistrano Job failed")) {
-                $output->writeln("deploy id ".$deploy->getId()." failed, redis jobHandle: ".$deploy->getJobHandle()." now deleting log...");
-                $gmClient->delRedisLog($deploy->getJobHandle());
-                $deploy->setStatus("failed");
-                $em->persist($deploy);
-            }
-            $em->flush();
-        }
+        $output->writeln($numUpdated." deployments updated");
     }
 }
