@@ -21,6 +21,12 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "apy/breadcrumbtrail-bundle": "dev-master"
     },
+    "require-dev": {
+        "behat/symfony2-extension": "~1.1",
+        "behat/mink-extension": "~1.3",
+        "behat/mink-selenium2-driver": "~1.1",
+        "behat/mink-goutte-driver": "~1.0"
+    },
     "scripts": {
         "post-install-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",

@@ -3,7 +3,7 @@
     {% for recipe in recipes %}
 
         <li class="">
-            <a href="{{ render(controller('WapistranoCoreBundle:recipes:getUrl', { 'action': 'Edit', 'id': recipe.id })) }}">
+            <a href="{{ render(controller('WapistranoCoreBundle:Recipes:getUrl', { 'action': 'Edit', 'id': recipe.id })) }}">
                 <i class="fa fa-angle-right"></i>&nbsp;{{ recipe.getName }}
             </a>
         </li>

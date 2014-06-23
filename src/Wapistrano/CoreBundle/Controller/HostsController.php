@@ -6,9 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
-use Wapistrano\CoreBundle\Entity\hosts;
+use Wapistrano\CoreBundle\Entity\Hosts;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
-use Wapistrano\CoreBundle\Form\hostsTypeAdd;
+use Wapistrano\CoreBundle\Form\HostsTypeAdd;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
