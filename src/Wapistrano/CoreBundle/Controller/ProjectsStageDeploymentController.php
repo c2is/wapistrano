@@ -184,11 +184,19 @@ class ProjectsStageDeploymentController extends Controller
                 $job = $stageService->deployStage($deployment->getTask());
                 $deployment->setJobHandle($job->getJobHandle());
 
+                // unset prompted vars
+                foreach($confPrompted as $confName => $configurations) {
+                    $configurations->setValue("");
+                }
+                $jobUnset = $stageService->publishStage($project->getId(), $stage->getId());
+
                 $manager = $this->getDoctrine()->getManager();
                 $manager->persist($deployment);
                 $manager->flush();
 
                 $twigVars['jobHandle'] = $job;
+
+
 
                 return $this->redirect($this->generateUrl('projectsStageDeploymentHome', array("id" => $project->getId(), "stageId" => $stage->getId(), "deploymentId" => $deployment->getId())));
             }
