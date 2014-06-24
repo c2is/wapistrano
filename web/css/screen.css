@@ -151,4 +151,7 @@ pre code {
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
 }
+#left {
+    z-index: 3;
+}
 
