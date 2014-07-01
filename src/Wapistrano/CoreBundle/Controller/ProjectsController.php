@@ -173,4 +173,30 @@ class ProjectsController extends Controller implements UserRightsController
         $session->getFlashBag()->add('notice', 'Project '.$project->getName().' deleted');
         return $this->redirect($this->generateUrl('projectsList'));
     }
+
+    public function getLastDeployAction($projectId) {
+        $em = $this->container->get('doctrine')->getManager();
+
+        $queryBuilder = $em->getRepository('WapistranoCoreBundle:Deployments')
+            ->createQueryBuilder('dp');
+
+        $queryBuilder
+            ->join("dp.stage", "stage")
+            ->where('stage.project = :projectId')
+            ->setParameters(
+                array('projectId' => sprintf('%s', $projectId)))
+            ->orderBy('dp.createdAt', 'DESC');
+
+
+        $query = $queryBuilder->getQuery();
+        $deployments = $query->getResult();
+        if(count($deployments) > 0) {
+            $resp =  "Stage ".$deployments[0]->getStage().", task ".$deployments[0]->getTask();
+        } else {
+            $resp = "Never deployed";
+        }
+        //var_dump($resp);
+        return new Response($resp);
+
+    }
 }

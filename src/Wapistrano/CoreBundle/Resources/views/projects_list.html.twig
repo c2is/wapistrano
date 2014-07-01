@@ -23,7 +23,7 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Status</th>
+            <th>Last deploy</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -35,7 +35,7 @@
                 <td>
                     <a href="{{ path('projectsHome', { 'id': project.id }) }}">{{ project.getName }}</a>
                 </td>
-                <td>Internet Explorer 4.0</td>
+                <td>{{ render(controller('WapistranoCoreBundle:Projects:getLastDeploy', { 'projectId': project.id })) }}</td>
                 <td><a href="{{ path('projectsEdit', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                             <i class="glyphicon glyphicon-edit"></i>
                 </a></td>
