@@ -31,7 +31,7 @@ Feature: As an admin user I can fill project's parameters
     Given I fill in "wapistrano_corebundle_projects_name" with "testConfigUpdated"
     Given I fill in "wapistrano_corebundle_projects_value" with "testValue"
     Then I press "Save"
-    Then I should see "testConfigUpdated"
+    Then I wait for text "testConfigUpdated" to appear
 
   @javascript
   Scenario: I fill some stages in a project
