@@ -33,6 +33,17 @@ class FeatureContext extends MinkContext
     }
 
     /**
+     * @Given /^I am logged as an admin user "([^"]*)" "([^"]*)"$/
+     */
+    public function iAmLoggedAsAnAdminUser($userName, $passWord)
+    {
+        $this->visit("/login");
+        $this->fillField("username", $userName);
+        $this->fillField("password", $passWord);
+        $this->pressButton("login");
+    }
+
+    /**
      * @Given /^I click on "([^"]*)" "([^"]*)"$/
      */
     public function iClickOn($selectorType, $selector)
@@ -85,6 +96,37 @@ class FeatureContext extends MinkContext
             if ($sleep) {
                 sleep($sleep);
             }
+        }
+    }
+    /**
+     * @Then /^I wait for element "([^"]*)" to appear$/
+     */
+    public function iWaitForElementToAppear($cssSelector)
+    {
+
+        $this->getSession()->wait(1000,"$('".$cssSelector."').length > 0");
+    }
+
+    /**
+     * @Then /^I wait for text "([^"]*)" to appear$/
+     */
+    public function iWaitForTextToAppear($text)
+    {
+        $found = false;
+        for($i=0; $i<=10; $i++) {
+            try {
+                $this->assertPageContainsText($text);
+                $found = true;
+                break;
+            }
+            catch(Exception $e) {
+                $this->getSession()->wait(1000);
+                continue;
+            }
+        }
+        if(!$found) {
+            $message = sprintf('The text "%s" was not found anywhere in the text of the current page.', $text);
+            throw new Exception($message);
         }
     }
 }
