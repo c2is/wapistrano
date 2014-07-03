@@ -5,6 +5,9 @@ default:
     extensions:
         Behat\MinkExtension\Extension:
             base_url: 'http://localhost/wapistrano/web/app_dev.php'
+            default_session: goutte
+            javascript_session: selenium2
+            show_cmd: open %s
             goutte:
                 guzzle_parameters:
                     curl.options:
@@ -12,6 +15,11 @@ default:
                         CURLOPT_CERTINFO: false
                         CURLOPT_TIMEOUT: 120
                         CURLOPT_MAXREDIRS: 3
-                        CURLOPT_FOLLOWLOCATION: true
                         CURLOPT_USERAGENT: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36"
                     ssl.certificate_authority: false
+            # to use this driver with phantomjs, launch:  phantomjs --webdriver=8643
+            # wd_host: "http://127.0.0.1:8643/wd/hub"
+            # to use this driver with selenium2, launch:  java -jar selenium-server-standalone-2.40.0.jar
+            # wd_host: "http://127.0.0.1:4444/wd/hub"
+            selenium2:
+                wd_host: "http://127.0.0.1:8643/wd/hub"
