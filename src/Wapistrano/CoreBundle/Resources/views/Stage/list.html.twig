@@ -13,7 +13,7 @@
                 <td><a href="{{ path('projectsStageHome', { 'id': projectId, "stageId" : stage.id }) }}">{{ stage.name }}</a></td>
                 <td>{{ stage.alertEmails }}</td>
                 <td>
-                    <a href="{{ path('projectsStageEdit', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-success btn-xs btn-grad popConfigurationAjax">
+                    <a href="{{ path('projectsStageEdit', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-success btn-xs btn-grad popStageAjax">
                         <i class="glyphicon glyphicon-edit"></i>
                     </a>
                     <a href="{{ path('projectsStageDelete', { 'projectId': projectId, "stageId" : stage.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
