@@ -129,4 +129,12 @@ class FeatureContext extends MinkContext
             throw new Exception($message);
         }
     }
+
+    /**
+     * @Given /^I fill in "([^"]*)" with$/
+     */
+    public function iFillInWith($fieldName, PyStringNode $string)
+    {
+        $this->fillField($fieldName, $string);
+    }
 }
