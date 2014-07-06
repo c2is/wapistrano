@@ -37,7 +37,7 @@
                     <a href="{{ path('recipesEdit', { 'id': recipe.id }) }}">{{ recipe.getName }}
                     </a>
                 </td>
-                <td>Internet Explorer 4.0</td>
+                <td>{{ recipe.getDescription }}</td>
                 <td>
                     <a href="{{ path('recipesEdit', { 'id': recipe.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                         <i class="glyphicon glyphicon-edit"></i>

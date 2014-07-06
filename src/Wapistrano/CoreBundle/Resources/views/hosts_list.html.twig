@@ -23,7 +23,7 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Status</th>
+            <th>Alias</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -35,7 +35,7 @@
                 <td>
                     <a href="{{ path('hostsEdit', { 'id': host.id }) }}">{{ host.getName }}</a>
                 </td>
-                <td>Internet Explorer 4.0</td>
+                <td>{{ host.getAlias }}</td>
                 <td><a href="{{ path('hostsEdit', { 'id': host.id }) }}" class="btn btn-success btn-xs btn-grad" data-original-title="" title="">
                             <i class="glyphicon glyphicon-edit"></i>
                 </a></td>
