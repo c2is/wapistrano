@@ -1,0 +1,19 @@
+setup:
+    composer:
+        action: "install -n"
+    shell:
+        command: "%buildpath%app/console doctrine:database:create; %buildpath%app/console doctrine:schema:update --force; %buildpath%app/console doctrine:fixtures:load"
+shell:
+        command: "chmod -R 777 %buildpath%app/cache; chmod -R 777 %buildpath%app/logs;"
+test:
+    atoum:
+        executable: "bin/behat"
+success:
+    shell:
+        command: "cp /var/www/PHPCI/public/assets/img/build-ok.png /var/www/PHPCI/public/assets/img/wapistrano.png"
+failure:
+    shell:
+        command: "cp /var/www/PHPCI/public/assets/img/build-failed.png /var/www/PHPCI/public/assets/img/wapistrano.png"
+complete:
+    shell:
+        command: "%buildpath%app/console doctrine:database:drop --force"
