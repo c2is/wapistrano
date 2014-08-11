@@ -154,4 +154,7 @@ pre code {
 #left {
     z-index: 3;
 }
+.formLogin {
+    padding:5px;
+}
 
