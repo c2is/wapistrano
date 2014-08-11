@@ -1,3 +1,13 @@
+#DESCRIPTION
+Wapistrano is a web user interface dedicated to configure, store and execute capistrano tasks.
+It's mainly built on Symfony 2 framework and uses the queue manager Gearman listened by python workers.
+Overview:
+--- Webui part (symfony2, web server etc.)
+--- Queue manager part (gearman)
+--- Workers part (python and capistrano)
+
+These three parts can run on the same station or separately on their own environment.
+
 #INSTALL
 ##On the webserver side (where the wapistrano webui will live)
 
@@ -5,21 +15,23 @@
 * a webserver (Apache, Nginx),
 * Mysql server,
 * php5.4.1,
-* php-pear
+* php5-dev,
+* php-pear,
 * php-redis (git clone git@github.com:nicolasff/phpredis.git;cd phpredis; phpize;./configure;make && make install;echo "extension=redis.so" >> /etc/php5/conf.d/redis.ini),
-* libgearman (apt-get install libgearman-dev)
-* make,
+* libgearman (apt-get install libgearman-dev),
 * php-gearman 0.8.3 (pecl install channel://pecl.php.net/gearman-0.8.3; echo "extension=gearman.so" >> /etc/php5/conf.d/gearman.ini; service apache2 restart)
 * Git
 
 ###Cloning and installation
 
 ```
-git clone git@gitlab.c2is.fr:a.cianfarani/wapistrano.git wapistrano
+git clone git@github.com:c2is/wapistrano.git
 cd wapistrano
 curl -sS https://getcomposer.org/installer | php
 composer.phar install
 ./app/console doctrine:schema:update --force
+chmod -R 777 ./app/cache
+chmod -R 777 ./app/logs
 ```
 
 ##On the gearman server side (where the gearman daemon will run)
@@ -46,7 +58,7 @@ apt-get install python-setuptools
 
 Redis, Python-redis and Python-gearman packages installs:
 ```
-apt-get install redis
+apt-get install redis-server
 easy_install redis
 #command above will install this package https://github.com/Yelp/python-gearman
 easy_install gearman
