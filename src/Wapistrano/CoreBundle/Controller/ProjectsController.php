@@ -191,7 +191,7 @@ class ProjectsController extends Controller implements UserRightsController
         $query = $queryBuilder->getQuery();
         $deployments = $query->getResult();
         if(count($deployments) > 0) {
-            $resp =  "Stage ".$deployments[0]->getStage().", task ".$deployments[0]->getTask();
+            $resp =  "Stage ".$deployments[0]->getStage()->getName().", task ".$deployments[0]->getTask();
         } else {
             $resp = "Never deployed";
         }
