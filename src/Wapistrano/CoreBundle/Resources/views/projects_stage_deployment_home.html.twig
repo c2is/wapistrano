@@ -30,7 +30,7 @@
                     </div>
                     <div class="">
                         Description:<br>
-                        {{ deployment.description }}
+                        {{ deployment.description | nl2br }}
                         Started at: {{ deployment.createdAt|date('Y-m-d H:i:s') }}<br>
                         Completed at: {{ deployment.completedAt|date('Y-m-d H:i:s') }}<br>
                     </div>
