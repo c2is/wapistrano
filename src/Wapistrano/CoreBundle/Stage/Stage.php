@@ -318,6 +318,9 @@ class Stage
             } elseif($gmclient->getTerminateStatus() == "error with Gearman reception") {
                 $gmclient->delRedisLog($gmclient->getJobHandle());
                 return "Error with Gearman. Please check if brokers are up";
+            } elseif($gmclient->getTerminateStatus() == "error") {
+                $gmclient->delRedisLog($gmclient->getJobHandle());
+                return "Error : a worker failed, check logs";
             } else {
                 $gmclient->delRedisLog($gmclient->getJobHandle());
                 return $gmclient;

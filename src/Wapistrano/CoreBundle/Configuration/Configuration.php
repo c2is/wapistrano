@@ -96,11 +96,10 @@ class Configuration
 
     public function displayFormEdit() {
         $configurationType = new ConfigurationParametersTypeAdd();
+        $twigVars = array();
 
         $configuration = $this->em->getRepository('WapistranoCoreBundle:ConfigurationParameters')
             ->findOneBy(array("id" => $this->getConfigurationId()));
-
-
 
         $form = $this->form->create($configurationType, $configuration);
 
@@ -136,8 +135,12 @@ class Configuration
 
         $formUrl = $this->router->generate("projectsConfigurationEdit", array("projectId"=>$this->getProjectId(), "configurationId"=>$this->getConfigurationId()));
 
-        return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig",
-            array("form"=>$form->createView(), "projectId"=>$this->projectId, "popinTitle" => "Edit a configuration", "formUrl" => $formUrl));
+        $twigVars["form"] = $form->createView();
+        $twigVars["formUrl"] = $formUrl;
+        $twigVars["projectId"] = $this->projectId;
+        $twigVars["popinTitle"] = "Edit a configuration";
+
+        return $this->twig->render("WapistranoCoreBundle:Popin:configuration.html.twig", $twigVars);
 
     }
 

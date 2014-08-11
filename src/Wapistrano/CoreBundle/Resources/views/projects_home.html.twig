@@ -185,6 +185,8 @@
 
                         $("#flashMessagePopin").show("slow");
                         updateConfigurationList();
+                    }).fail( function(xhr, textStatus, errorThrown) {
+                        $("#flashMessagePopinText").html(xhr.responseText);
                     });
 
             return false;
