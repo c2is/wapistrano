@@ -52,9 +52,9 @@ class Gearman extends \GearmanClient
     public function init() {
         $this->jobHandle = "";
         $this->terminateStatus = "";
-        if(count($this->getBrokerErrors()) > 0) {
+        $this->brokerErrors = array();
 
-        }
+
     }
 
     public function doBackgroundAsync($function, $workload) {
@@ -119,12 +119,12 @@ class Gearman extends \GearmanClient
 
     private function terminate($job_handle) {
         $redisJobLog = $this->redis->get($job_handle);
+
         // if log hasn't been deleted by python worker, an exception occured
         if (false !== strpos($redisJobLog, "Wapistrano job ended")) {
             $this->logger->info("Job log: ". $this->redis->get($job_handle));
             $this->terminateStatus = "success";
         } elseif (false !== strpos($redisJobLog, "Wapistrano Job failed")) {
-
             $this->logger->error("Job error log: ". $redisJobLog);
             $this->terminateStatus = "error";
         }
