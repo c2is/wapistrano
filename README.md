@@ -10,8 +10,9 @@
 * libgearman (apt-get install libgearman-dev)
 * make,
 * php-gearman 0.8.3 (pecl install channel://pecl.php.net/gearman-0.8.3; echo "extension=gearman.so" >> /etc/php5/conf.d/gearman.ini; service apache2 restart)
+* Git
 
-###Commands to execute
+###Cloning and installation
 
 ```
 git clone git@gitlab.c2is.fr:a.cianfarani/wapistrano.git wapistrano
@@ -21,13 +22,48 @@ composer.phar install
 ./app/console doctrine:schema:update --force
 ```
 
-#MIGRATE FROM WEBISTRANO TO WAPISTRANO
+##On the gearman server side (where the gearman daemon will run)
+Just install gearman :-)
+```
+apt-get install gearman
+```
+
+##On the capistrano server side (where capistrano and python workers will live)
+Capistrano install:
+```
+apt-get install capistrano
+```
+Wapistrano needs capistrano/ext/multistage installed:
+```
+gem install capistrano-ext
+```
+
+Python-setuptools install (to get easy_install):
+
+```
+apt-get install python-setuptools
+```
+
+Redis, Python-redis and Python-gearman packages installs:
+```
+apt-get install redis
+easy_install redis
+#command above will install this package https://github.com/Yelp/python-gearman
+easy_install gearman
+```
+
+Install wapyd:
+```
+Please, report to wapyd project
+```
+
+#MIGRATION FROM WEBISTRANO TO WAPISTRANO
 Export your capistrano db like this:
 ```
 mysqldump -u root -p webistrano_prod --no-create-info -c > /tmp/webistrano-data.sql
 ```
 
-Perform a fields names changes to map new database structure:
+Perform fields names changes to map new database structure:
 ```
 sed -i -e "s/\`recipe_id\`, \`stage_id\`/\`recipes_id\`, \`stages_id\`/g" /tmp/webistrano-data.sql
 ```
@@ -37,45 +73,6 @@ Import the resulting sql file:
 mysql -h 127.0.0.1 -u root wapistrano < /tmp/webistrano-data.sql
 ```
 
-
-##On the gearman server side (where the gearman daemon will run)
-Just install gearman :-)
-```
-apt-get install gearman
-```
-
-##On the capistrano server side (where capistrano and python workers will live)
-Install redis
-```
-apt-get install redis
-```
-
-Install wapyd
-```
-
-```
-
-
-
-
-#Webui side
-A webserver (Apache, Nginx)
-php-redis
-php-gearman 1.1
-mysql
-
-
-#Capistrano server side
-python 2.7
-python-gearman (sudo easy_install gearman) (https://github.com/Yelp/python-gearman)
-redis (sudo easy_install redis)
-Capistrano (Need capistrano/ext/multistage installed : gem install capistrano-ext)
-Git
-
-
-#Somewhere on an accessible server
-gearman
-redis
 
 *** Exclusive admin Grants***
 Add/Edit recipe
