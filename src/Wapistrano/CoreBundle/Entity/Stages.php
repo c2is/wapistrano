@@ -120,7 +120,7 @@ class Stages
     /**
      * Set project
      *
-     * @param integer $project
+     * @param Projects $project
      * @return Projects
      */
     public function setProject($project)
