@@ -34,7 +34,7 @@ class HostsController extends Controller
     {
 
         $em = $this->container->get('doctrine')->getManager();
-        $hosts = $em->getRepository('WapistranoCoreBundle:hosts')->findAll();
+        $hosts = $em->getRepository('WapistranoCoreBundle:Hosts')->findAll();
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
@@ -126,7 +126,7 @@ class HostsController extends Controller
     {
         $session = $request->getSession();
         $em = $this->container->get('doctrine')->getManager();
-        $Host = $em->getRepository('WapistranoCoreBundle:hosts')->findOneBy(array("id" => $id));
+        $Host = $em->getRepository('WapistranoCoreBundle:Hosts')->findOneBy(array("id" => $id));
 
         $Roles = $em->getRepository('WapistranoCoreBundle:Roles')->findBy(array("host" => $id));
         if (null != $Roles) {
