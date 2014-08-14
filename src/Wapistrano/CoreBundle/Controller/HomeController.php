@@ -33,12 +33,12 @@ class HomeController extends Controller
         $twigVars["brokerIsUp"] = true;
         $twigVars["workersAreUp"] = true;
 
-        if(count($brokerService->getBrokerErrors()) == 0) {
+        if (count($brokerService->getBrokerErrors()) == 0) {
             $admin = new Gadm();
 
             $twigVars["brokerVersion"] = 'gearman version: ' . $admin->getVersion() . "\n";
             $twigVars["brokerStatus"] = $admin->getStatus();
-            if(count($admin->getWorkersAsArray()) == 0) {
+            if (count($admin->getWorkersAsArray()) == 0) {
                 $twigVars["workersAreUp"] = false;
                 $twigVars["message"] = "No worker running, no task will be handled now";
             } else {

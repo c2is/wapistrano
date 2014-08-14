@@ -75,8 +75,7 @@ class ProjectsStageDeploymentController extends Controller
 
         // regenerate original stage rb file
 
-        if($deployment->getStatus() == "running")
-        {
+        if ($deployment->getStatus() == "running") {
             if (false !== strpos($jobLog, "Wapistrano job ended")) {
                 $today = new \DateTime();
                 $deployment->setUpdatedAt($today);
@@ -144,8 +143,8 @@ class ProjectsStageDeploymentController extends Controller
         $form->get('task')->setData($taskCommand);
 
         $confPrompted = array();
-        foreach($stageService->getConfigurations() as $confName=>$configuration) {
-            if($configuration->getPromptOnDeploy()) {
+        foreach ($stageService->getConfigurations() as $confName => $configuration) {
+            if ($configuration->getPromptOnDeploy()) {
                 $confPrompted[$confName] = $configuration;
                 $form->add($confName, null, array('mapped' => false, 'attr' => array('class'=>'form-control')));
             }
@@ -156,15 +155,15 @@ class ProjectsStageDeploymentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            foreach($confPrompted as $confName => $configurations) {
+            foreach ($confPrompted as $confName => $configurations) {
                 $configurations->setValue($form->get($confName)->getData());
             }
 
             $job = $stageService->publishStage($project->getId(), $stage->getId(), $confPrompted);
 
-            if(! is_object($job)) {
+            if (! is_object($job)) {
                 $session->getFlashBag()->add('notice', $job);
-            }elseif("error" == $job->getTerminateStatus()) {
+            } elseif ("error" == $job->getTerminateStatus()) {
                 $session->getFlashBag()->add('notice', "Stage's configurations couldn't be published, deploy aborted");
                 $job->delRedisLog($job->getJobHandle());
             } else {
@@ -185,7 +184,7 @@ class ProjectsStageDeploymentController extends Controller
                 $deployment->setJobHandle($job->getJobHandle());
 
                 // unset prompted vars
-                foreach($confPrompted as $confName => $configurations) {
+                foreach ($confPrompted as $confName => $configurations) {
                     $configurations->setValue("");
                 }
                 $jobUnset = $stageService->publishStage($project->getId(), $stage->getId());

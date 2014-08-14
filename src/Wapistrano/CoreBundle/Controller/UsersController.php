@@ -57,7 +57,7 @@ class UsersController extends Controller
         $twigVars["sectionAction"] = $this->getSectionAction();
         $formHandle = $userService->getFormAdd();
 
-        if("sent" == $userService->getFormStatus()) {
+        if ("sent" == $userService->getFormStatus()) {
             return $this->redirect($this->generateUrl('usersList'));
         } else {
             $twigVars += $formHandle->getFormTwigVars();
@@ -77,7 +77,7 @@ class UsersController extends Controller
         $twigVars["sectionAction"] = $this->getSectionAction();
         $formHandle = $userService->getFormEdit($user);
 
-        if("sent" == $userService->getFormStatus()) {
+        if ("sent" == $userService->getFormStatus()) {
             return $this->redirect($this->generateUrl('usersList'));
         } else {
             $twigVars += $formHandle->getFormTwigVars();
@@ -126,7 +126,7 @@ class UsersController extends Controller
         $twigVars["barTitle"] = "Manage users ".$project->getName(). " project";
         $formHandle = $userService->getFormProjectEdit($project);
 
-        if("sent" == $userService->getFormStatus()) {
+        if ("sent" == $userService->getFormStatus()) {
             return $this->redirect($this->generateUrl('usersProjectsList'));
         } else {
             $twigVars += $formHandle->getFormTwigVars();

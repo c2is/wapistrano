@@ -131,7 +131,7 @@ class ProjectsStageController extends Controller
 
         $session = $request->getSession();
 
-        if(! is_object($job)) {
+        if (! is_object($job)) {
             $session->getFlashBag()->add('notice',$job);
         } else {
             $session->getFlashBag()->add('notice', 'Stage deleted');
