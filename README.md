@@ -3,7 +3,7 @@ WAPISTRANO - Alpha Version
 
 ![Wapistrano project home page](./doc/shoot1.png?raw=true "Optional Title")
 
-#DESCRIPTION
+#Description
 Wapistrano is a web user interface dedicated to configure, store and execute capistrano tasks.
 It's mainly built on Symfony 2 framework and uses the queue manager Gearman listened by python workers.
 Overview:
@@ -17,21 +17,21 @@ These three parts can run on the same station or separately on their own environ
 Wapistrano is strongly based on [Webistrano](https://github.com/peritor/webistrano/) (which is unfortunately no longer maintained).
 The Wapistrano database structure has been deliberately designed in order to be very closed to Webistrano structure to make Webistrano to Wapistrano migration easier.
 
-#WARNING
+#Warning
 This is an Alpha version of this project. Many features and tests are missing.
 It works with capistrano v 2.15.5 max, not yet with 3.* versions.
 
-#EASY INSTALL
+#Easy install
 If you want a quick install to test wapistrano immediately, use our appliance. We built it under VirtualBox but you can use it with VmWare.
 
-##Install appliance on VirtualBox
+##Install appliance on Virtualbox
 *  [Download the aplliance](https://www.dropbox.com/s/wir6v1t7e5iu9uo/wapistrano-debian.ova)
 *  import it into VirtualBox, File->Import an appliance and choose the image you have juste downloaded
 *  run the virtual machine
 *  go to http://127.0.0.1:8074
 *  log as admin (admin/admin) or as a user (user/user)
 
-#PRODUCTION INSTALL
+#Production install
 ##On the webserver side (where the wapistrano webui will live)
 
 ###Prerequisite:
@@ -100,7 +100,7 @@ Install wapyd:
 Please, report to wapyd project
 ```
 
-#MIGRATION FROM WEBISTRANO TO WAPISTRANO
+#Migration from webistrano to wapistrano
 Export your capistrano db like this:
 ```
 mysqldump -u root -p webistrano_prod --no-create-info -c > /tmp/webistrano-data.sql
@@ -116,7 +116,7 @@ Import the resulting sql file:
 mysql -h 127.0.0.1 -u root wapistrano < /tmp/webistrano-data.sql
 ```
 
-#FEATURES INFORMATIONS
+#Features informations
 ## Exclusive admin rights
 * Add/Edit recipe
 * Add/Edit user
