@@ -1,3 +1,6 @@
+Wapistrano Alpha Version
+====================
+
 #DESCRIPTION
 Wapistrano is a web user interface dedicated to configure, store and execute capistrano tasks.
 It's mainly built on Symfony 2 framework and uses the queue manager Gearman listened by python workers.
@@ -101,13 +104,15 @@ Import the resulting sql file:
 mysql -h 127.0.0.1 -u root wapistrano < /tmp/webistrano-data.sql
 ```
 
+#FEATURES INFORMATIONS
+## Exclusive admin rights
+* Add/Edit recipe
+* Add/Edit user
+* Add/Edit host
+* Create users
+* Grant users/projects or projects/users
 
-*** Exclusive admin Grants***
-Add/Edit recipe
-Add/Edit user
-Add/Edit host
-
-*** Todo ***
-- command to check if env is ok (services installed, capistrano path and rights ok etc.)
-- status column to fill in projects list
+##Not yet implemented
+* email notification on deploy
+* disabled an host before deploying
 
