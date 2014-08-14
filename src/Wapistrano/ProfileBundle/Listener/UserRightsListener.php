@@ -35,7 +35,7 @@ class UserRightsListener
 
             $params = $request->attributes->get('_route_params');
             $projectId = null;
-            foreach($params as $index=>$param) {
+            foreach ($params as $index => $param) {
                 switch($index) {
                     case "id":
                         $projectId = $param;
@@ -43,8 +43,8 @@ class UserRightsListener
                 }
             }
 
-          if(null != $projectId) {
-                if(! $this->wapistranoUserRights->isProjectGranted($projectId)) {
+          if (null != $projectId) {
+                if (! $this->wapistranoUserRights->isProjectGranted($projectId)) {
                     throw new AccessDeniedHttpException('Access denied !');
                 }
 
