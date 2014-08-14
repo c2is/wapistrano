@@ -59,24 +59,28 @@ chmod -R 777 ./app/logs
 
 ##On the gearman server side (where the gearman daemon will run)
 Just install gearman :-)
+
 ```
 apt-get install gearman
 ```
 
 ##On the capistrano server side (where capistrano and python workers will live)
 Capistrano install:
+
 ```
 apt-get install ruby
 gem install capistrano -v 2.15.5
 ```
 If you meet some problem on ssh auth with password, ensure that you have net-ssh <= 2.7.0 installed.
 If not:
+
 ```
 gem uninstall net-ssh
 gem install net-ssh -v 2.7.0
 ```
 
 Wapistrano needs capistrano/ext/multistage installed:
+
 ```
 gem install capistrano-ext
 ```
@@ -88,6 +92,7 @@ apt-get install python-setuptools
 ```
 
 Redis, Python-redis and Python-gearman packages installs:
+
 ```
 apt-get install redis-server
 easy_install redis
@@ -96,9 +101,9 @@ easy_install gearman
 ```
 
 Install wapyd:
-```
-Please, report to wapyd project
-```
+
+Please, report to [Wapy project](https://github.com/c2is/wapy)
+
 
 #Migration from webistrano to wapistrano
 Export your capistrano db like this:
