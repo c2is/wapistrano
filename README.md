@@ -8,6 +8,14 @@ Overview:
 
 These three parts can run on the same station or separately on their own environment.
 
+Wapistrano is strongly based on [Webistrano](https://github.com/peritor/webistrano/) (which is unfortunately no longer maintained).
+The Wapistrano database structure has been deliberately designed in order to be very closed to Webistrano structure to make Webistrano to Wapistrano migration easier.
+
+#WARNING
+This is an Alpha version of this project. Many features and tests are missing.
+It works with capistrano v 2.15.5 max, not yet with 3.* versions.
+
+
 #INSTALL
 ##On the webserver side (where the wapistrano webui will live)
 
@@ -43,8 +51,16 @@ apt-get install gearman
 ##On the capistrano server side (where capistrano and python workers will live)
 Capistrano install:
 ```
-apt-get install capistrano
+apt-get install ruby
+gem install capistrano -v 2.15.5
 ```
+If you meet some problem on ssh auth with password, ensure that you have net-ssh <= 2.7.0 installed.
+If not:
+```
+gem uninstall net-ssh
+gem install net-ssh -v 2.7.0
+```
+
 Wapistrano needs capistrano/ext/multistage installed:
 ```
 gem install capistrano-ext
