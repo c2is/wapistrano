@@ -5,9 +5,10 @@ Wapistrano Alpha Version
 Wapistrano is a web user interface dedicated to configure, store and execute capistrano tasks.
 It's mainly built on Symfony 2 framework and uses the queue manager Gearman listened by python workers.
 Overview:
---- Webui part (symfony2, web server etc.)
---- Queue manager part (gearman)
---- Workers part (python and capistrano)
+
+* Webui part (symfony2, web server etc.)
+* Queue manager part (gearman)
+* Workers part (python and capistrano)
 
 These three parts can run on the same station or separately on their own environment.
 
