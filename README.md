@@ -1,5 +1,7 @@
-Wapistrano Alpha Version
+WAPISTRANO - Alpha Version
 ====================
+
+![Wapistrano project home page](./doc/shoot1.png?raw=true "Optional Title")
 
 #DESCRIPTION
 Wapistrano is a web user interface dedicated to configure, store and execute capistrano tasks.
@@ -19,8 +21,17 @@ The Wapistrano database structure has been deliberately designed in order to be 
 This is an Alpha version of this project. Many features and tests are missing.
 It works with capistrano v 2.15.5 max, not yet with 3.* versions.
 
+#EASY INSTALL
+If you want a quick install to test wapistrano immediately, use our appliance. We built it under VirtualBox but you can use it with VmWare.
 
-#INSTALL
+##Install appliance on VirtualBox
+*  [Download the aplliance](https://www.dropbox.com/s/wir6v1t7e5iu9uo/wapistrano-debian.ova)
+*  import it into VirtualBox, File->Import an appliance and choose the image you have juste downloaded
+*  run the virtual machine
+*  go to http://127.0.0.1:8074
+*  log as admin (admin/admin) or as a user (user/user)
+
+#PRODUCTION INSTALL
 ##On the webserver side (where the wapistrano webui will live)
 
 ###Prerequisite:
