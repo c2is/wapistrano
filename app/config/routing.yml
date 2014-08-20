@@ -1,3 +1,8 @@
+wapistrano_carrier:
+    resource: "@WapistranoCarrierBundle/Controller"
+    prefix:   /
+    type: annotation
+
 wapistrano_profile:
     resource: "@WapistranoProfileBundle/Controller"
     prefix:   /

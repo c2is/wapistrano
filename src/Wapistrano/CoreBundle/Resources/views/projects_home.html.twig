@@ -30,11 +30,14 @@
                     <br>
                     {{ project.description | nl2br }}
                         <div class="action">
-                            <a href="{{ path('projectsEdit', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad popProjectAjax" data-original-title="" title="">
+                            <a href="{{ path('projectsEdit', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad popProjectAjax" title="Edit" data-original-title="" title="">
                                 <i class="glyphicon glyphicon-edit"></i>
                             </a>
-                            <a href="{{ path('projectsDelete', { 'id': project.id }) }}" class="btn btn-danger btn-xs btn-grad confirm">
+                            <a href="{{ path('projectsDelete', { 'id': project.id }) }}" class="btn btn-danger btn-xs btn-grad confirm" title="Delete">
                                 <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                            <a href="{{ path('projectsClone', { 'id': project.id }) }}" class="btn btn-success btn-xs btn-grad" title="Duplicate">
+                                <i class="glyphicon glyphicon-random"></i>
                             </a>
                         </div>
                     </div>

@@ -1,0 +1,8 @@
+name: Project Test
+description: This is a fake project as an example of a Symfony's like project deployment
+configuration_parameters:
+    - { name: repository, value: git@github.com:c2is/Walker.git, project_id: 1, stage_id: 1, type: ProjectConfiguration, prompt_on_deploy: 0}
+stages:
+    - { name: preprod, alert_emails: exploitation@c2is.fr}
+recipes:
+    - { name: preprod }
