@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Wapistrano\CoreBundle\Entity\Projects;
+use Wapistrano\CarrierBundle\Importer;
 
 class CloneController extends Controller
 {
@@ -15,8 +16,12 @@ class CloneController extends Controller
      * @Breadcrumb("Projects", routeName="projectsHome", routeParameters={"id"="{id}"})
      * @Breadcrumb("Clone", routeName="projectsClone", routeParameters={"id"="{id}"})
      */
-    public function indexAction( Projects $project)
+    public function indexAction(Projects $project)
     {
+        $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
+        $importer = new importer($this->container->get('doctrine')->getManager());
+        $importer->import($importDir."template.xml");
+
         return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array('name' => $project->getName()));
     }
 }

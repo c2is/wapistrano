@@ -1,5 +1,5 @@
 parameters:
-#    wapistrano_carrier.example.class: Wapistrano\CarrierBundle\Example
+    wapistrano_carrier.transit_dir: %kernel.root_dir%/../src/Wapistrano/CarrierBundle/Resources/importExport/
 
 services:
 #    wapistrano_carrier.example:

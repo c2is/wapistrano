@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project>
+    <name>Project Test</name>
+    <description>This is a fake project as an example of a Symfony's like project deployment</description>
+
+    <configuration_parameters>
+        <configuration>
+            <name>repository</name>
+            <value>git@github.com:c2is/Walker.git</value>
+            <type>ProjectConfiguration</type>
+            <prompt_on_deploy>0</prompt_on_deploy>
+        </configuration>
+    </configuration_parameters>
+
+    <stages>
+        <stage>
+            <name>preprod</name>
+            <alert_emails>exploitation@c2is.fr</alert_emails>
+        </stage>
+    </stages>
+
+    <recipes>
+        <recipe>
+            <name>Setup</name>
+            <description>Build directories 's arch when setup task is launched</description>
+            <body>
+                <![CDATA[
+                task :setup, :except => { :no_release => true } do
+                dirs = uploads_dirs.map { |d| File.join(shared_path, d) }
+                run "#{try_sudo} mkdir -p #{dirs.join(' ')} && #{try_sudo} chmod g+w #{deploy_to}/*"
+                end
+                after "deploy:symlink", "deploy:cleanup"
+                ]]>
+            </body>
+        </recipe>
+    </recipes>
+    <hosts>
+        <host>
+            <name>10.0.1.15</name>
+            <alias>hostfordemo.local</alias>
+            <description>This is a fake host, just for example</description>
+        </host>
+    </hosts>
+</project>
