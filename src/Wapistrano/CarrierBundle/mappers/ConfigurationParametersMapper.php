@@ -7,18 +7,18 @@
 namespace Wapistrano\CarrierBundle\mappers;
 use Symfony\Component\DomCrawler\Crawler;
 
-use Wapistrano\CoreBundle\Entity\Projects;
+use Wapistrano\CoreBundle\Entity\ConfigurationParameters;
 
-class ProjectMapper extends AbstractMapper{
+class ConfigurationParametersMapper extends AbstractMapper{
 
     public function __construct($em, Crawler $crawler = null)
     {
         $this->setManager($em);
-        $this->setRepository('WapistranoCoreBundle:Projects');
+        $this->setRepository('WapistranoCoreBundle:ConfigurationParameters');
 
         if(null != $crawler) {
             $this->setCrawler($crawler);
-            $object = new Projects();
+            $object = new ConfigurationParameters();
             $this->setObjectMapped($object);
         }
 
@@ -27,7 +27,7 @@ class ProjectMapper extends AbstractMapper{
 
     protected function getUniqueConstraintProperty()
     {
-        return "name";
+        return false;
     }
 
 

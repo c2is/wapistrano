@@ -20,7 +20,8 @@ class CloneController extends Controller
     {
         $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
         $importer = new importer($this->container->get('doctrine')->getManager());
-        $importer->import($importDir."template.xml");
+        $serializer = $this->container->get('jms_serializer');
+        $importer->import($importDir."template.xml", $serializer);
 
         return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array('name' => $project->getName()));
     }

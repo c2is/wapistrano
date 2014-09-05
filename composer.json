@@ -19,7 +19,8 @@
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
-        "apy/breadcrumbtrail-bundle": "dev-master"
+        "apy/breadcrumbtrail-bundle": "dev-master",
+        "jms/serializer-bundle": "dev-master"
     },
     "require-dev": {
         "behat/symfony2-extension": "~1.1",

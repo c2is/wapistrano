@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new APY\BreadcrumbTrailBundle\APYBreadcrumbTrailBundle(),
             new Wapistrano\ProfileBundle\WapistranoProfileBundle(),
             new Wapistrano\CarrierBundle\WapistranoCarrierBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -16,7 +16,9 @@ abstract class AbstractMapper {
     protected $objectMapped;
     protected $uniqueConstraintProperty;
 
-    abstract protected function getNodeName();
+    /*
+     * return false or a field name
+     */
     abstract protected function getUniqueConstraintProperty();
 
     protected function setCrawler(Crawler $crawler)
@@ -36,9 +38,10 @@ abstract class AbstractMapper {
 
     protected function getProperties()
     {
-        $properties = $this->crawler->filter($this->getNodeName())->children();
+        $properties = $this->crawler->children();
 
         $flatProperties = array();
+
         foreach($properties as $domElem) {
             if(count($this->crawler->filter($domElem->nodeName)->children()) == 0) {
                 $flatProperties[$domElem->nodeName] = $this->crawler->filter($domElem->nodeName)->text();
@@ -55,25 +58,57 @@ abstract class AbstractMapper {
         $properties = $this->getProperties();
 
         foreach($properties as $name => $value) {
-            $methodName = "set".ucfirst($name);
+            $methodName = "set".$this->camelCase($name);
             $object->$methodName($value);
         }
-        /*
-        $test = $this->repository->findOneBy(array("name" => $project->getName()));
-        if(is_object($test)) {
-            $project->setName($project->getName()." imported");
+
+        if($this->getUniqueConstraintProperty()) {
+            $uniquePropertySetMethod = sprintf("set%s", $this->camelCase($this->getUniqueConstraintProperty()));
+            $uniquePropertyGetMethod = sprintf("get%s", $this->camelCase($this->getUniqueConstraintProperty()));
+            $test = $this->repository->findOneBy(array($this->getUniqueConstraintProperty() => $object->$uniquePropertyGetMethod()));
+            if(is_object($test)) {
+                $object->$uniquePropertySetMethod($object->$uniquePropertyGetMethod()." imported");
+            }
         }
-        */
+
         $this->objectMapped = $object;
     }
 
+    /*
+     * Return object created from xml data
+     */
     protected function getObjectMapped()
     {
         return $this->objectMapped;
     }
 
+    /*
+     * Return existing object in database
+     */
+    public function getObjectStored($id)
+    {
+        $object = $this->repository->findOneBy(array("id" => $id));
+
+        return $object;
+    }
+
+    protected function camelCase($string)
+    {
+        $string = str_replace("_", " ", $string);
+        $string = ucwords($string);
+        $string = str_replace(" ", "", $string);
+
+        return $string;
+    }
+
     public function object()
     {
         return $this->getObjectMapped();
+    }
+
+    public function save()
+    {
+        $this->em->persist($this->objectMapped);
+        $this->em->flush();
     }
 } 

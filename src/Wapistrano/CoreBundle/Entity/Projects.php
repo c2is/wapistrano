@@ -4,12 +4,17 @@ namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\XmlRoot;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Projects
  *
  * @ORM\Table(name="projects")
  * @ORM\Entity
+ * @ExclusionPolicy("none")
+ * @XmlRoot("project")
  */
 class Projects
 {
@@ -19,6 +24,7 @@ class Projects
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 
