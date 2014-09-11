@@ -43,13 +43,16 @@ after "deploy:symlink", "deploy:cleanup"
                     </body>
                 </recipe>
             </recipes>
-            <hosts>
-                <host>
-                    <name>10.0.1.15</name>
-                    <alias>hostfordemo.local</alias>
-                    <description>This is a fake host, just for example</description>
-                </host>
-            </hosts>
+            <roles>
+                <role>
+                    <name>Web</name>
+                    <host>
+                        <name>10.0.1.15</name>
+                        <alias>hostfordemo.local</alias>
+                        <description>This is a fake host, just for example</description>
+                    </host>
+                </role>
+            </roles>
         </stage>
 
         <stage>

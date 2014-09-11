@@ -10,7 +10,7 @@ namespace Wapistrano\CarrierBundle\mappers;
 class DbPercolator {
     private $em;
 
-    function __construct($em)
+    public function __construct($em)
     {
         $this->em = $em;
     }
@@ -33,5 +33,16 @@ class DbPercolator {
         }
         $this->em->persist($entity);
         $this->em->flush();
+    }
+
+    public function get($entity, $criteria) {
+
+            $searchCriteria = array();
+            foreach ($criteria as $criterion) {
+                $methodName = "get".ucfirst($criterion);
+                $searchCriteria[$criterion] = $entity->$methodName();
+            }
+
+           return $this->em->getRepository(get_class($entity))->findOneBy($searchCriteria);
     }
 } 

@@ -25,7 +25,7 @@ class Importer {
     {
         try {
             $xml = file_get_contents($filePath);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
@@ -56,29 +56,31 @@ class Importer {
 
             // recipes are shared by projects, so we add constraint to manage creation or not
             foreach ($smartCrawler->getStageRecipes($stage->getName()) as $recipe) {
+                if (null == $existingRecipe = $percolator->get($recipe, array("name"))) {
+                    $percolator->save($recipe);
+                    $stage->addRecipe($recipe);
+                } else {
+                    $stage->addRecipe($existingRecipe);
+                }
+            }
 
-                $percolator->save($recipe, array("name", "description", "body"));
+            foreach ($smartCrawler->getStageRoles($stage->getName()) as $role) {
+                $host = $smartCrawler->getStageRoleHost($stage->getName(), $role->getName());
+                $role->setStage($stage);
 
-                $stage->addRecipe($recipe);
+                if (null == $existingHost = $percolator->get($host, array("name"))) {
+                    $percolator->save($host);
+                    $role->setHost($host);
+                } else {
+                    $role->setHost($existingHost);
+                }
+
+                $percolator->save($role);
             }
 
             $percolator->save($stage);
 
         }
-
-        die();
-        // $stage->setProject($project); $stage->addRecipe($recipe);
-        $stages = $smartCrawler->getStages();
-        // need projectId end stageId
-        $stageConfigurations = $smartCrawler->getStageConfigurations("preprod");
-
-        $smartCrawler->getStageRoles("prod");
-
-        $smartCrawler->getStageRoleHost("prod", "Web");
-
-        $stageRecipes = $smartCrawler->getStageRecipes("preprod");
-
-        var_dump($stageHosts);
 
     }
 

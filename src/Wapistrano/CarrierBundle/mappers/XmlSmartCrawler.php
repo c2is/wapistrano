@@ -49,7 +49,7 @@ class XmlSmartCrawler
         // unmap host
         $filteredRoles = array();
         foreach ($roles as $role) {
-            $filteredRoles = $role->setHost(null);
+            $filteredRoles[] = $role->setHost(null);
         }
 
         return $filteredRoles;
