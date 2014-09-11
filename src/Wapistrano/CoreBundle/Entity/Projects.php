@@ -4,12 +4,17 @@ namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\XmlRoot;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Projects
  *
  * @ORM\Table(name="projects")
  * @ORM\Entity
+ * @ExclusionPolicy("none")
+ * @XmlRoot("project")
  */
 class Projects
 {
@@ -19,6 +24,7 @@ class Projects
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 
@@ -66,9 +72,16 @@ class Projects
     private $user;
 
     /**
+     * @var Stages
+     *
+     * @ORM\OneToMany(targetEntity="Stages", mappedBy="project", cascade={"remove"})
+     */
+    private $stages;
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -91,7 +104,7 @@ class Projects
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -114,7 +127,7 @@ class Projects
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -137,7 +150,7 @@ class Projects
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -160,7 +173,7 @@ class Projects
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -183,7 +196,7 @@ class Projects
     /**
      * Get template
      *
-     * @return string 
+     * @return string
      */
     public function getTemplate()
     {
@@ -229,10 +242,43 @@ class Projects
     /**
      * Get user
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Add stages
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Stages $stages
+     * @return Projects
+     */
+    public function addStage(\Wapistrano\CoreBundle\Entity\Stages $stages)
+    {
+        $this->stages[] = $stages;
+
+        return $this;
+    }
+
+    /**
+     * Remove stages
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Stages $stages
+     */
+    public function removeStage(\Wapistrano\CoreBundle\Entity\Stages $stages)
+    {
+        $this->stages->removeElement($stages);
+    }
+
+    /**
+     * Get stages
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getStages()
+    {
+        return $this->stages;
     }
 }
