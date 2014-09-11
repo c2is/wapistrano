@@ -23,6 +23,6 @@ class CloneController extends Controller
         $serializer = $this->container->get('jms_serializer');
         $importer->import($importDir."template.xml", $serializer);
 
-        return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array('name' => $project->getName()));
+        return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array());
     }
 }

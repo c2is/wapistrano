@@ -7,8 +7,10 @@ namespace Wapistrano\CarrierBundle;
 
 use Symfony\Component\DomCrawler\Crawler;
 use Wapistrano\CoreBundle\Entity\Projects;
-use Wapistrano\CarrierBundle\mappers\ProjectMapper;
-use Wapistrano\CarrierBundle\mappers\ConfigurationParametersMapper;
+
+use Wapistrano\CarrierBundle\mappers\XmlSmartCrawler;
+use Wapistrano\CarrierBundle\mappers\DbPercolator;
+
 
 class Importer {
 
@@ -27,57 +29,57 @@ class Importer {
             throw $e;
         }
 
-        $crawler = new Crawler($xml);
-        $filtered = $crawler->filterXPath("//project");
+        $smartCrawler = new XmlSmartCrawler($xml, $serializer);
+        $percolator = new DbPercolator($this->em);
+        $project = $smartCrawler->getProject();
 
-        $xml = simplexml_load_string($filePath);
+        $percolator->save($project, array("name"));
 
-       $test = sprintf("<project>%s</project>", $filtered->current());
+        // var_dump($project);
+        foreach ($smartCrawler->getProjectConfigurations() as $configuration) {
+            $configuration->setProjectId($project->getId());
+            $percolator->save($configuration);
+        }
 
-        echo "|".$test."|";
-        echo $serializer->deserialize($test, 'Wapistrano\CoreBundle\Entity\Projects', "xml");
+        foreach ($smartCrawler->getStages() as $stage) {
+            $stage->setProject($project);
+
+            $percolator->save($stage);
+
+            // configurations are binded to project, so we create all
+            foreach ($smartCrawler->getStageConfigurations($stage->getName()) as $configuration) {
+                $configuration->setProjectId($project->getId());
+                $configuration->setStageId($stage->getId());
+
+                $percolator->save($configuration);
+            }
+
+            // recipes are shared by projects, so we add constraint to manage creation or not
+            foreach ($smartCrawler->getStageRecipes($stage->getName()) as $recipe) {
+
+                $percolator->save($recipe, array("name", "description", "body"));
+
+                $stage->addRecipe($recipe);
+            }
+
+            $percolator->save($stage);
+
+        }
 
         die();
+        // $stage->setProject($project); $stage->addRecipe($recipe);
+        $stages = $smartCrawler->getStages();
+        // need projectId end stageId
+        $stageConfigurations = $smartCrawler->getStageConfigurations("preprod");
 
-        $projectMapper  = new ProjectMapper($this->em, $filtered);
-        $xml =$serializer->serialize($projectMapper->getObjectStored("91"), "xml");
-        echo "<pre>".$xml."</pre>";
+        $smartCrawler->getStageRoles("prod");
 
+        $smartCrawler->getStageRoleHost("prod", "Web");
 
+        $stageRecipes = $smartCrawler->getStageRecipes("preprod");
 
+        var_dump($stageHosts);
 
-        echo $projectMapper->object()->getName();
-        //$projectMapper->save();
-        echo  $projectMapper->object()->getId();
-
-        $filtered = $crawler->filterXPath("//project/stages/stage")->eq(0)->filterXPath("//configuration_parameters/configuration")->eq(0);
-        $confMapper = new ConfigurationParametersMapper($this->em, $filtered);
-        echo $confMapper->object()->getName();
-
-        $projectMapper  = new ProjectMapper($this->em);
-
-
-        //$array = $serializer->normalize($projectMapper->getObjectStored("91"));
-        //$array = $serializer->normalize(new Projects());
-
-        //echo $serializer->serialize($array, 'xml');
-
-
-        //echo $filtered->text();
-        /*
-        echo $project->getName();
-
-
-        $crawler->filter('recipe')->each(function ($node) {
-            $node->children()->each(function ($nodeChild) {
-
-                foreach ($nodeChild as $domElement) {
-                    print "<br>".$domElement->nodeName."--".$nodeChild->text();
-                }
-
-            });
-        });
-        */
     }
 
-} 
+}
