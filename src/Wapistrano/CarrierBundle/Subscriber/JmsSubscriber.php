@@ -35,9 +35,16 @@ class JmsSubscriber implements EventSubscriberInterface {
             ],
             [
                 'event' => Events::PRE_DESERIALIZE,
-                'format' => 'json',
-                'class' => 'Task',
-                'method' => 'onPreDeserializeTaskJson',
+                'format' => 'xml',
+                'class' => 'Wapistrano\CoreBundle\Entity\Projects',
+                'method' => 'onPreDeserializeProjects',
+            ]
+            ,
+            [
+                'event' => Events::PRE_DESERIALIZE,
+                'format' => 'xml',
+                'class' => 'Wapistrano\CoreBundle\Entity\Stages',
+                'method' => 'onPreDeserializeStages',
             ]
         ];
     }
@@ -58,12 +65,18 @@ class JmsSubscriber implements EventSubscriberInterface {
 
     }
 
-    public function onPreDeserializeTaskJson(PreDeserializeEvent $event)
+    public function onPreDeserializeProjects(PreDeserializeEvent $event)
     {
         $data = $event->getData();
+        $data->stages = null;
+        $event->setData($data);
+    }
 
-        $data['status'] = Task::getStatusFromLabel($data['status']);
-
+    public function onPreDeserializeStages(PreDeserializeEvent $event)
+    {
+        $data = $event->getData();
+        $data->recipe = null;
+        $data->roles = null;
         $event->setData($data);
     }
 } 

@@ -5,12 +5,7 @@
  */
 namespace Wapistrano\CarrierBundle;
 
-use Symfony\Component\DomCrawler\Crawler;
 use Wapistrano\CoreBundle\Entity\Projects;
-
-use Wapistrano\CarrierBundle\mappers\XmlSmartCrawler;
-use Wapistrano\CarrierBundle\mappers\DbPercolator;
-
 
 class Exporter {
 
@@ -21,10 +16,12 @@ class Exporter {
         $this->em = $em;
     }
 
-    function export(Projects $project, $serializer)
+    function export(Projects $project, $serializer, $filePath)
     {
         $xProject = $serializer->serialize($project, "xml");
-        echo $xProject;
+
+        file_put_contents($filePath, $xProject);
+
     }
 
 }

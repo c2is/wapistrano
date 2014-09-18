@@ -33,12 +33,12 @@ class Importer {
         $percolator = new DbPercolator($this->em);
         $project = $smartCrawler->getProject();
 
-
-
+        /*
+         * project is flatten by JmsSubscriber on deserialize because of doctrine relations which can't be correctly performed (database structure is legacy of Webistrano...)
+         * The object is rebuilt by processes below
+         */
         $percolator->save($project, array("name"));
 
-
-        // var_dump($project);
         foreach ($smartCrawler->getProjectConfigurations() as $configuration) {
             $configuration->setProjectId($project->getId());
             $percolator->save($configuration);
@@ -46,6 +46,8 @@ class Importer {
 
         foreach ($smartCrawler->getStages() as $stage) {
             $stage->setProject($project);
+
+            $stage->setRecipe(array());
 
             $percolator->save($stage);
 
@@ -66,7 +68,7 @@ class Importer {
                     $stage->addRecipe($existingRecipe);
                 }
             }
-
+            $percolator->save($stage);
             foreach ($smartCrawler->getStageRoles($stage->getName()) as $role) {
                 $host = $smartCrawler->getStageRoleHost($stage->getName(), $role->getName());
                 $role->setStage($stage);
@@ -77,11 +79,8 @@ class Importer {
                 } else {
                     $role->setHost($existingHost);
                 }
-
                 $percolator->save($role);
             }
-
-            $percolator->save($stage);
 
         }
 

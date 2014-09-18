@@ -44,6 +44,7 @@ class DbPercolator {
                 $searchCriteria[$criterion] = $entity->$methodName();
             }
 
-           return $this->em->getRepository(get_class($entity))->findOneBy($searchCriteria);
+        $res = $this->em->getRepository(get_class($entity))->findOneBy($searchCriteria);
+        return $res;
     }
 } 

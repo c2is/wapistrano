@@ -19,22 +19,25 @@ class CloneController extends Controller
      */
     public function indexAction(Projects $project)
     {
+        $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
+        $filePath = $importDir."project_".$project->getId().".xml";
 
-        $this->import();
-
-        $exporter = new exporter($this->container->get('doctrine')->getManager());
-        //$stageService = $this->container->get('wapistrano_core.stage');
-        $exporter->export($project, $serializer = $this->container->get('jms_serializer'));
-
+        $this->export($project, $filePath);
+        $this->import($filePath);
 
         return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array());
     }
 
-    private function import()
+    private function export(Projects $project, $filePath)
     {
-        $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
+        $exporter = new exporter($this->container->get('doctrine')->getManager());
+        $exporter->export($project, $serializer = $this->container->get('jms_serializer'), $filePath);
+    }
+
+    private function import($filePath)
+    {
         $importer = new importer($this->container->get('doctrine')->getManager());
         $serializer = $this->container->get('jms_serializer');
-        $importer->import($importDir."template.xml", $serializer);
+        $importer->import($filePath, $serializer);
     }
 }
