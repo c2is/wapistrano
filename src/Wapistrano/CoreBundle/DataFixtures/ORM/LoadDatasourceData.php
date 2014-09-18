@@ -50,7 +50,7 @@ class LoadDatasourceData implements FixtureInterface
          *              PROJECT             *
          ************************************/
         $project = new Projects();
-        $project->setName("Project Test");
+        $project->setName("Project One");
         $project->setDescription("This is a fake project as an example of a Symfony's like project deployment");
         $project->setCreatedAt($today);
         $manager->persist($project);
