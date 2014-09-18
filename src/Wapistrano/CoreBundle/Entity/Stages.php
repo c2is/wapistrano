@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\XmlList;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Stages
@@ -94,7 +95,7 @@ class Stages
     /**
      * @var Roles
      *
-     * @ORM\OneToMany(targetEntity="Roles", mappedBy="stage", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Roles", mappedBy="stage", cascade={"remove", "persist"})
      * @XmlList(entry = "role")
      */
     private $roles;
@@ -102,6 +103,7 @@ class Stages
     /**
      * @var ConfigurationParameters
      *
+     * @Type("array<Wapistrano\CoreBundle\Entity\ConfigurationParameters>")
      * @XmlList(entry = "configuration")
      */
     private $configurationParameters;

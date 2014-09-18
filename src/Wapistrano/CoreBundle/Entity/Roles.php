@@ -44,7 +44,7 @@ class Roles
 
     /**
      * @var Hosts
-     * @ORM\ManyToOne(targetEntity="Hosts")
+     * @ORM\ManyToOne(targetEntity="Hosts", cascade={ "persist"})
      * @ORM\JoinColumn(name="host_id", referencedColumnName="id")
      */
     private $host;

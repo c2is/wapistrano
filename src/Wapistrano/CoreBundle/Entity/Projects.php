@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation\XmlRoot;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\XmlList;
+use JMS\Serializer\Annotation\Type;
 
 /**
  * Projects
@@ -76,14 +77,14 @@ class Projects
     /**
      * @var Stages
      *
-     * @ORM\OneToMany(targetEntity="Stages", mappedBy="project", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Stages", mappedBy="project", cascade={"remove", "persist"})
      * @XmlList(entry = "stage")
      */
     private $stages;
 
     /**
      * @var ConfigurationParameters
-     *
+     * @Type("array<Wapistrano\CoreBundle\Entity\ConfigurationParameters>")
      * @XmlList(entry = "configuration")
      */
     private $configurationParameters;

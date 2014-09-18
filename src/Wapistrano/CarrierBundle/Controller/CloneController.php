@@ -20,7 +20,8 @@ class CloneController extends Controller
     public function indexAction(Projects $project)
     {
 
-        //$this->import();
+        $this->import();
+
         $exporter = new exporter($this->container->get('doctrine')->getManager());
         //$stageService = $this->container->get('wapistrano_core.stage');
         $exporter->export($project, $serializer = $this->container->get('jms_serializer'));

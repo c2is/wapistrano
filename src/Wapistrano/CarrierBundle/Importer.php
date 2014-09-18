@@ -33,7 +33,10 @@ class Importer {
         $percolator = new DbPercolator($this->em);
         $project = $smartCrawler->getProject();
 
+
+
         $percolator->save($project, array("name"));
+
 
         // var_dump($project);
         foreach ($smartCrawler->getProjectConfigurations() as $configuration) {

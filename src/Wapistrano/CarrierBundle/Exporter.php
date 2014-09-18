@@ -23,9 +23,6 @@ class Exporter {
 
     function export(Projects $project, $serializer)
     {
-
-
-
         $xProject = $serializer->serialize($project, "xml");
         echo $xProject;
     }
