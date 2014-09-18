@@ -19,7 +19,7 @@ class DbPercolator {
         if (null != $constraints) {
             $constraintsBak = $constraints;
             $firstConstraint = array_shift($constraintsBak);
-    
+
             $searchCriteria = array();
             foreach ($constraints as $constraint) {
                 $methodName = "get".ucfirst($constraint);
@@ -27,8 +27,6 @@ class DbPercolator {
             }
 
             if (null != $test = $this->em->getRepository(get_class($entity))->findOneBy($searchCriteria)) {
-                var_dump($constraints);
-                var_dump($firstConstraint);
                 $setMethodName = "set".ucfirst($firstConstraint);
                 $getMethodName = "get".ucfirst($firstConstraint);
                 $entity->$setMethodName($entity->$getMethodName()." imported");
