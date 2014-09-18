@@ -3,12 +3,17 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\XmlList;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * Stages
  *
  * @ORM\Table(name="stages", indexes={@ORM\Index(name="index_stages_on_project_id", columns={"project_id"})})
  * @ORM\Entity
+ * @ExclusionPolicy("none")
  */
 class Stages
 {
@@ -18,6 +23,7 @@ class Stages
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 
@@ -31,8 +37,9 @@ class Stages
     /**
      * @var Projects
      *
-     * @ORM\ManyToOne(targetEntity="Projects")
+     * @ORM\ManyToOne(targetEntity="Projects", inversedBy="stages")
      * @ORM\JoinColumn(name="project_id", referencedColumnName="id")
+     * @Exclude()
      */
     private $project;
 
@@ -79,10 +86,25 @@ class Stages
      *      inverseJoinColumns={@ORM\JoinColumn(name="recipes_id", referencedColumnName="id")}
      *      ))
      * @ORM\OrderBy({"name"="ASC"})
+     * @SerializedName("recipes")
+     * @XmlList(entry = "recipe")
      */
     protected $recipe;
 
+    /**
+     * @var Roles
+     *
+     * @ORM\OneToMany(targetEntity="Roles", mappedBy="stage", cascade={"remove"})
+     * @XmlList(entry = "role")
+     */
+    private $roles;
 
+    /**
+     * @var ConfigurationParameters
+     *
+     * @XmlList(entry = "configuration")
+     */
+    private $configurationParameters;
 
     /**
      * Get id
@@ -308,5 +330,50 @@ class Stages
     public function __toString()
     {
         return (string) $this->getId();
+    }
+
+    /**
+     * Add roles
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Roles $roles
+     * @return Stages
+     */
+    public function addRole(\Wapistrano\CoreBundle\Entity\Roles $roles)
+    {
+        $this->roles[] = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Remove roles
+     *
+     * @param \Wapistrano\CoreBundle\Entity\Roles $roles
+     */
+    public function removeRole(\Wapistrano\CoreBundle\Entity\Roles $roles)
+    {
+        $this->roles->removeElement($roles);
+    }
+
+    /**
+     * Get roles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    /**
+     * Set configurationParameters
+     *
+     * @param \Wapistrano\CoreBundle\Entity\ConfigurationParameters $configurationParameters
+     * @return Stages
+     */
+    public function setConfigurationParameters($configurationParameters)
+    {
+        $this->configurationParameters = $configurationParameters;
+        return $this;
     }
 }

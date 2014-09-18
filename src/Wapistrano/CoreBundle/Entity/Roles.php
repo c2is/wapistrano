@@ -5,12 +5,15 @@ namespace Wapistrano\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Wapistrano\CoreBundle\Validator\Constraints as WapiAssert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Roles
  *
  * @ORM\Table(name="roles", indexes={@ORM\Index(name="index_roles_on_stage_id", columns={"stage_id"}), @ORM\Index(name="index_roles_on_host_id", columns={"host_id"})})
  * @ORM\Entity
+ * @ExclusionPolicy("none")
  */
 class Roles
 {
@@ -20,6 +23,7 @@ class Roles
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 

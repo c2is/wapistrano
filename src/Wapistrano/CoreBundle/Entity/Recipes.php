@@ -4,11 +4,15 @@ namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
+
 /**
  * Recipes
  *
  * @ORM\Table(name="recipes")
  * @ORM\Entity
+ * @ExclusionPolicy("none")
  */
 class Recipes
 {
@@ -18,6 +22,7 @@ class Recipes
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 
@@ -60,6 +65,7 @@ class Recipes
      * @var integer
      *
      * @ORM\ManyToMany(targetEntity="Stages", mappedBy="recipe")
+     * @Exclude()
      */
     private $stage;
 

@@ -3,10 +3,12 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\XmlRoot;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\XmlList;
 
 /**
  * Projects
@@ -75,8 +77,16 @@ class Projects
      * @var Stages
      *
      * @ORM\OneToMany(targetEntity="Stages", mappedBy="project", cascade={"remove"})
+     * @XmlList(entry = "stage")
      */
     private $stages;
+
+    /**
+     * @var ConfigurationParameters
+     *
+     * @XmlList(entry = "configuration")
+     */
+    private $configurationParameters;
 
     /**
      * Get id
@@ -281,4 +291,17 @@ class Projects
     {
         return $this->stages;
     }
+
+    /**
+     * Set configurationParameters
+     *
+     * @param \Wapistrano\CoreBundle\Entity\ConfigurationParameters $configurationParameters
+     * @return Projects
+     */
+    public function setConfigurationParameters($configurationParameters)
+    {
+       $this->configurationParameters = $configurationParameters;
+        return $this;
+    }
+
 }

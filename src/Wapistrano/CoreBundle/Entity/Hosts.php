@@ -3,12 +3,15 @@
 namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Hosts
  *
  * @ORM\Table(name="hosts")
  * @ORM\Entity
+ * @ExclusionPolicy("none")
  */
 class Hosts
 {
@@ -18,6 +21,7 @@ class Hosts
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 

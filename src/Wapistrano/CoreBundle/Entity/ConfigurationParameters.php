@@ -4,12 +4,15 @@ namespace Wapistrano\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * ConfigurationParameters
  *
  * @ORM\Table(name="configuration_parameters")
  * @ORM\Entity
+ * @ExclusionPolicy("none")
  */
 class ConfigurationParameters
 {
@@ -19,6 +22,7 @@ class ConfigurationParameters
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Exclude()
      */
     private $id;
 
@@ -39,8 +43,8 @@ class ConfigurationParameters
 
     /**
      * @var integer
-     *
      * @ORM\Column(name="project_id", type="integer", nullable=true)
+     * @Exclude()
      */
     private $projectId;
 
@@ -48,6 +52,7 @@ class ConfigurationParameters
      * @var integer
      *
      * @ORM\Column(name="stage_id", type="integer", nullable=true)
+     * @Exclude()
      */
     private $stageId;
 
