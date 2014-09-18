@@ -84,6 +84,8 @@ class Importer {
 
         }
 
+        return $project->getId();
+
     }
 
 }

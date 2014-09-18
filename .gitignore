@@ -9,4 +9,5 @@
 /vendor/
 /bin/
 /composer.phar
+/src/Wapistrano/CarrierBundle/Resources/importExport/*
 *.*~

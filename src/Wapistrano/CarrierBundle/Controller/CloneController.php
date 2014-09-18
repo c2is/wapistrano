@@ -23,9 +23,8 @@ class CloneController extends Controller
         $filePath = $importDir."project_".$project->getId().".xml";
 
         $this->export($project, $filePath);
-        $this->import($filePath);
-
-        return $this->render('WapistranoCarrierBundle:Clone:index.html.twig', array());
+        $id = $this->import($filePath);
+        return $this->redirect($this->generateUrl('projectsHome', array("id" => $id)));
     }
 
     private function export(Projects $project, $filePath)
@@ -38,6 +37,6 @@ class CloneController extends Controller
     {
         $importer = new importer($this->container->get('doctrine')->getManager());
         $serializer = $this->container->get('jms_serializer');
-        $importer->import($filePath, $serializer);
+        return $importer->import($filePath, $serializer);
     }
 }
