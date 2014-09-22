@@ -71,6 +71,7 @@ class Projects
      * @var integer
      *
      * @ORM\ManyToMany(targetEntity="Users", mappedBy="project")
+     * @Exclude()
      */
     private $user;
 
