@@ -35,9 +35,8 @@ class ProjectsController extends Controller implements UserRightsController
      */
     public function listAction(Request $request)
     {
-
-        $em = $this->container->get('doctrine')->getManager();
-        $projects = $em->getRepository('WapistranoCoreBundle:Projects')->findBy(array(), array("name" => "ASC"));
+	// get project filtered by right access
+        $projects = $this->container->get('wapistrano_core.menu')->getMenuProjectItems();
 
         $session = $request->getSession();
         $flashMessage = implode("\n", $session->getFlashBag()->get('notice', array()));
