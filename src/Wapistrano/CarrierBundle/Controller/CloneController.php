@@ -23,10 +23,12 @@ class CloneController extends Controller
     public function indexAction(Request $request, Projects $project)
     {
         $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
-        $filePath = $importDir."project_".$project->getId().".xml";
+        $securityContext = $this->container->get('security.context');
 
+
+        $filePath = $importDir."project_".$project->getId().".xml";
         $this->export($project, $filePath);
-        $id = $this->import($filePath);
+        $id = $this->import($filePath, $securityContext);
         $session = $request->getSession();
         $session->getFlashBag()->add('notice', 'Project '.$project->getName().' cloned');
         return $this->redirect($this->generateUrl('projectsHome', array("id" => $id)));
@@ -42,7 +44,6 @@ class CloneController extends Controller
         $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
 
         $fileName = "wapistrano-project-".$project->getName().".xml";
-
         $filePath = $importDir."project_".$project->getId().".xml";
 
         $this->export($project, $filePath);
@@ -64,10 +65,10 @@ class CloneController extends Controller
         $exporter->export($project, $serializer = $this->container->get('jms_serializer'), $filePath);
     }
 
-    private function import($filePath)
+    private function import($filePath, $securityContext)
     {
         $importer = new importer($this->container->get('doctrine')->getManager());
         $serializer = $this->container->get('jms_serializer');
-        return $importer->import($filePath, $serializer);
+        return $importer->import($filePath, $serializer, $securityContext);
     }
 }

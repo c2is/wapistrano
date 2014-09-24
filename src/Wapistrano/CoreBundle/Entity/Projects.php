@@ -68,7 +68,7 @@ class Projects
     private $template;
 
     /**
-     * @var integer
+     * @var Users
      *
      * @ORM\ManyToMany(targetEntity="Users", mappedBy="project")
      * @Exclude()
@@ -259,6 +259,15 @@ class Projects
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set user
+     *
+     */
+    public function setUser($user)
+    {
+        return $this->user = $user;
     }
 
     /**

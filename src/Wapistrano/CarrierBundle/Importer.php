@@ -21,7 +21,7 @@ class Importer {
         $this->em = $em;
     }
 
-    function import($filePath, $serializer)
+    function import($filePath, $serializer, $securityContext)
     {
         try {
             $xml = file_get_contents($filePath);
@@ -29,15 +29,18 @@ class Importer {
             throw $e;
         }
 
+
         $smartCrawler = new XmlSmartCrawler($xml, $serializer);
         $percolator = new DbPercolator($this->em);
         $project = $smartCrawler->getProject();
+        $percolator->save($project, array("name"));
 
         /*
          * project is flatten by JmsSubscriber on deserialize because of doctrine relations which can't be correctly performed (database structure is legacy of Webistrano...)
          * The object is rebuilt by processes below
          */
-        $percolator->save($project, array("name"));
+
+
 
         foreach ($smartCrawler->getProjectConfigurations() as $configuration) {
             $configuration->setProjectId($project->getId());
@@ -84,6 +87,14 @@ class Importer {
 
         }
 
+        if (! $securityContext->isGranted("ROLE_ADMIN") ) {
+            $user = $securityContext->getToken()->getUser();
+
+            // because user property has been nullified by Exclude annotation, qhe have to re-contruct it
+            $project->setUser(new \Doctrine\Common\Collections\ArrayCollection());
+            $project->addUser($user);
+            $percolator->save($project);
+        }
         return $project->getId();
 
     }
