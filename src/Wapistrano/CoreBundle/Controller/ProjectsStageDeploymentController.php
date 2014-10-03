@@ -146,8 +146,9 @@ class ProjectsStageDeploymentController extends Controller
         foreach ($stageService->getConfigurations() as $confName => $configuration) {
             if ($configuration->getPromptOnDeploy()) {
                 $confPrompted[$confName] = $configuration;
-                $form->add($confName, null, array('mapped' => false, 'attr' => array('class'=>'form-control')));
-            }
+            	$type = ($confName == "password")? "password": null;
+                $form->add($confName, $type, array('mapped' => false, 'attr' => array('class'=>'form-control')));
+	    }
         }
 
         $form->add('saveBottom', 'submit', array('attr' => array('class'=>'btn btn-warning btn-sm'), "label" => "Start deployment"));
