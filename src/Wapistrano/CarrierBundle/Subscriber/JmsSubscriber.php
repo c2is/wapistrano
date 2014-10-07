@@ -52,14 +52,14 @@ class JmsSubscriber implements EventSubscriberInterface {
     public function onPreSerializeProjects(PreSerializeEvent $event)
     {
         $project = $event->getObject();
-        $projectConfigurations = $this->entityManager->getRepository("WapistranoCoreBundle:ConfigurationParameters")->findBy(array("projectId" => $project->getId(), "type" => "ProjectConfiguration"));
+        $projectConfigurations = $this->entityManager->getRepository("WapistranoCoreBundle:ConfigurationParameters")->findBy(array("projectId" => $project->getId(), "stageId" => null));
         $project->setConfigurationParameters($projectConfigurations);
     }
 
     public function onPreSerializeStages(PreSerializeEvent $event)
     {
         $stage = $event->getObject();
-        $stageConfigurations = $this->entityManager->getRepository("WapistranoCoreBundle:ConfigurationParameters")->findBy(array("stageId" => $stage->getId(), "type" => "StageConfiguration"));
+        $stageConfigurations = $this->entityManager->getRepository("WapistranoCoreBundle:ConfigurationParameters")->findBy(array("stageId" => $stage->getId()));
         $stage->setConfigurationParameters($stageConfigurations);
 
     }
