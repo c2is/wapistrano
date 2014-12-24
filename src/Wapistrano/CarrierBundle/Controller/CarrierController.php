@@ -92,11 +92,13 @@ class CarrierController extends Controller
         if ($form->isValid()) {
             $fileName = md5(microtime())."-tmp.xml";
             $form['attachment']->getData()->move($importDir, $fileName);
-            // $id = $this->import($filePath, $securityContext);
-            // $session = $request->getSession();
-           // $session->getFlashBag()->add('notice', 'Project '.$project->getName().' cloned');
+            $id = $this->import($importDir.$fileName, $securityContext);
+            $session = $request->getSession();
+            $session->getFlashBag()->add('notice', 'Import done');
 
-            // return "";// $this->redirect($this->generateUrl('projectsHome', array("id" => $id)));
+            unlink($importDir.$fileName);
+
+            return $this->redirect($this->generateUrl('projectsHome', array("id" => $id)));
         }
 
         return array('barTitle' =>  'Import project', 'form' => $form->createView(), "flashMessage" => "");
