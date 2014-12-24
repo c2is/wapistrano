@@ -1,0 +1,29 @@
+{% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block content %}
+    {% form_theme form 'WapistranoCoreBundle:Form:fields.html.twig' %}
+    {{ form_start(form, { 'attr': {'class': 'form-horizontal'} }) }}
+    <div class="box primary">
+        <header>
+            <div class="icons">
+                <i class="fa fa-building-o"></i>
+            </div>
+            <h5>{{ barTitle }}</h5>
+            <div class="toolbar">
+
+                <a href="{{ path('projectsList') }}" class="btn btn-default btn-sm" data-original-title="" title="">Cancel</a>
+                {{ form_widget(form.saveTop, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+            </div>
+        </header>
+        <div class="body collapse in" id="div1">
+            <div class="form-group">
+                {{ form_label(form.attachment, null, { 'attr': {'class': 'control-label col-lg-4'} }) }}
+                <div class="col-lg-4">
+                    {{ form_widget(form.attachment, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            </div>
+            {{ form_widget(form.saveBottom, { 'attr': {'class': 'btn btn-default btn-sm'}, 'label' : 'Save' }) }}
+        </div>
+    </div>
+    {{ form_end(form, {'render_rest': true}) }}
+{% endblock content %}
+

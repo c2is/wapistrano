@@ -12,9 +12,19 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Wapistrano\CoreBundle\Entity\Projects;
 use Wapistrano\CarrierBundle\Importer;
 use Wapistrano\CarrierBundle\Exporter;
+use Wapistrano\CarrierBundle\Form\ImportTypeAdd;
 
-class CloneController extends Controller
+class CarrierController extends Controller
 {
+    private $sectionAction;
+
+    public function getSectionAction() {
+        if (null == $this->sectionAction) {
+            $this->sectionAction = $this->generateUrl('projectsImport');
+        }
+
+        return $this->sectionAction;
+    }
     /**
      * @Route("/projects/{id}/clone", name="projectsClone")
      * @Breadcrumb("Projects", routeName="projectsHome", routeParameters={"id"="{id}"})
@@ -57,6 +67,39 @@ class CloneController extends Controller
         );
 
         return $response;
+    }
+
+    /**
+     * @Route("/projects/import", name="projectsImport")
+     * @Breadcrumb("Projects", routeName="projectsList")
+     * @Breadcrumb("Import", routeName="projectsImport")
+     * @Template("WapistranoCarrierBundle:Form:import.html.twig")
+     */
+    public function importAction(Request $request)
+    {
+        $importDir = $this->container->getParameter('wapistrano_carrier.transit_dir');
+        $securityContext = $this->container->get('security.context');
+
+        $importType = new ImportTypeAdd();
+
+
+        $form = $this->get('form.factory')->create($importType);
+        $form->add('saveTop', 'submit');
+        $form->add('saveBottom', 'submit');
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $fileName = md5(microtime())."-tmp.xml";
+            $form['attachment']->getData()->move($importDir, $fileName);
+            // $id = $this->import($filePath, $securityContext);
+            // $session = $request->getSession();
+           // $session->getFlashBag()->add('notice', 'Project '.$project->getName().' cloned');
+
+            // return "";// $this->redirect($this->generateUrl('projectsHome', array("id" => $id)));
+        }
+
+        return array('barTitle' =>  'Import project', 'form' => $form->createView(), "flashMessage" => "");
     }
 
     private function export(Projects $project, $filePath)
