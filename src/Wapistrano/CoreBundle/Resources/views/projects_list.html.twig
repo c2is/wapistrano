@@ -1,4 +1,9 @@
 {% extends 'WapistranoCoreBundle::base.html.twig' %}
+{% block moreAction %}
+    {% if sectionAction is defined %}
+        <a href="{{ path('projectsImport') }}" class="btn btn-success btn-sm btn-grad" data-original-title="" title="">Import one from xml file</a>
+    {% endif %}
+{% endblock moreAction %}
 {% block content %}
 
     <div class="box primary">
