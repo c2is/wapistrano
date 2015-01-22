@@ -99,7 +99,11 @@ easy_install redis
 #command above will install this package https://github.com/Yelp/python-gearman
 easy_install gearman
 ```
+If your python install uses site plugin, you have to install redis and gearman plugin under the wapyd user account (see below what is wapyd), you can do that by a classic plugin's install with --user option
 
+```
+python setup.py install --user
+```
 Install wapyd:
 
 Please, report to [Wapy project](https://github.com/c2is/wapy)
