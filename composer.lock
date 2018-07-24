@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd48a4fd4c43bdae22d3998f32f5bb49",
+    "content-hash": "c45ce45cb480f5f21ea55c4584c1ff6e",
     "packages": [
         {
             "name": "apy/breadcrumbtrail-bundle",
@@ -2542,16 +2542,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.8.42",
+            "version": "v2.8.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "0084ec5bb6614688f547ef80bf1ef8a900c4e350"
+                "reference": "e7f50768f107fa951f4c80dc447b893502cf2e89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/0084ec5bb6614688f547ef80bf1ef8a900c4e350",
-                "reference": "0084ec5bb6614688f547ef80bf1ef8a900c4e350",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/e7f50768f107fa951f4c80dc447b893502cf2e89",
+                "reference": "e7f50768f107fa951f4c80dc447b893502cf2e89",
                 "shasum": ""
             },
             "require": {
@@ -2678,7 +2678,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2018-06-25T12:02:18+00:00"
+            "time": "2018-07-23T09:03:03+00:00"
         },
         {
             "name": "twig/extensions",
@@ -3619,5 +3619,8 @@
     "platform": {
         "php": ">=5.3.3"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.0.23"
+    }
 }

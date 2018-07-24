@@ -6,10 +6,17 @@
     "autoload": {
         "psr-0": { "": "src/" }
     },
+    "config": {
+        "bin-dir": "bin",
+        "platform": {
+            "php": "7.0.23"
+        }
+    },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "~2.7",
+        "symfony/symfony": "~2.8",
         "doctrine/orm": "^2.5",
+        "doctrine/annotations": "1.4.*",
         "doctrine/doctrine-bundle": "^1.6",
         "twig/extensions": "~1.0",
         "symfony/assetic-bundle": "~2.3",
@@ -43,9 +50,6 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
         ]
-    },
-    "config": {
-        "bin-dir": "bin"
     },
     "extra": {
         "symfony-app-dir": "app",
