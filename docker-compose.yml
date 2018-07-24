@@ -1,0 +1,30 @@
+application:
+    image: debian:stretch
+    volumes:
+        - ./:/var/www/website
+        - ~/.ssh:/root/.ssh/
+    tty: true
+db:
+    image: mysql
+    ports:
+        - "3306"
+    environment:
+        MYSQL_DATABASE: website
+        MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+apachephp:
+    build: ./docker/apachephp/
+    environment:
+        - WEBSITE_HOST=127.0.0.1
+        - CERTIFICAT_CNAME=www.valdisere.com
+        - SYMFONY_VHOST_COMPLIANT=yes
+        - SMTP_HOST=mail.eolas.fr
+        - SMTP_USER=a.cianfarani@acti.fr
+        - SMTP_PASSWORD=4uCBxT47
+    ports:
+        - "80"
+        - "443"
+    links:
+        - db
+    volumes_from:
+        - application
