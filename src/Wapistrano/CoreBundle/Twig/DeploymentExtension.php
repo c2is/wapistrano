@@ -27,7 +27,7 @@ class DeploymentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_deployment_list' => new \Twig_Function_Method($this, 'renderDeploymentList', array('is_safe' => array('html'))),
+             new \Twig_SimpleFunction('wapi_render_deployment_list', array($this, 'renderDeploymentList'), array('is_safe' => array('html'))),
         );
     }
 

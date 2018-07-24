@@ -16,7 +16,7 @@ use Wapistrano\ProfileBundle\Controller\UserRightsController;
  * @Route("/projects")
  * @Breadcrumb("Projects", routeName="projectsList")
  */
-class ProjectsController extends Controller implements UserRightsController
+class ProjectsController extends Controller
 {
 
     private $sectionAction;
@@ -65,7 +65,6 @@ class ProjectsController extends Controller implements UserRightsController
     }
 
     public function getUrlAction($action, $id = ""){
-
         if ("" == $id) {
             return new Response($this->generateUrl('projects'.$action));
         } else {

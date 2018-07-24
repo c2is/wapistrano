@@ -27,7 +27,7 @@ class MiscExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_loader' => new \Twig_Function_Method($this, 'renderLoader', array('is_safe' => array('html')))
+             new \Twig_SimpleFunction('wapi_render_loader', array($this, 'renderLoader'), array('is_safe' => array('html')))
         );
     }
 

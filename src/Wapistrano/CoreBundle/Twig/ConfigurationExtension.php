@@ -26,8 +26,8 @@ class ConfigurationExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_configuration_list' => new \Twig_Function_Method($this, 'renderConfigurationList', array('is_safe' => array('html'))),
-            'wapi_render_effective_configuration_list' => new \Twig_Function_Method($this, 'renderEffectiveConfigurationList', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_configuration_list', array($this, 'renderConfigurationList'), array('is_safe' => array('html'))),
+             new \Twig_SimpleFunction('wapi_render_effective_configuration_list', array($this, 'renderEffectiveConfigurationList'), array('is_safe' => array('html'))),
         );
     }
 

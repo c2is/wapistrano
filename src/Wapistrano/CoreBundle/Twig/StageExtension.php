@@ -27,8 +27,8 @@ class StageExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_stage_list' => new \Twig_Function_Method($this, 'renderStageList', array('is_safe' => array('html'))),
-            'wapi_render_stage_recipe_list' => new \Twig_Function_Method($this, 'renderStageRecipeList', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_stage_list', array($this, 'renderStageList'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_stage_recipe_list', array($this, 'renderStageRecipeList'), array('is_safe' => array('html'))),
         );
     }
 

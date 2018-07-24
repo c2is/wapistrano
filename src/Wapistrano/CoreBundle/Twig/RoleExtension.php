@@ -27,7 +27,7 @@ class RoleExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_role_list' => new \Twig_Function_Method($this, 'renderRoleList', array('is_safe' => array('html'))),
+             new \Twig_SimpleFunction('wapi_render_role_list', array($this, 'renderRoleList'), array('is_safe' => array('html'))),
         );
     }
 

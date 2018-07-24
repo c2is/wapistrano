@@ -1,6 +1,8 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        Wapistrano\CoreBundle\Entity\Users:
+            id: wapistrano_profile.password_encoder
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -12,9 +14,7 @@ security:
             entity:
                 class: WapistranoCoreBundle:Users
 
-    encoders:
-        Wapistrano\CoreBundle\Entity\Users:
-            id: wapistrano_profile.password_encoder
+
 
     firewalls:
         dev:

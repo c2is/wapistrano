@@ -19,6 +19,7 @@ class Menu
 
         $grantedProject = array();
         foreach($allProjects as $project) {
+
             if($this->wapistranoUserRights->isProjectGranted($project->getId())) {
                 $grantedProject[] = $project;
             }

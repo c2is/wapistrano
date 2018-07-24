@@ -26,9 +26,9 @@ class MenuExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'wapi_render_menu_project' => new \Twig_Function_Method($this, 'renderMenuProject', array('is_safe' => array('html'))),
-            'wapi_render_menu_host' => new \Twig_Function_Method($this, 'renderMenuHost', array('is_safe' => array('html'))),
-            'wapi_render_menu_recipe' => new \Twig_Function_Method($this, 'renderMenuRecipe', array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_menu_project', array($this, 'renderMenuProject'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_menu_host', array($this, 'renderMenuHost'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('wapi_render_menu_recipe', array($this, 'renderMenuRecipe'), array('is_safe' => array('html'))),
         );
     }
 
